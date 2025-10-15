@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Chat Dashboard - Scriptobot</title>
+  <link rel="stylesheet" href="style.css"> <!-- Apni existing CSS file use karein -->
+  <style>
+    /* Admin Chat Dashboard Specific Styles */
+    body {
+      display: flex; /* Make body a flex container */
+      min-height: 100vh; /* Full viewport height */
+      margin: 0;
+      flex-direction: column; /* For potential header/footer */
+    }
+
+    .admin-dashboard {
+      display: flex;
+      flex-grow: 1; /* Occupy remaining space */
+      max-width: 1200px;
+      margin: 2rem auto;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border-radius: 1.5rem;
+      box-shadow: 0 15px 30px var(--shadow-dark);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      width: 95%; /* Make it almost full width */
+    }
+
+    .sidebar {
+      width: 300px; /* Fixed width for sidebar */
+      border-right: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(0, 0, 0, 0.1); /* Slightly darker glass for sidebar */
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+
+    .sidebar h2 {
+      color: var(--accent);
+      font-size: 1.5rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .user-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      flex-grow: 1;
+    }
+
+    .user-list li {
+      display: flex;
+      align-items: center;
+      padding: 0.8rem 1rem;
+      margin-bottom: 0.5rem;
+      background: var(--glass-darker); /* Darker glass for list items */
+      border-radius: 0.8rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      position: relative;
+    }
+    .user-list li:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .user-list li.active {
+      background: var(--accent);
+      color: #fff;
+      font-weight: bold;
+    }
+    .user-list li.active:hover {
+      background: var(--accent-darker);
+    }
+
+    .user-name {
+      flex-grow: 1;
+      font-size: 1rem;
+      color: var(--text);
+    }
+    .user-list li.active .user-name {
+      color: #fff;
+    }
+
+    .new-message-dot {
+      width: 10px;
+      height: 10px;
+      background-color: #00d757; /* Green dot for new messages */
+      border-radius: 50%;
+      margin-left: 10px;
+      display: none; /* Hidden by default */
+      box-shadow: 0 0 5px #00d757;
+    }
+    .user-list li.has-new-messages .new-message-dot {
+      display: block; /* Show if has new messages */
+    }
+    .user-list li.active .new-message-dot {
+      background-color: #fff; /* White dot when active */
+      box-shadow: none;
+    }
+
+
+    .chat-main {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative; /* For overlays */
+    }
+
+    .chat-main .chat-header {
+      background: rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      text-align: center;
+      padding: 1.2rem 2rem;
+    }
+    .chat-main .chat-header h3 {
+      margin: 0;
+      color: var(--text);
+      font-size: 1.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .chat-main .chat-header h3 span {
+      color: var(--accent);
+      font-size: 1.8rem;
+    }
+
+    .messages-area-admin {
+      flex-grow: 1;
+      padding: 1.5rem 2rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* Message styles similar to user-side */
+    .messages-area-admin .message {
+      display: flex;
+      flex-direction: column;
+      max-width: 70%;
+      padding: 0.8rem 1.2rem;
+      border-radius: 1rem;
+      word-wrap: break-word;
+    }
+    .messages-area-admin .message.admin { /* Admin sending message */
+      align-self: flex-end;
+      background: var(--accent);
+      color: #fff;
+      border-bottom-right-radius: 0.3rem;
+    }
+    .messages-area-admin .message.user { /* User sending message */
+      align-self: flex-start;
+      background: var(--glass-darker);
+      color: var(--text);
+      border-bottom-left-radius: 0.3rem;
+    }
+    .messages-area-admin .message-sender {
+      font-weight: bold;
+      font-size: 0.8rem;
+      opacity: 0.8;
+      margin-bottom: 5px;
+    }
+    .messages-area-admin .message-text {
+      font-size: 1rem;
+    }
+    .messages-area-admin .message-timestamp {
+      font-size: 0.75rem;
+      opacity: 0.6;
+      margin-top: 5px;
+      align-self: flex-end;
+    }
+
+    .chat-input-area-admin {
+      display: flex;
+      padding: 1.5rem 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      gap: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .chat-input-area-admin input {
+      flex-grow: 1;
+      padding: 0.9rem 1.2rem;
+      border-radius: 2.5rem;
+      border: 2px solid var(--accent);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      box-shadow: inset 0 2px 5px var(--shadow-light);
+    }
+    .chat-input-area-admin input:focus {
+      outline: none;
+      border-color: var(--text);
+      box-shadow: 0 0 10px var(--accent);
+    }
+    .chat-input-area-admin button.btn.primary {
+      padding: 0.85rem 1.5rem;
+      white-space: nowrap;
+    }
+
+    .no-chat-selected-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7); /* Dark overlay */
+        backdrop-filter: blur(10px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        font-size: 1.8rem;
+        font-weight: bold;
+        text-shadow: 0 0 10px rgba(0,0,0,0.5);
+        z-index: 10;
+        border-radius: 1.5rem; /* Match parent */
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .admin-dashboard {
+        flex-direction: column; /* Stack sidebar and chat main */
+        margin: 1rem auto;
+        height: 90vh;
+        border-radius: 1rem;
+      }
+      .sidebar {
+        width: 100%;
+        height: 200px; /* Fixed height for sidebar on mobile */
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 1rem 1rem 0 0;
+      }
+      .sidebar h2 {
+        font-size: 1.3rem;
+        margin-bottom: 0.8rem;
+      }
+      .user-list li {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
+      }
+      .chat-main .chat-header h3 {
+        font-size: 1.4rem;
+      }
+      .messages-area-admin {
+        padding: 1rem 1.5rem;
+      }
+      .messages-area-admin .message {
+        max-width: 85%;
+      }
+      .chat-input-area-admin {
+        padding: 1rem 1.5rem;
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+      .chat-input-area-admin input {
+        border-radius: 1.5rem;
+      }
+      .chat-input-area-admin button.btn.primary {
+        width: 100%;
+        max-width: none;
+        border-radius: 1.5rem;
+      }
+      .no-chat-selected-overlay {
+          font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ADMIN NAVBAR (Optional: agar admin dashboard par bhi navbar chahte hain) -->
+  <!-- Aap index.html se navbar code yahan copy-paste kar sakte hain
+       aur usme login/profile link ko "Admin Profile" ya "Logout" mein badal sakte hain. -->
+
+  <div class="admin-dashboard">
+    <div class="sidebar">
+      <h2>Users</h2>
+      <ul class="user-list" id="user-list">
+        <!-- User list will be loaded here by JavaScript -->
+        <li style="text-align: center; color: var(--text); opacity: 0.7;">Loading users...</li>
+      </ul>
+    </div>
+
+    <div class="chat-main">
+        <div class="chat-header">
+            <h3 id="current-chat-user-name">Select a User to Chat</h3>
+        </div>
+        <div class="messages-area-admin" id="messages-area-admin">
+            <!-- Messages will be loaded here by JavaScript -->
+            <p style="text-align: center; color: var(--text); opacity: 0.7;">No chat selected.</p>
+        </div>
+        <div class="chat-input-area-admin">
+            <input type="text" id="admin-chat-message-input" placeholder="Type your message...">
+            <button id="admin-send-message-btn" class="btn primary">Send</button>
+        </div>
+
+        <div class="no-chat-selected-overlay" id="no-chat-selected-overlay">
+            Select a user from the left panel to start chatting.
+        </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <script>
+    // Firebase config (index.html se copy karein)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCu-j4jpX89hE3zihqb6Ibet22syYFDh1o",
+      authDomain: "scriptobot-1.firebaseapp.com",
+      projectId: "scriptobot-1",
+      storageBucket: "scriptobot-1.firebasestorage.app",
+      messagingSenderId: "463059915239",
+      appId: "1:463059915239:web:9a5446d23c2c19286b6d42",
+      measurementId: "G-X027DDY1PN"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // DOM Elements
+    const userListElement = document.getElementById('user-list');
+    const messagesAreaAdmin = document.getElementById('messages-area-admin');
+    const adminChatMessageInput = document.getElementById('admin-chat-message-input');
+    const adminSendMessageBtn = document.getElementById('admin-send-message-btn');
+    const currentChatUserName = document.getElementById('current-chat-user-name');
+    const noChatSelectedOverlay = document.getElementById('no-chat-selected-overlay');
+
+    let adminUser = null;
+    let selectedUserUID = null;
+    let unsubscribeFromMessages = null; // To stop listening to previous chat
+
+    // --- Admin Authorization (Simple check) ---
+    // Yahan apne Admin ka Firebase User UID (UID) daalein.
+    // Aap apna UID Firebase Console (Authentication > Users) se copy kar sakte hain.
+    // Agar multiple admins hain toh comma se alag karein, jaise: ["admin_uid_1", "admin_uid_2"]
+    const ADMIN_UIDS = ["960DpSiDeohIPzRPAX4TTalpAa62"]; // <--- Yeh ADMIN UID rules aur JS dono mein SAME hona chahiye
+
+    function isAdmin(uid) {
+        return ADMIN_UIDS.includes(uid);
+    }
+
+    // --- Helper Functions ---
+    function formatTimestamp(timestamp) {
+        if (!timestamp) return '';
+        const date = timestamp.toDate();
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' ' +
+               date.toLocaleDateString([], { month: 'numeric', day: 'numeric' });
+    }
+
+    function displayMessage(messageData) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+        messageDiv.classList.add(messageData.senderId === adminUser.uid ? 'admin' : 'user');
+
+        const senderName = document.createElement('div');
+        senderName.classList.add('message-sender');
+        senderName.textContent = messageData.senderName;
+
+        const messageText = document.createElement('div');
+        messageText.classList.add('message-text');
+        messageText.textContent = messageData.text;
+
+        const messageTimestamp = document.createElement('div');
+        messageTimestamp.classList.add('message-timestamp');
+        messageTimestamp.textContent = formatTimestamp(messageData.timestamp);
+
+        messageDiv.appendChild(senderName);
+        messageDiv.appendChild(messageText);
+        messageDiv.appendChild(messageTimestamp);
+        messagesAreaAdmin.appendChild(messageDiv);
+
+        // Scroll to bottom
+        messagesAreaAdmin.scrollTop = messagesAreaAdmin.scrollHeight;
+    }
+
+    async function sendMessageToUser() {
+        const text = adminChatMessageInput.value.trim();
+        if (text === '' || !adminUser || !selectedUserUID) return;
+
+        try {
+            const conversationId = selectedUserUID;
+
+            // Add message to Firestore
+            await db.collection('chats').doc(conversationId).collection('messages').add({
+                senderId: adminUser.uid,
+                senderName: 'Admin', // Admin's name in chat
+                text: text,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            // Update parent chat document lastUpdated and mark user for new messages
+            await db.collection('chats').doc(conversationId).set({
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                userHasNewMessages: true, // User ko naya message aaya hai
+                adminHasNewMessages: false
+            }, { merge: true });
+
+            adminChatMessageInput.value = ''; // Clear input
+
+        } catch (error) {
+            console.error("Error sending message:", error);
+            alert("Failed to send message.");
+        }
+    }
+
+    async function markUserMessagesAsRead(userId) {
+        if (!userId) return;
+        try {
+            await db.collection('chats').doc(userId).set({
+                adminHasNewMessages: false // Admin ne message dekh liye
+            }, { merge: true });
+        } catch (error) {
+            console.error("Error marking admin messages as read:", error);
+        }
+    }
+
+    function loadUserChat(userUID, userName) {
+        if (unsubscribeFromMessages) {
+            unsubscribeFromMessages(); // Stop listening to previous chat
+        }
+
+        selectedUserUID = userUID;
+        currentChatUserName.textContent = `Chat with ${userName}`;
+        messagesAreaAdmin.innerHTML = ''; // Clear previous messages
+        noChatSelectedOverlay.style.display = 'none'; // Hide overlay
+
+        // Update active class in sidebar
+        Array.from(userListElement.children).forEach(li => {
+            if (li.dataset.uid === userUID) {
+                li.classList.add('active');
+            } else {
+                li.classList.remove('active');
+            }
+        });
+
+        // Real-time listener for this user's messages
+        unsubscribeFromMessages = db.collection('chats').doc(userUID).collection('messages')
+          .orderBy('timestamp', 'asc')
+          .onSnapshot(snapshot => {
+            messagesAreaAdmin.innerHTML = ''; // Clear and re-render all for simplicity
+            snapshot.forEach(doc => {
+              displayMessage(doc.data());
+            });
+            markUserMessagesAsRead(userUID); // Admin ne chat kholi, toh admin ke liye messages read
+          }, error => {
+            console.error("Error listening to user chat:", error);
+            messagesAreaAdmin.innerHTML = '<p style="text-align: center; color: var(--accent);">Failed to load chat.</p>';
+          });
+    }
+
+
+    // --- Main Admin Logic ---
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        if (!isAdmin(user.uid)) {
+            alert("Access Denied: You are not an admin.");
+            window.location.href = "index.html"; // Redirect non-admins
+            return;
+        }
+        adminUser = user;
+        userListElement.innerHTML = ''; // Clear loading message
+
+        // Real-time listener for all chats to build user list
+        db.collection('chats')
+          .orderBy('lastUpdated', 'desc') // Sort by most recent activity
+          .onSnapshot(snapshot => {
+            userListElement.innerHTML = ''; // Clear list to rebuild
+            snapshot.forEach(doc => {
+              const chatData = doc.data();
+              const userUID = doc.id; // Conversation ID is the user UID for user-admin chat
+
+              // Fetch user details from 'users' collection
+              db.collection('users').doc(userUID).get().then(userDoc => {
+                  if (userDoc.exists) {
+                      const userData = userDoc.data();
+                      const userName = userData.name || userData.email || userUID; // Display name or email
+
+                      const listItem = document.createElement('li');
+                      listItem.dataset.uid = userUID;
+                      listItem.innerHTML = `
+                          <span class="user-name">${userName}</span>
+                          <span class="new-message-dot"></span>
+                      `;
+                      if (chatData.adminHasNewMessages) { // Agar admin ke liye naya message hai
+                          listItem.classList.add('has-new-messages');
+                      }
+                      listItem.addEventListener('click', () => {
+                          loadUserChat(userUID, userName);
+                          listItem.classList.remove('has-new-messages'); // Once clicked, remove dot
+                      });
+                      userListElement.appendChild(listItem);
+                  }
+              }).catch(error => {
+                  console.error("Error fetching user data for chat list:", error);
+              });
+            });
+
+          }, error => {
+            console.error("Error listening to chat list:", error);
+            userListElement.innerHTML = '<li style="text-align: center; color: var(--accent);">Failed to load users.</li>';
+          });
+
+      } else {
+        // Not logged in, redirect to login page
+        window.location.href = "login.html";
+      }
+    });
+
+    // Event Listeners
+    adminSendMessageBtn.addEventListener('click', sendMessageToUser);
+    adminChatMessageInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendMessageToUser();
+      }
+    });
+
+  </script>
+</body>
+</html>

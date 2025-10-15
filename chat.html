@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat with Admin - Scriptobot</title>
+  <style>
+    /* Base Reset */
+    * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+    /* Theme Variables (Assuming dark mode by default, adjust as per your main style.css) */
+    body {
+      --bg:#121212;
+      --text:#f5f5f5;
+      --accent:#e63946; /* Reddish accent */
+      --accent-darker: #c0303c;
+      --glass: rgba(0,0,0,0.4); /* Darker glass for dark mode */
+      --glass-darker: rgba(255,255,255,0.1); /* Lighter glass-darker for contrast */
+      --shadow-light: rgba(255,255,255,0.05); /* Lighter shadows for dark mode */
+      --shadow-dark: rgba(255,255,255,0.1);
+      background:var(--bg);
+      color:var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition:background 0.3s ease, color 0.3s ease;
+    }
+
+    /* Custom Scrollbar (for better aesthetics in WebKit browsers) */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 5px;
+      border: 2px solid var(--bg);
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-darker); }
+
+    /* Text Selection Style */
+    ::selection { background-color: var(--accent); color: var(--bg); }
+
+    /* Focus States (Accessibility & UX) */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+    input:focus-visible,
+    textarea:focus-visible,
+    button:focus-visible {
+      border-radius: 8px;
+    }
+
+    /* Chat Page Specific Styles */
+    .chat-container {
+      max-width: 800px;
+      margin: 4rem auto;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border-radius: 1.5rem;
+      box-shadow: 0 15px 30px var(--shadow-dark);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      height: 70vh; /* Adjust height as needed */
+      min-height: 400px; /* Minimum height for usability */
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .chat-header {
+      padding: 1.5rem 2rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      text-align: center;
+      display: flex; /* For aligning title and options button */
+      justify-content: space-between;
+      align-items: center;
+      position: relative; /* For options menu positioning */
+    }
+    .chat-header h2 {
+      color: var(--accent);
+      font-size: 2rem;
+      margin: 0 auto; /* Center title */
+      text-shadow: 1px 1px 5px rgba(230, 57, 70, 0.4);
+    }
+
+    /* 3-dots Options Button */
+    .options-btn {
+        background: none;
+        border: none;
+        color: var(--text);
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 50%;
+        transition: color 0.3s ease, background-color 0.2s ease;
+        position: absolute; /* Position to the right */
+        right: 1.5rem;
+    }
+    .options-btn:hover {
+        color: var(--accent);
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Background Options Menu */
+    .bg-options-menu {
+        position: absolute;
+        top: 100%; /* Below the header */
+        right: 1.5rem;
+        background: var(--glass);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 0.8rem;
+        padding: 0.8rem;
+        box-shadow: 0 5px 20px var(--shadow-dark);
+        z-index: 101; /* Above emoji picker */
+        display: none; /* Hidden by default */
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .bg-options-menu.visible {
+        display: flex;
+    }
+    .bg-options-menu label {
+        font-weight: bold;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+    .bg-option-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+    }
+    .bg-option-swatch {
+        width: 30px;
+        height: 30px;
+        border-radius: 5px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border-color 0.2s ease, transform 0.1s ease;
+    }
+    .bg-option-swatch:hover {
+        border-color: var(--accent);
+        transform: scale(1.05);
+    }
+    .bg-option-swatch.selected {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px var(--accent);
+    }
+    /* Specific swatches */
+    .bg-option-swatch[data-bg-color="default"] { background-color: transparent; border: 1px dashed var(--text); }
+    .bg-option-swatch[data-bg-color="#E0F7FA"] { background-color: #E0F7FA; } /* Light Blue */
+    .bg-option-swatch[data-bg-color="#F0F4C3"] { background-color: #F0F4C3; } /* Light Yellow */
+    .bg-option-swatch[data-bg-color="#F8BBD0"] { background-color: #F8BBD0; } /* Light Pink */
+    .bg-option-swatch[data-bg-color="#DCEDC8"] { background-color: #DCEDC8; } /* Light Green */
+    .bg-option-swatch[data-bg-pattern="pattern1"] { background-image: url('https://www.transparenttextures.com/patterns/clean-gray-paper.png'); background-size: cover; }
+    .bg-option-swatch[data-bg-pattern="pattern2"] { background-image: url('https://www.transparenttextures.com/patterns/crossword.png'); background-size: cover; }
+
+
+    .messages-area {
+      flex-grow: 1;
+      padding: 1.5rem 2rem;
+      overflow-y: auto; /* Scrollable message area */
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      background-color: var(--bg); /* Default background, can be overridden by user selection */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: background-image 0.5s ease, background-color 0.5s ease;
+    }
+    .message {
+      display: flex;
+      flex-direction: column;
+      max-width: 70%;
+      padding: 0.8rem 1.2rem;
+      border-radius: 1rem;
+      word-wrap: break-word; /* Ensure long words break */
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
+    }
+    
+    /* --- FIXED: Chat Message Colors & Alignment --- */
+    .message.user {
+      align-self: flex-end;
+      background: #fff; /* Pure white for user */
+      color: #333; /* Dark text for readability */
+      border-bottom-right-radius: 0.3rem; /* Tail effect */
+      border-top-left-radius: 1rem;
+      border-top-right-radius: 0.3rem;
+      border-bottom-left-radius: 1rem;
+    }
+    .message.admin {
+      align-self: flex-start;
+      background: #f7f7f7; /* Very light grey for admin, subtle distinction */
+      color: #333; /* Dark text for readability */
+      border-bottom-left-radius: 0.3rem; /* Tail effect */
+      border-top-left-radius: 0.3rem;
+      border-top-right-radius: 1rem;
+      border-bottom-right-radius: 1rem;
+    }
+    /* --- END FIX: Chat Message Colors & Alignment --- */
+
+    .message-sender {
+      font-weight: bold;
+      font-size: 0.8rem;
+      opacity: 0.8;
+      margin-bottom: 5px;
+      color: inherit; /* Inherit color from parent bubble */
+    }
+    .message-text {
+      font-size: 1rem;
+      color: inherit; /* Inherit color from parent bubble */
+    }
+    .message-timestamp {
+      font-size: 0.75rem;
+      opacity: 0.6;
+      margin-top: 5px;
+      align-self: flex-end;
+      color: inherit; /* Inherit color from parent bubble */
+    }
+
+    /* Input Area enhancements for Emoji */
+    .chat-input-area {
+      display: flex;
+      padding: 1.5rem 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      gap: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      align-items: flex-end;
+    }
+    .input-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      position: relative;
+    }
+    .icon-btn {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--text);
+        transition: color 0.3s ease, transform 0.2s ease, background-color 0.2s ease;
+        padding: 0.5rem;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .icon-btn:hover {
+        color: var(--accent);
+        background: rgba(255, 255, 255, 0.08);
+        transform: scale(1.05);
+    }
+    .chat-input-area input {
+      flex-grow: 1;
+      padding: 0.9rem 1.2rem;
+      border-radius: 2.5rem;
+      border: 2px solid var(--accent);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      box-shadow: inset 0 2px 5px var(--shadow-light);
+      transition: all 0.3s ease;
+    }
+    .chat-input-area input:focus {
+      outline: none;
+      border-color: var(--text);
+      box-shadow: 0 0 10px var(--accent);
+    }
+    .btn.primary {
+      padding: 0.85rem 1.5rem;
+      border-radius: 2.5rem;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+      white-space: nowrap;
+    }
+    .btn.primary:hover {
+      background: var(--accent-darker);
+      box-shadow: 0 6px 20px rgba(230, 57, 70, 0.6);
+      transform: translateY(-2px) scale(1.02);
+    }
+
+    /* Emoji Picker Styles */
+    .emoji-picker {
+        position: absolute;
+        bottom: 60px;
+        left: 0;
+        background: var(--glass);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 1rem;
+        padding: 0.8rem;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr); /* More emojis per row */
+        gap: 0.5rem;
+        box-shadow: 0 5px 20px var(--shadow-dark);
+        z-index: 100;
+        max-width: 280px; /* Wider picker */
+    }
+    .emoji-picker.hidden {
+        display: none;
+    }
+    .emoji {
+        cursor: pointer;
+        font-size: 1.3rem; /* Slightly smaller for more emojis */
+        padding: 0.3rem;
+        border-radius: 0.5rem;
+        transition: background-color 0.2s ease;
+        text-align: center;
+    }
+    .emoji:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .chat-container {
+        margin: 2rem auto;
+        height: 85vh;
+        border-radius: 1rem;
+        box-shadow: 0 8px 20px var(--shadow-dark);
+      }
+      .chat-header {
+        padding: 1rem 1.5rem;
+      }
+      .chat-header h2 {
+        font-size: 1.5rem;
+      }
+      .options-btn {
+        right: 1rem;
+        font-size: 1.3rem;
+      }
+      .bg-options-menu {
+        right: 1rem;
+      }
+      .messages-area {
+        padding: 1rem 1.5rem;
+      }
+      .message {
+        max-width: 85%;
+        padding: 0.7rem 1rem;
+      }
+      .chat-input-area {
+        padding: 1rem 1.5rem;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.8rem;
+      }
+      .input-actions {
+        justify-content: space-around;
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+      .emoji-picker {
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 120px;
+        max-width: 90%;
+        grid-template-columns: repeat(8, 1fr); /* More emojis on small screens */
+      }
+      .icon-btn {
+          width: 40px;
+          height: 40px;
+          font-size: 1.3rem;
+      }
+      .btn.primary {
+        width: 100%;
+        max-width: none;
+        border-radius: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="chat-container">
+    <div class="chat-header">
+      <h2>Chat with Admin</h2>
+      <button id="options-btn" class="options-btn">...</button>
+      <div id="bg-options-menu" class="bg-options-menu">
+          <label>Chat Background:</label>
+          <div class="bg-option-grid">
+              <div class="bg-option-swatch selected" data-bg-color="default" title="Default"></div>
+              <div class="bg-option-swatch" data-bg-color="#E0F7FA" title="Light Blue"></div>
+              <div class="bg-option-swatch" data-bg-color="#F0F4C3" title="Light Yellow"></div>
+              <div class="bg-option-swatch" data-bg-color="#F8BBD0" title="Light Pink"></div>
+              <div class="bg-option-swatch" data-bg-color="#DCEDC8" title="Light Green"></div>
+              <div class="bg-option-swatch" data-bg-pattern="pattern1" title="Paper Pattern"></div>
+              <div class="bg-option-swatch" data-bg-pattern="pattern2" title="Crossword Pattern"></div>
+          </div>
+      </div>
+    </div>
+    <div class="messages-area" id="messages-area">
+      <!-- Messages will be loaded here by JavaScript -->
+      <p style="text-align: center; color: var(--text); opacity: 0.7;">Loading messages...</p>
+    </div>
+    <div class="chat-input-area">
+      <div class="input-actions">
+        <button id="emoji-btn" class="icon-btn" aria-label="Add emoji">😀</button>
+        <div id="emoji-picker-container" class="emoji-picker hidden">
+            <!-- Expanded Emoji Grid -->
+            <span class="emoji" data-emoji="😀">😀</span>
+            <span class="emoji" data-emoji="😂">😂</span>
+            <span class="emoji" data-emoji="😍">😍</span>
+            <span class="emoji" data-emoji="👍">👍</span>
+            <span class="emoji" data-emoji="🙏">🙏</span>
+            <span class="emoji" data-emoji="🔥">🔥</span>
+            <span class="emoji" data-emoji="❤️">❤️</span>
+            <span class="emoji" data-emoji="💯">💯</span>
+            <span class="emoji" data-emoji="🎉">🎉</span>
+            <span class="emoji" data-emoji="🥳">🥳</span>
+            <span class="emoji" data-emoji="💡">💡</span>
+            <span class="emoji" data-emoji="😎">😎</span>
+            <span class="emoji" data-emoji="🤔">🤔</span>
+            <span class="emoji" data-emoji="👏">👏</span>
+            <span class="emoji" data-emoji="👋">👋</span>
+            <span class="emoji" data-emoji="🌟">🌟</span>
+            <span class="emoji" data-emoji="🚀">🚀</span>
+            <span class="emoji" data-emoji="✅">✅</span>
+            <span class="emoji" data-emoji="❌">❌</span>
+            <span class="emoji" data-emoji="👍">👍</span>
+            <span class="emoji" data-emoji="👎">👎</span>
+            <span class="emoji" data-emoji="🥺">🥺</span>
+            <span class="emoji" data-emoji="😭">😭</span>
+            <span class="emoji" data-emoji="😅">😅</span>
+            <span class="emoji" data-emoji="😊">😊</span>
+            <span class="emoji" data-emoji="🤩">🤩</span>
+            <span class="emoji" data-emoji="🤯">🤯</span>
+            <span class="emoji" data-emoji="😴">😴</span>
+            <span class="emoji" data-emoji="🤫">🤫</span>
+            <span class="emoji" data-emoji="😬">😬</span>
+            <span class="emoji" data-emoji="🤔">🤔</span>
+            <span class="emoji" data-emoji="🧐">🧐</span>
+            <span class="emoji" data-emoji="😏">😏</span>
+            <span class="emoji" data-emoji="🙃">🙃</span>
+            <span class="emoji" data-emoji="😇">😇</span>
+            <span class="emoji" data-emoji="🥰">🥰</span>
+            <span class="emoji" data-emoji="🥳">🥳</span>
+            <span class="emoji" data-emoji="😎">😎</span>
+            <span class="emoji" data-emoji="🤑">🤑</span>
+            <span class="emoji" data-emoji="🤩">🤩</span>
+            <span class="emoji" data-emoji="💯">💯</span>
+            <span class="emoji" data-emoji="🔥">🔥</span>
+            <span class="emoji" data-emoji="💫">💫</span>
+            <span class="emoji" data-emoji="✨">✨</span>
+            <span class="emoji" data-emoji="💥">💥</span>
+            <span class="emoji" data-emoji="⚡">⚡</span>
+            <span class="emoji" data-emoji="🌈">🌈</span>
+            <span class="emoji" data-emoji="⭐">⭐</span>
+            <span class="emoji" data-emoji="💖">💖</span>
+            <span class="emoji" data-emoji="💙">💙</span>
+            <span class="emoji" data-emoji="💚">💚</span>
+            <span class="emoji" data-emoji="💛">💛</span>
+        </div>
+      </div>
+      <input type="text" id="chat-message-input" placeholder="Type your message...">
+      <button id="send-message-btn" class="btn primary">Send</button>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCu-j4jpX89hE3zihqb6Ibet22syYFDh1o",
+      authDomain: "scriptobot-1.firebaseapp.com",
+      projectId: "scriptobot-1",
+      storageBucket: "scriptobot-1.firebasestorage.app", // Storage bucket is needed if you re-add file upload
+      messagingSenderId: "463059915239",
+      appId: "1:463059915239:web:9a5446d23c2c19286b6d42",
+      measurementId: "G-X027DDY1PN"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    // Firebase Storage SDK hata diya gaya hai jaisa aapne kaha.
+    // const storage = firebase.storage(); // Ab iski zaroorat nahi agar files upload nahi ho rahi.
+
+    // DOM Elements
+    const messagesArea = document.getElementById('messages-area');
+    const chatMessageInput = document.getElementById('chat-message-input');
+    const sendMessageBtn = document.getElementById('send-message-btn');
+    const emojiBtn = document.getElementById('emoji-btn');
+    const emojiPickerContainer = document.getElementById('emoji-picker-container');
+    const optionsBtn = document.getElementById('options-btn');
+    const bgOptionsMenu = document.getElementById('bg-options-menu');
+    const bgOptionSwatches = document.querySelectorAll('.bg-option-swatch');
+
+    let currentUser = null;
+    const adminUID = "YOUR_ADMIN_FIREBASE_UID"; // <-- Yahan apne Admin ka asal UID daalein
+
+    // --- Helper Functions ---
+    function formatTimestamp(timestamp) {
+        if (!timestamp) return '';
+        const date = timestamp.toDate();
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' ' +
+               date.toLocaleDateString([], { month: 'numeric', day: 'numeric' });
+    }
+
+    function displayMessage(messageData) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+        messageDiv.classList.add(messageData.senderId === currentUser.uid ? 'user' : 'admin');
+
+        const senderName = document.createElement('div');
+        senderName.classList.add('message-sender');
+        senderName.textContent = messageData.senderName;
+
+        // Ab sirf text messages handle kiye ja rahe hain
+        if (messageData.text) {
+            const messageText = document.createElement('div');
+            messageText.classList.add('message-text');
+            messageText.textContent = messageData.text;
+            messageDiv.appendChild(messageText);
+        }
+
+        const messageTimestamp = document.createElement('div');
+        messageTimestamp.classList.add('message-timestamp');
+        messageTimestamp.textContent = formatTimestamp(messageData.timestamp);
+
+        messageDiv.prepend(senderName);
+        messageDiv.appendChild(messageTimestamp);
+        messagesArea.appendChild(messageDiv);
+
+        messagesArea.scrollTop = messagesArea.scrollHeight;
+    }
+
+    async function sendMessage() {
+        const text = chatMessageInput.value.trim();
+        if (text === '' || !currentUser) return;
+
+        try {
+            const conversationId = currentUser.uid;
+
+            const messagePayload = {
+                senderId: currentUser.uid,
+                senderName: currentUser.displayName || 'User',
+                text: text, // Ab sirf text bhej rahe hain
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            await db.collection('chats').doc(conversationId).collection('messages').add(messagePayload);
+
+            await db.collection('chats').doc(conversationId).set({
+                participants: [currentUser.uid, adminUID],
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                adminHasNewMessages: true,
+                userHasNewMessages: false
+            }, { merge: true });
+
+            chatMessageInput.value = '';
+
+        } catch (error) {
+            console.error("Error sending message:", error);
+            alert("Failed to send message.");
+        }
+    }
+
+    async function markMessagesAsRead(userId) {
+        if (!userId) return;
+        try {
+            await db.collection('chats').doc(userId).set({
+                userHasNewMessages: false
+            }, { merge: true });
+        } catch (error) {
+            console.error("Error marking messages as read:", error);
+        }
+    }
+
+    // --- Chat Background Logic ---
+    const backgroundPatterns = {
+        "pattern1": "url('https://www.transparenttextures.com/patterns/clean-gray-paper.png')",
+        "pattern2": "url('https://www.transparenttextures.com/patterns/crossword.png')",
+        // Add more patterns here if needed, or use local images
+    };
+
+    function applyChatBackground(selection) {
+        messagesArea.style.backgroundImage = 'none'; // Reset image
+        messagesArea.style.backgroundColor = 'var(--bg)'; // Reset color
+
+        if (selection === 'default') {
+            // Default background apply (CSS variables will take over)
+        } else if (selection.startsWith('#')) {
+            messagesArea.style.backgroundColor = selection;
+        } else if (backgroundPatterns[selection]) {
+            messagesArea.style.backgroundImage = backgroundPatterns[selection];
+            messagesArea.style.backgroundColor = 'transparent'; // So pattern is visible
+        }
+        localStorage.setItem('chatBackground', selection);
+        updateSelectedSwatch(selection);
+    }
+
+    function loadChatBackground() {
+        const savedBackground = localStorage.getItem('chatBackground');
+        if (savedBackground) {
+            applyChatBackground(savedBackground);
+        } else {
+            applyChatBackground('default'); // If no background saved, apply default
+        }
+    }
+
+    function updateSelectedSwatch(currentSelection) {
+        bgOptionSwatches.forEach(swatch => {
+            swatch.classList.remove('selected');
+            const swatchColor = swatch.dataset.bgColor;
+            const swatchPattern = swatch.dataset.bgPattern;
+
+            if (swatchColor && swatchColor === currentSelection) {
+                swatch.classList.add('selected');
+            } else if (swatchPattern && swatchPattern === currentSelection) {
+                swatch.classList.add('selected');
+            } else if (currentSelection === 'default' && (swatchColor === 'default' || swatchColor === undefined && swatchPattern === undefined)) {
+                // Handle default selection (e.g., first swatch)
+                swatch.classList.add('selected');
+            }
+        });
+    }
+
+    // --- Main Logic ---
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        currentUser = user;
+        const conversationId = currentUser.uid;
+
+        messagesArea.innerHTML = ''; // Clear loading message
+
+        loadChatBackground(); // Load saved background on auth state change
+
+        db.collection('chats').doc(conversationId).collection('messages')
+          .orderBy('timestamp', 'asc')
+          .onSnapshot(snapshot => {
+            snapshot.docChanges().forEach(change => {
+              if (change.type === 'added') {
+                displayMessage(change.doc.data());
+              }
+            });
+            markMessagesAsRead(currentUser.uid);
+          }, error => {
+            console.error("Error listening to messages:", error);
+            messagesArea.innerHTML = '<p style="text-align: center; color: var(--accent);">Failed to load messages.</p>';
+          });
+
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+
+    // --- Event Listeners ---
+    sendMessageBtn.addEventListener('click', sendMessage);
+    chatMessageInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+
+    // Emoji Picker Logic
+    emojiBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        emojiPickerContainer.classList.toggle('hidden');
+        bgOptionsMenu.classList.remove('visible'); // Close background menu if open
+    });
+
+    emojiPickerContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('emoji')) {
+            chatMessageInput.value += e.target.dataset.emoji;
+            emojiPickerContainer.classList.add('hidden');
+            chatMessageInput.focus();
+        }
+    });
+
+    // 3-dots Options Menu Logic
+    optionsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        bgOptionsMenu.classList.toggle('visible');
+        emojiPickerContainer.classList.add('hidden'); // Close emoji picker if open
+        // Update selected swatch state when menu opens
+        const currentBackground = localStorage.getItem('chatBackground') || 'default';
+        updateSelectedSwatch(currentBackground);
+    });
+
+    // Background Swatch selection
+    bgOptionsMenu.addEventListener('click', (e) => {
+        const swatch = e.target.closest('.bg-option-swatch');
+        if (swatch) {
+            const bgColor = swatch.dataset.bgColor;
+            const bgPattern = swatch.dataset.bgPattern;
+            if (bgColor) {
+                applyChatBackground(bgColor);
+            } else if (bgPattern) {
+                applyChatBackground(bgPattern);
+            }
+            bgOptionsMenu.classList.remove('visible'); // Close menu after selection
+        }
+    });
+
+
+    // Hide picker/menu if clicking outside
+    document.addEventListener('click', (e) => {
+        if (!emojiPickerContainer.contains(e.target) && e.target !== emojiBtn) {
+            emojiPickerContainer.classList.add('hidden');
+        }
+        if (!bgOptionsMenu.contains(e.target) && e.target !== optionsBtn) {
+            bgOptionsMenu.classList.remove('visible');
+        }
+    });
+
+    // Initial background load
+    document.addEventListener('DOMContentLoaded', loadChatBackground);
+
+  </script>
+</body>
+</html>

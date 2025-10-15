@@ -1,0 +1,1730 @@
+/* Base Reset */
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: Arial, sans-serif; background:var(--bg); color:var(--text); transition:0.3s; }
+
+/* Theme Variables */
+body { /* Dark theme variables as default */
+  --bg:#121212;
+  --text:#f5f5f5;
+  --glass: rgba(0,0,0,0.3);
+}
+
+/* Navbar */
+.site-header { backdrop-filter: blur(10px); background: var(--glass); position: sticky; top:0; z-index:100;}
+.navbar { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem;}
+.brand { font-size:1.5rem; font-weight:bold; color:var(--accent); text-decoration:none; }
+.nav-links { display:flex; list-style:none; gap:1.5rem; }
+.nav-links a { text-decoration:none; color:var(--text); font-weight:500;}
+.controls { display:flex; gap:1rem; align-items:center;}
+.hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer;}
+.hamburger span { width:25px; height:3px; background:var(--text); border-radius:3px; }
+
+/* Hero */
+.hero { display:flex; justify-content:space-between; align-items:center; padding:4rem 2rem; gap:2rem; }
+.hero-left { flex:1; padding:2rem; border-radius:1rem; backdrop-filter:blur(15px); background:var(--glass);}
+.hero-left h1 { font-size:2.5rem; margin-bottom:1rem; }
+.accent { color:var(--accent); }
+.lead { margin-bottom:1.5rem; }
+.hero-cta { display:flex; gap:1rem; margin-bottom:1rem; }
+.btn { padding:0.75rem 1.5rem; border-radius:2rem; font-weight:bold; text-decoration:none; transition:0.3s; }
+.btn.primary { background:var(--accent); color:#fff; }
+.btn.outline { border:2px solid var(--accent); color:var(--accent);}
+.btn:hover { opacity:0.8; }
+.micro-hint { font-size:0.9rem; opacity:0.7; margin-top:1rem; }
+
+.hero-right { flex:1; display:flex; justify-content:center; }
+.hero-video { width:100%; max-width:500px; border-radius:1rem; box-shadow:0 8px 25px rgba(0,0,0,0.2); }
+
+/* Services Preview */
+.services-preview { padding:4rem 2rem; text-align:center; }
+.services-preview h2 { font-size:2rem; margin-bottom:2rem; }
+.services-cards { display:flex; gap:2rem; justify-content:center; flex-wrap:wrap; margin-bottom:2rem; }
+.card { flex:1 1 250px; padding:1.5rem; border-radius:1rem; backdrop-filter:blur(15px); background:var(--glass); transition:0.3s;}
+.card:hover { transform:translateY(-5px); box-shadow:0 10px 20px rgba(0,0,0,0.2); }
+
+/* Footer */
+.site-footer { padding:2rem; text-align:center; background:var(--glass); backdrop-filter:blur(10px); margin-top:2rem; }
+.site-footer .socials { margin-top:1rem; display:flex; justify-content:center; gap:1rem; }
+
+/* Responsive */
+@media (max-width:768px){
+  .nav-links { display:none; flex-direction:column; position:absolute; top:70px; right:20px; background:var(--glass); padding:1rem; border-radius:1rem; }
+  .nav-links.active { display:flex; }
+  .hamburger { display:flex; }
+  .hero { flex-direction:column; gap:2rem; }
+  .services-cards { flex-direction:column; gap:1.5rem; }
+}
+/* footer */
+/* Base Reset */
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: Arial, sans-serif; background:var(--bg); color:var(--text); transition:0.3s; }
+
+/* Theme Variables */
+body { /* Dark theme variables as default */
+  --bg:#121212;
+  --text:#f5f5f5;
+  --glass: rgba(0,0,0,0.3);
+}
+
+/*Navbar */
+.site-header { backdrop-filter: blur(10px); background: var(--glass); position: sticky; top:0; z-index:100;}
+.navbar { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem;}
+.brand { font-size:1.5rem; font-weight:bold; color:var(--accent); text-decoration:none; }
+.nav-links { display:flex; list-style:none; gap:1.5rem; }
+.nav-links a { text-decoration:none; color:var(--text); font-weight:500;}
+.controls { display:flex; gap:1rem; align-items:center;}
+.hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer;}
+.hamburger span { width:25px; height:3px; background:var(--text); border-radius:3px; }
+
+/* Hero */
+.hero { display:flex; justify-content:space-between; align-items:center; padding:4rem 2rem; gap:2rem; }
+.hero-left { flex:1; padding:2rem; border-radius:1rem; backdrop-filter:blur(15px); background:var(--glass);}
+.hero-left h1 { font-size:2.5rem; margin-bottom:1rem; }
+.accent { color:var(--accent); }
+.lead { margin-bottom:1.5rem; }
+.hero-cta { display:flex; gap:1rem; margin-bottom:1rem; }
+.btn { padding:0.75rem 1.5rem; border-radius:2rem; font-weight:bold; text-decoration:none; transition:0.3s; }
+.btn.primary { background:var(--accent); color:#fff; }
+.btn.outline { border:2px solid var(--accent); color:var(--accent);}
+.btn:hover { opacity:0.8; }
+.micro-hint { font-size:0.9rem; opacity:0.7; margin-top:1rem; }
+
+.hero-right { flex:1; display:flex; justify-content:center; }
+.hero-video { width:100%; max-width:500px; border-radius:1rem; box-shadow:0 8px 25px rgba(0,0,0,0.2); }
+
+/* Services Preview */
+.services-preview { padding:4rem 2rem; text-align:center; }
+.services-preview h2 { font-size:2rem; margin-bottom:2rem; }
+.services-cards { display:flex; gap:2rem; justify-content:center; flex-wrap:wrap; margin-bottom:2rem; }
+.card { flex:1 1 250px; padding:1.5rem; border-radius:1rem; backdrop-filter:blur(15px); background:var(--glass); transition:0.3s;}
+.card:hover { transform:translateY(-5px); box-shadow:0 10px 20px rgba(0,0,0,0.2); }
+
+/* Footer Styles */
+.site-footer {
+  padding: 3rem 2rem; /* Increased padding for more content */
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  margin-top: 2rem;
+  color: var(--text); /* Ensure text color is applied */
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap; /* Allow sections to wrap on smaller screens */
+  gap: 2rem; /* Space between footer sections */
+  max-width: 1200px; /* Limit width of content */
+  margin: 0 auto; /* Center the content */
+}
+
+.footer-section {
+  flex: 1; /* Allow sections to grow */
+  min-width: 200px; /* Minimum width before wrapping */
+}
+
+.footer-section h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: var(--accent); /* Use accent color for headings */
+}
+
+.footer-section p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 0.75rem;
+}
+
+.footer-section ul li a {
+  text-decoration: none;
+  color: var(--text);
+  transition: color 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+  color: var(--accent);
+}
+
+.footer-section .social-links {
+  margin-top: 1.5rem; /* Space above social links */
+  display: flex;
+  gap: 15px; /* Spacing between social buttons */
+  flex-wrap: wrap; /* Allow buttons to wrap */
+}
+
+/* Social Button Styles (re-using your .Btn logic adapted to .social-btn) */
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition-duration: .3s;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+  text-decoration: none; /* Remove underline from anchor tag */
+}
+
+.social-btn .sign {
+  width: 100%;
+  transition-duration: .3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-btn .sign svg {
+  width: 30px; /* Default icon size */
+  height: 30px; /* Ensure consistent height */
+}
+
+.social-btn .sign svg path {
+  fill: white; /* Icon color */
+}
+
+.social-btn .text {
+  position: absolute;
+  right: 0%;
+  width: 0%;
+  opacity: 0;
+  color: white;
+  font-size: 1.2em;
+  font-weight: 600;
+  transition-duration: .3s;
+  white-space: nowrap;
+}
+
+/* Specific Facebook SVG handling */
+.social-btn.facebook .sign svg {
+  stroke: currentColor; /* Ensure the stroke on Facebook SVG inherits color */
+}
+
+/* Specific Button Colors */
+.social-btn.whatsapp {
+  background-color: #00d757; /* WhatsApp green */
+}
+
+.social-btn.facebook {
+  background-color: #1877f2; /* Facebook blue */
+}
+
+/* Newsletter Form Styling */
+.footer-section.newsletter form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.footer-section.newsletter input[type="email"] {
+  flex-grow: 1; /* Allow input to take available space */
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--accent); /* Use accent for input border */
+  border-radius: 2rem;
+  background: var(--bg); /* Inherit background */
+  color: var(--text);
+  transition: border-color 0.3s ease;
+}
+
+.footer-section.newsletter input[type="email"]:focus {
+  outline: none;
+  border-color: var(--accent); /* Keep accent on focus */
+}
+
+.footer-section.newsletter .btn.primary {
+  /* Styles for the subscribe button are inherited from global .btn.primary */
+  /* Ensure it fits the form, might need adjustments if not */
+}
+
+
+/* Hover effects for social buttons */
+.social-btn:hover {
+  width: 150px;
+  border-radius: 40px;
+  transition-duration: .3s;
+}
+
+.social-btn:hover .sign {
+  width: 30%;
+  transition-duration: .3s;
+  padding-left: 10px;
+}
+
+.social-btn:hover .text {
+  opacity: 1;
+  width: 70%;
+  transition-duration: .3s;
+  padding-right: 10px;
+}
+
+.social-btn:active {
+  transform: translate(2px ,2px);
+}
+
+
+/* Footer Bottom Bar */
+.footer-bottom {
+  padding-top: 1.5rem;
+  margin-top: 2rem;
+  border-top: 1px solid var(--glass); /* Subtle separator */
+  text-align: center;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column; /* Stack sections vertically */
+    align-items: center; /* Center sections */
+  }
+  .footer-section {
+    text-align: center; /* Center text within sections */
+    width: 100%; /* Full width for stacked sections */
+    min-width: unset; /* Remove min-width */
+  }
+  .footer-section .social-links {
+    justify-content: center; /* Center social buttons */
+  }
+  .footer-section.newsletter form {
+    flex-direction: column; /* Stack input and button */
+    align-items: center;
+  }
+  .footer-section.newsletter input[type="email"] {
+    width: 100%; /* Full width for input */
+    max-width: 300px; /* Limit max width */
+  }
+  .footer-section.newsletter button {
+    width: 100%; /* Full width for button */
+    max-width: 300px; /* Limit max width */
+  }
+}
+.service-icon {
+  width:50px;
+  margin-bottom:1rem;
+}
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow:0 15px 30px rgba(0,0,0,0.2);
+  transition:0.3s;
+}
+.portfolio-preview {
+  padding:4rem 2rem;
+  text-align:center;
+}
+.portfolio-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
+  gap:1.5rem;
+  margin-bottom:2rem;
+}
+.portfolio-item img {
+  width:100%;
+  border-radius:1rem;
+  transition:0.3s;
+}
+.portfolio-item img:hover {
+  transform:scale(1.05);
+}
+/* review */
+.reviews { padding:4rem 2rem; text-align:center; }
+.reviews h2 { font-size:2rem; margin-bottom:2rem; }
+.reviews-container { display:flex; flex-wrap:wrap; justify-content:center; gap:1.5rem; }
+.review-card { flex:1 1 250px; padding:1.5rem; border-radius:1rem; backdrop-filter:blur(15px); background:var(--glass); }
+.review-card h3 { margin-bottom:0.5rem; color:var(--accent); }
+.review-card p { margin-bottom:0.5rem; }
+/* text animation */
+/* Hero text animations */
+.hero-title {
+  font-size: 2.5rem;
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: fadeSlideIn 1s forwards;
+}
+
+.hero-lead .animated-word {
+  opacity: 0;
+  display: inline-block;
+  animation: wordFade 0.8s forwards;
+}
+
+.hero-lead .animated-word:nth-child(1) { animation-delay: 0.3s; }
+.hero-lead .animated-word:nth-child(2) { animation-delay: 0.6s; }
+.hero-lead .animated-word:nth-child(3) { animation-delay: 0.9s; }
+
+/* CTA buttons animation */
+.hero-cta .btn {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeSlideIn 0.8s forwards;
+}
+
+.hero-cta .btn.primary { animation-delay: 1.2s; }
+.hero-cta .btn.outline { animation-delay: 1.4s; }
+
+/* Micro hint fade */
+.micro-hint {
+  opacity: 0;
+  animation: fadeSlideIn 0.8s forwards;
+  animation-delay: 1.6s;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+/* Keyframes */
+@keyframes fadeSlideIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes wordFade {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Optional hover for CTA buttons */
+.hero-cta .btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+/* contact */
+/* Contact Section */
+.contact-section {
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.contact-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--accent);
+}
+
+.contact-section p {
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  color: var(--text);
+  opacity: 0.8;
+}
+
+.contact-section .container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  border-radius: 1rem;
+  backdrop-filter: blur(15px);
+  background: var(--glass);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Form Styles */
+#contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  text-align: left;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+  color: var(--text);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: 2px solid transparent;
+  border-radius: 0.8rem;
+  font-size: 1rem;
+  background: var(--bg);
+  color: var(--text);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index:1;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 8px rgba(230, 57, 70, 0.3);
+}
+
+textarea {
+  resize: none;
+  min-height: 120px;
+}
+
+/* Button inherits global .btn */
+#contact-form .btn {
+  align-self: flex-start;
+}
+.review-form {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  backdrop-filter: blur(15px);
+  background: var(--glass);
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+.review-form h3 {
+  margin-bottom: 1rem;
+  color: var(--accent);
+}
+.review-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.review-form input,
+.review-form textarea {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 2px solid var(--accent);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 1rem;
+  resize: vertical;
+}
+.review-form button {
+  align-self: flex-start;
+}
+/* login/singup */
+/* Base Reset */
+* { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
+body { background:var(--bg); color:var(--text); transition:0.3s; }
+
+/* Theme Variables */
+:root {
+  --bg: #f5f5f5;
+  --text:#222;
+  --accent:#e63946;
+  --glass: rgba(255,255,255,0.3);
+}
+body.dark { --bg:#121212; --text:#f5f5f5; --glass: rgba(0,0,0,0.3); }
+
+/* Center the form */
+.auth-section {
+  max-width: 400px;
+  margin: 5% auto;
+  padding: 2rem;
+  border-radius: 1rem;
+  background: var(--glass);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated background shapes */
+.auth-section::before,
+.auth-section::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.auth-section::before {
+  width: 200px; height: 200px;
+  background: rgba(230,57,70,0.2);
+  top: -50px; left: -50px;
+  animation: float1 6s ease-in-out infinite;
+}
+
+.auth-section::after {
+  width: 150px; height: 150px;
+  background: rgba(101,31,255,0.2);
+  bottom: -40px; right: -40px;
+  animation: float2 5s ease-in-out infinite;
+}
+
+@keyframes float1 {
+  0%,100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(20px) rotate(45deg); }
+}
+
+@keyframes float2 {
+  0%,100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(-30deg); }
+}
+
+/* Headings & paragraphs */
+.auth-section h2 { font-size:2rem; margin-bottom:0.5rem; color:var(--accent); position: relative; z-index:1; }
+.auth-section p { margin-bottom:1.5rem; color:var(--text); z-index:1; position: relative; }
+
+/* Input Fields */
+.auth-section input {
+  width: 90%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 2rem;
+  border: 2px solid var(--accent);
+  background: var(--bg);
+  color: var(--text);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index:1;
+}
+.auth-section input:focus {
+  outline: none;
+  border-color: var(--text);
+  box-shadow: 0 0 10px var(--accent);
+}
+
+/* Buttons */
+.btn.primary {
+  padding: 0.75rem 2rem;
+  border-radius: 2rem;
+  background: var(--accent);
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+  position: relative;
+  z-index:1;
+}
+.btn.primary:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* Links */
+.auth-section a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.3s;
+  z-index:1;
+  position: relative;
+}
+.auth-section a:hover { color: #222; }
+
+/* Messages */
+#signup-msg, #login-msg { margin-top: 1rem; z-index:1; position: relative; }
+
+/* Responsive */
+@media (max-width:480px){
+  .auth-section { width: 90%; padding: 1.5rem; }
+}
+/* shack backgorund login/singup */
+/* Video Background */
+.video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1; /* behind all content */
+}
+
+.video-background video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.6); /* Optional: dim for text readability */
+}
+
+/* Content on top of video */
+.content {
+  position: relative;
+  z-index: 10;
+  color: white; /* adjust text color */
+  text-align: center;
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+}
+/* From Uiverse.io by csozidev */ 
+/* Cool share button made by: csozi | Website: english.csozi.hu*/
+
+.buttons {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: fit-content;
+  width: fit-content;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+.buttons:hover {
+  padding: 60px;
+}
+
+.buttons:hover .button {
+  box-shadow: 5px 5px 12px #cacaca, -5px -5px 12px #ffffff;
+}
+
+.main-button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  border: none;
+  background: #e8e8e8;
+  box-shadow: 5px 5px 12px #cacaca, -5px -5px 12px #ffffff;
+  border-radius: 50%;
+  transition: 0.2s;
+  z-index: 100;
+}
+
+.button {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  border: none;
+  background: #e8e8e8;
+  box-shadow: 5px 5px 12px rgba(202, 202, 202, 0), -5px -5px 12px rgba(255, 255, 255, 0);
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+.discord-button:hover {
+  background: #5865F2;
+}
+
+.buttons:hover .discord-button {
+  translate: 70px 0px;
+  box-shadow: 5px 5px 12px #cacaca, -5px -5px 12px #ffffff;
+}
+
+.twitter-button:hover {
+  background: #1CA1F1;
+}
+
+.buttons:hover .twitter-button {
+  translate: 47px -47px;
+  box-shadow: 5px 5px 12px #cacaca, -5px -5px 12px #ffffff;
+}
+
+.reddit-button:hover {
+  background: #FF4500;
+}
+
+.buttons:hover .reddit-button {
+  translate: 0px -70px;
+  box-shadow: 5px 5px 12px #cacaca, -5px -5px 12px #ffffff;
+}
+
+.messenger-button:hover {
+  background: #0093FF;
+}
+
+.buttons:hover .messenger-button {
+  translate: -47px -47px;
+  box-shadow: 5px 5px 12px #cacaca, -5px -5px 12px #ffffff;
+}
+
+.pinterest-button:hover {
+  background: #F0002A;
+}
+
+.buttons:hover .pinterest-button {
+  translate: -70px 0px;
+  box-shadow: 5px 5px 12px #cacaca, -5px -5px 12px #ffffff;
+}
+
+.instagram-button:hover {
+  background: #F914AF;
+}
+
+.buttons:hover .instagram-button {
+  translate: -47px 47px;
+  box-shadow: 5px 5px 12px #cacaca, -5px -5px 12px #ffffff;
+}
+
+.snapchat-button:hover {
+  background: #FFFC00;
+}
+
+.buttons:hover .snapchat-button {
+  translate: 0px 70px;
+  box-shadow: 5px 5px 12px #cacaca, -5px -5px 12px #ffffff;
+}
+
+.whatsapp-button:hover {
+  background: #25D366;
+}
+
+.buttons:hover .whatsapp-button {
+  translate: 47px 47px;
+  box-shadow: 5px 5px 12px #cacaca, -5px -5px 12px #ffffff;
+}
+
+/* fake dynamic card */
+.reviews-carousel {
+  padding: 80px 20px;
+  background: radial-gradient(circle at top left, #0d0d0d, #151515 70%);
+  color: #fff;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.reviews-carousel h2 {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  background: linear-gradient(90deg, #ffffff, #e70404);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Slider container */
+.slider-container {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+/* Track for scrolling cards */
+.slider-track {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.6s ease-in-out;
+}
+
+/* Individual review cards */
+.review-card {
+  flex: 0 0 300px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 20px;
+  text-align: left;
+  backdrop-filter: blur(10px);
+  transition: all 0.4s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 8px 25px rgba(255, 59, 59, 0.25);
+}
+
+.review-card img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 3px solid #ff3b3b;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.review-card h3 {
+  color: #ffdca8;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.review-card h3 span {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.review-card p {
+  color: #eee;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.stars {
+  color: #ffcc4d;
+  font-size: 1.2rem;
+}
+
+/* Slider buttons */
+.slider-btn {
+  position: absolute;
+  top: 45%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  font-size: 1.8rem;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.slider-btn:hover {
+  background: rgba(255, 59, 59, 0.6);
+  border-color: #ff3b3b;
+}
+
+.slider-btn.left { left: -10px; }
+.slider-btn.right { right: -10px; }
+
+@media (max-width: 768px) {
+  .review-card { flex: 0 0 80%; }
+  .slider-btn { display: none; }
+}
+/* new styles */
+
+/* From Uiverse.io by vinodjangid07 */ 
+.reward-btn {
+  width: 120px;
+  height: 40px;
+  background-color: #181210;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.IconContainer {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.IconContainer svg {
+  width: 40%;
+  z-index: 3;
+}
+.box-top {
+  transition: all 0.3s;
+}
+.text {
+  width: 70px;
+  height: 100%;
+  font-size: 13px;
+  color: #f04c00;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-weight: 600;
+}
+.reward-btn:hover .IconContainer .box-top {
+  transform: translateY(-5px);
+}
+.reward-btn:hover {
+  background-color: #202531;
+}
+.reward-btn:hover .coin {
+  transform: translateY(-5px);
+  transition-delay: 0.2s;
+}
+.coin {
+  width: 25%;
+  height: 25%;
+  background-color: #e4d61a;
+  position: absolute;
+  border-radius: 50%;
+  transition: all 0.3s;
+  z-index: 1;
+  border: 2px solid #ffe956;
+  margin-top: 4px;
+}
+
+
+/* new css */
+/* --- Polish & Enhancements --- */
+
+/* General Body Enhancements */
+body {
+  line-height: 1.6; /* Improves readability of longer texts */
+  -webkit-font-smoothing: antialiased; /* Smoother fonts on WebKit browsers */
+  -moz-osx-font-smoothing: grayscale; /* Smoother fonts on Firefox OSX */
+  text-rendering: optimizeLegibility; /* Optimizes text rendering for legibility */
+}
+
+/* Custom Scrollbar (for better aesthetics in WebKit browsers) */
+::-webkit-scrollbar {
+  width: 10px; /* Width of the scrollbar */
+}
+::-webkit-scrollbar-track {
+  background: var(--bg); /* Background of the scrollbar track */
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent); /* Color of the scrollbar thumb */
+  border-radius: 5px; /* Rounded corners for the thumb */
+  border: 2px solid var(--bg); /* Border around the thumb to match theme */
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent); /* Keep accent, or slightly darker if a darker accent var is available */
+}
+
+/* Text Selection Style */
+::selection {
+  background-color: var(--accent); /* Background color of selected text */
+  color: var(--bg); /* Text color when selected */
+}
+
+/* Focus States (Accessibility & UX) */
+:focus-visible {
+  outline: 2px solid var(--accent); /* Outline using accent color */
+  outline-offset: 3px; /* Space between the element and the outline */
+  border-radius: 4px; /* Default border-radius for outline */
+}
+/* Adjust border-radius for elements that already have rounded corners */
+.btn:focus-visible,
+.hero-left:focus-visible,
+.card:focus-visible,
+.review-card:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  border-radius: 8px; /* More generous for cards/buttons */
+}
+
+
+/* Navbar Enhancements */
+.site-header {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+.nav-links a {
+  position: relative; /* Needed for ::after pseudo-element positioning */
+  font-weight: bold;
+  color: var(--text);
+  transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -5px; /* Position the underline below the text */
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width 0.3s ease-out; /* Smooth transition for the underline */
+}
+.nav-links a:hover {
+  color: var(--accent);
+  text-shadow: 0 0 8px rgba(230, 57, 70, 0.4);
+}
+.nav-links a:hover::after {
+  width: 100%; /* Expand underline on hover */
+}
+.brand {
+  text-shadow: 0 0 5px rgba(230, 57, 70, 0.4); /* Subtle glow for brand text */
+}
+
+/* --- Naye Badlaav: Uiverse Hamburger Styles --- */
+/* Hamburger checkbox ko screen se visually hide karein lekin accessible rakhein */
+.hamburger-checkbox-hidden {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.hamburger {
+  cursor: pointer;
+  /* Default hidden for larger screens, will be displayed in media query */
+  display: none; 
+  align-items: center; /* SVG ko vertically center karne ke liye */
+  justify-content: center; /* SVG ko horizontally center karne ke liye */
+  padding: 0.5rem; /* Touch target ko badhayein */
+  border-radius: 8px; /* Halki si border radius */
+  transition: background-color 0.3s ease;
+  z-index: 1001; /* Ensure it's above other content */
+}
+
+.hamburger:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Hover par halka background */
+}
+
+/* Uiverse SVG animation ke liye: input:checked + label > svg */
+/* Yahan input khud label ke bahar hai, toh selector change hoga */
+.hamburger-checkbox-hidden:checked + .hamburger svg {
+  transform: rotate(-45deg);
+}
+
+.hamburger-checkbox-hidden:checked + .hamburger .line-top-bottom {
+  stroke-dasharray: 20 300;
+  stroke-dashoffset: -32.42;
+}
+
+
+.hamburger svg {
+  /* The size of the SVG defines the overall size */
+  height: 2.2em;
+  width: 2.2em;
+  /* Define the transition for transforming the SVG */
+  transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.line {
+  fill: none;
+  stroke: var(--text); /* White se theme text color kiya */
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+  /* Define the transition for transforming the Stroke */
+  transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
+              stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.line-top-bottom {
+  stroke-dasharray: 12 63;
+}
+
+
+/* Hero Section Polish */
+.hero-left {
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border for a more defined glass effect */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Enhanced shadow for more depth */
+  transform: perspective(1000px) rotateY(0deg) scale(1); /* Initial state for subtle 3D hover */
+  transition: all 0.5s ease-in-out;
+}
+.hero-left:hover {
+  transform: perspective(1000px) rotateY(3deg) scale(1.01); /* Subtle rotation on hover */
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+.hero-title .accent {
+  text-shadow: 2px 2px 8px rgba(230, 57, 70, 0.5); /* Text shadow for accent color */
+}
+.hero-video {
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border for the video frame */
+}
+
+/* Buttons Polish */
+.btn {
+  letter-spacing: 0.05em; /* Slight letter spacing for buttons */
+}
+.btn.primary {
+  box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4); /* Shadow for primary button */
+}
+.btn.primary:hover {
+  box-shadow: 0 6px 20px rgba(230, 57, 70, 0.6);
+  transform: translateY(-3px) scale(1.02); /* More pronounced hover effect */
+}
+.btn.outline:hover {
+  background: var(--accent); /* Fill with accent color on hover for outline button */
+  color: #fff; /* White text on accent background */
+  box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+}
+
+/* Service Cards Polish */
+.card {
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border for glass effect */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Initial shadow */
+  transform: translateY(0); /* Reset for custom hover */
+}
+.card:hover {
+  transform: translateY(-10px) scale(1.02); /* Lift and slightly scale */
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+  background: rgba(0,0,0,0.4); /* Slightly darker glass on hover */
+}
+.service-icon {
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3)); /* Subtle shadow for icons */
+}
+
+/* Portfolio Preview Polish */
+.portfolio-item img {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+.portfolio-item img:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  filter: brightness(1.1); /* Slight brighten on hover */
+}
+
+/* Reviews Section Polish */
+.reviews h2 {
+  text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+}
+.review-card {
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smoother animation curve */
+}
+.review-card:hover {
+  transform: translateY(-8px) scale(1.03) rotateZ(0.5deg); /* Added slight rotation for more dynamism */
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25), 0 0 15px var(--accent); /* More prominent shadow with accent glow */
+  background: rgba(0,0,0,0.4); /* Slightly darker glass on hover */
+}
+.review-card h3 span {
+  font-size: 0.85rem; /* Slightly smaller location text */
+  opacity: 0.8;
+}
+.review-card .stars {
+  font-size: 1.3rem; /* Slightly larger stars */
+  letter-spacing: 2px;
+}
+.review-card img {
+  box-shadow: 0 0 0 4px var(--bg), 0 0 0 6px var(--accent); /* More defined border for profile images */
+  transition: all 0.3s ease;
+}
+.review-card:hover img {
+  transform: scale(1.05); /* Slight scale on image inside card */
+}
+
+/* Reviews Carousel specific enhancements */
+.reviews-carousel h2 {
+  background: linear-gradient(90deg, var(--text), var(--accent)); /* Use accent color for gradient */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none; /* Remove previous text-shadow as gradient is used */
+}
+.slider-btn {
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+.slider-btn:hover {
+  transform: translateY(-50%) scale(1.1); /* Slightly larger on hover */
+  box-shadow: 0 5px 20px rgba(255, 59, 59, 0.4);
+}
+
+/* Contact Section Polish */
+.contact-section .container {
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border for glass effect */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+.form-group input,
+.form-group textarea {
+  border: 2px solid rgba(255, 255, 255, 0.15); /* More subtle initial border */
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--accent); /* Accent color border on focus */
+  box-shadow: 0 0 12px rgba(230, 57, 70, 0.4); /* Stronger focus shadow */
+  background: var(--bg); /* Ensure background stays theme-consistent */
+}
+.review-form {
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+.review-form input,
+.review-form textarea {
+  border-color: rgba(230, 57, 70, 0.4); /* Accent color, slightly transparent */
+  background: var(--bg);
+}
+.review-form input:focus,
+.review-form textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 8px rgba(230, 57, 70, 0.3);
+}
+
+/* Auth Section Polish (Login/Signup) */
+.auth-section {
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border for glass effect */
+  box-shadow: 0 15px 40px rgba(0,0,0,0.25); /* Enhanced shadow */
+}
+.auth-section h2 {
+  text-shadow: 1px 1px 5px rgba(230, 57, 70, 0.4);
+}
+.auth-section input {
+  border: 2px solid rgba(230, 57, 70, 0.5); /* Softer initial border */
+  background: rgba(0,0,0,0.1); /* Lighter background for glass contrast */
+}
+.auth-section input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 15px rgba(230, 57, 70, 0.6);
+  background: var(--bg); /* Return to default bg on focus */
+}
+.auth-section a:hover {
+  color: var(--accent); /* Maintain accent on hover */
+  text-decoration: underline; /* Add underline for better UX */
+}
+
+/* Video Background Polish */
+.video-background video {
+  filter: brightness(0.4) saturate(1.2); /* Deeper, more vibrant dimming of the video */
+}
+
+/* Social Buttons (from Uiverse) - Adjusted for theme */
+.social-btn {
+  background-color: var(--glass); /* Use glass variable for consistency */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.social-btn .sign svg path, .social-btn .sign svg {
+  fill: var(--text); /* Default icon color from theme */
+  stroke: var(--text); /* For paths that use stroke */
+}
+/* Ensure icons turn white on hover for colored backgrounds */
+.social-btn.whatsapp .sign svg path { fill: white; }
+.social-btn.facebook .sign svg { stroke: white; fill: white; }
+
+.social-btn:hover .sign svg path, .social-btn:hover .sign svg {
+  fill: white;
+  stroke: white;
+}
+.social-btn:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Footer Polish */
+.site-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+.footer-section h3 {
+  text-shadow: 0 0 3px rgba(230, 57, 70, 0.3);
+}
+.footer-section ul li a:hover {
+  color: var(--accent);
+  text-decoration: underline; /* Emphasize link hover */
+}
+.footer-section.newsletter input[type="email"] {
+  background: rgba(0,0,0,0.2); /* Slightly darker input for contrast */
+  border-color: rgba(230, 57, 70, 0.4);
+}
+.footer-section.newsletter input[type="email"]:focus {
+  box-shadow: 0 0 8px rgba(230, 57, 70, 0.3);
+}
+.footer-bottom {
+  border-top-color: rgba(255, 255, 255, 0.1);
+  opacity: 0.9;
+}
+/* Responsive Polish */
+@media (max-width: 768px) {
+  .hero {
+    padding-top: 2rem; /* Adjust hero padding on mobile */
+  }
+  .hero-left {
+    transform: none; /* Remove hover 3D effect on small screens */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15); /* Slightly less prominent shadow */
+  }
+  .site-header {
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.08); /* Lighter shadow for mobile navbar */
+  }
+  .navbar {
+    padding: 0.8rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Uiverse hamburger ko small screens par dikhao */
+  .hamburger {
+    display: flex; /* Flex is needed for center alignment of SVG within label */
+  }
+
+  /* Nav links ko small screens par hide karo by default */
+  .nav-links {
+    display: flex; 
+    flex-direction: column; 
+    position: absolute;
+    top: 100%; 
+    left: 0;
+    width: 100%;
+    background-color: var(--bg); 
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15); 
+    border-top: 1px solid rgba(255, 255, 255, 0.1); 
+    padding: 0; 
+    max-height: 0; 
+    overflow: hidden; 
+    opacity: 0; 
+    visibility: hidden; 
+    text-align: center;
+    transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out, visibility 0.4s ease-in-out; 
+    z-index: 999; 
+    border-bottom-left-radius: 8px; 
+    border-bottom-right-radius: 8px; 
+  }
+
+  /* Jab hamburger input:checked ho tab nav links ko dikhao */
+  /* *** Yahan selector ko update kiya gaya hai HTML adjustment ke hisab se *** */
+  #menu-toggle-checkbox:checked ~ .nav-links { 
+    max-height: 500px; /* Adjust this value if your menu content is taller */
+    padding: 1rem 0; 
+    opacity: 1; 
+    visibility: visible; 
+  }
+
+  .nav-links li {
+    margin: 0.5rem 0; 
+  }
+
+  .nav-links a {
+    padding: 0.8rem 1rem; 
+    display: block; 
+    text-decoration: none; 
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out; 
+  }
+  
+  .nav-links a:hover {
+    background-color: rgba(255, 255, 255, 0.05); 
+    color: var(--accent); 
+  }
+
+  .nav-links a::after {
+    display: none; 
+  }
+  .nav-links a:hover::after {
+    width: 0; 
+  }
+
+  /* 'What People Say' section ke scroll buttons ke liye CSS */
+  .reviews-carousel {
+    position: relative; 
+    padding-left: 50px; 
+    padding-right: 50px; 
+    box-sizing: border-box; 
+  }
+
+  .slider-btn {
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    position: absolute; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    width: 44px; 
+    height: 44px; 
+    border-radius: 50%; 
+    background-color: rgba(230, 57, 70, 0.7); 
+    color: #fff; 
+    font-size: 1.6rem; 
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
+    z-index: 10; 
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; 
+  }
+
+  .slider-btn:hover {
+    background-color: var(--accent); 
+    transform: translateY(-50%) scale(1.08); 
+    box-shadow: 0 6px 20px rgba(230, 57, 70, 0.4); 
+  }
+
+  .slider-btn.left {
+    left: 8px; 
+  }
+
+  .slider-btn.right {
+    right: 8px; 
+  }
+
+  .review-card:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
+}
+
+/* LOADING SCREEN SPECIFIC STYLES */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 1s ease-out, visibility 1s ease-out;
+}
+
+.loading-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loading-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* filter: brightness(0.8); */
+}
+
+/* Scroll to Top Button Styling */
+#scrollToTopBtn {
+  display: none; /* JavaScript iski visibility control karega */
+  position: fixed; /* Screen par fixed rahega */
+  bottom: 30px; /* Neeche se 30px upar */
+  right: 30px; /* Daen (right) se 30px andar */
+  background-color: #ff3b3b; /* بٹن کا پس منظر کا رنگ (primary-color value) */
+  color: #fff; /* ٹیکسٹ کا رنگ */
+  border: none; /* کوئی بارڈر نہیں */
+  border-radius: 50%; /* گول شکل کے لیے */
+  width: 50px; /* چوڑائی */
+  height: 50px; /* اونچائی */
+  font-size: 1.8rem; /* تیر (arrow) کا سائز */
+  line-height: 50px; /* تیر کو عمودی طور پر مرکز میں لانے کے لیے */
+  text-align: center; /* تیر کو افقی طور پر مرکز میں لانے کے لیے */
+  cursor: pointer; /* ماؤس پوائنٹر کو ہاتھ میں بدلتا ہے */
+  z-index: 900; /* یقینی بناتا ہے کہ یہ دوسرے مواد کے اوپر رہے */
+  box-shadow: 0 5px 15px rgba(255, 59, 59, 0.4); /* ایک خوبصورت شیڈو */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease; /* ہموار (smooth) ہوور اینیمیشنز */
+}
+
+#scrollToTopBtn:hover {
+  background-color: #e22a2a; /* ہوور کرنے پر پس منظر کا رنگ (secondary-color value) */
+  box-shadow: 0 8px 20px rgba(255, 59, 59, 0.5); /* ہوور کرنے پر بڑھا ہوا شیڈو */
+  transform: translateY(-2px); /* ہوور کرنے پر تھوڑا سا اوپر اٹھتا ہے */
+}
+
+/* Responsive Adjustments for Scroll to Top Button */
+@media (max-width: 768px) {
+  #scrollToTopBtn {
+    bottom: 20px; /* چھوٹے اسکرینوں پر نیچے سے تھوڑا کم اوپر */
+    right: 20px; /* چھوٹے اسکرینوں پر دائیں سے تھوڑا کم اندر */
+    width: 45px; /* چھوٹے اسکرینوں پر چوڑائی کم */
+    height: 45px; /* چھوٹے اسکرینوں پر اونچائی کم */
+    font-size: 1.5rem; /* چھوٹے اسکرینوں پر تیر کا سائز کم */
+  }
+}
+
+
+/*  new css message  */
+/* --- TOAST NOTIFICATION STYLES --- */
+.toast-notification {
+  visibility: hidden; /* Default hidden */
+  min-width: 280px; /* Minimum width */
+  background-color: var(--glass); /* Glass background */
+  backdrop-filter: blur(10px); /* Blur effect */
+  color: var(--text); /* Text color from theme */
+  text-align: center; /* Centered text */
+  border-radius: 10px; /* Rounded corners */
+  padding: 16px 20px; /* Padding */
+  position: fixed; /* Fixed position */
+  z-index: 1000; /* On top of everything */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Adjust for true centering */
+  top: 30px; /* Position from top */
+  font-size: 1.1rem; /* Font size */
+  font-weight: 600;
+  box-shadow: 0 4px 15px var(--shadow-dark); /* Subtle shadow */
+  opacity: 0; /* Hidden by default */
+  transition: visibility 0.5s, opacity 0.5s ease-in-out; /* Smooth transition */
+}
+
+.toast-notification.show {
+  visibility: visible; /* Show when 'show' class is added */
+  opacity: 1; /* Fully visible */
+}
+
+/* --- MESSAGE ICON WITH NOTIFICATION DOT STYLES --- */
+.message-icon-container {
+    position: relative;
+    display: flex; /* Flexbox to center icon */
+    align-items: center;
+    justify-content: center;
+    /* Nav-links ke default gap ke saath align karne ke liye margin de sakte hain */
+    margin-right: 1.5rem; /* Adjust as needed to space it from other links */
+}
+
+.message-svg-icon {
+    width: 28px; /* Icon size */
+    height: 28px;
+    color: var(--text); /* Inherit nav-link color */
+    transition: color 0.3s ease;
+}
+
+/* Hover effect for the message icon */
+.message-icon-container:hover .message-svg-icon {
+    color: var(--accent); /* Accent color on hover */
+    text-shadow: 0 0 8px rgba(230, 57, 70, 0.4);
+}
+
+.notification-dot {
+    position: absolute;
+    top: -2px; /* Adjust position relative to the icon */
+    right: -2px; /* Adjust position relative to the icon */
+    width: 12px; /* Dot size */
+    height: 12px;
+    background-color: var(--accent); /* Red dot color */
+    border-radius: 50%; /* Make it round */
+    display: block; /* By default, it's a block element */
+    border: 2px solid var(--bg); /* Small border for contrast with background */
+    box-shadow: 0 0 5px rgba(230, 57, 70, 0.5); /* Subtle glow */
+}
+
+.notification-dot.hidden {
+    display: none; /* Hide the dot */
+}
+
+/* --- RESPONSIVE ADJUSTMENTS for new elements --- */
+@media (max-width: 768px) {
+    .message-icon-container {
+        margin-right: 0; /* Reset margin for mobile menu */
+        justify-content: center; /* Ensure it's centered in the mobile menu */
+    }
+    .notification-dot {
+        top: 8px; /* Adjust dot position for mobile menu */
+        right: calc(50% - 30px); /* Adjust to center dot on wider mobile nav item */
+        /* Yeh 'right' value aapko apne menu item ki actual width ke hisaab se adjust karni pad sakti hai */
+    }
+
+    .toast-notification {
+      width: 90%; /* Smaller width on mobile */
+      min-width: unset;
+      font-size: 1rem;
+      padding: 12px 15px;
+    }
+
+
+    /* --- Naya/Updated CSS for Navbar Layout & Visibility --- */
+
+/* Yeh class jab element par lagegi, to use hamesha chupa degi */
+.auth-hidden {
+    display: none !important; 
+}
+
+/* Controls container ke liye styles */
+.navbar .controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem; 
+    margin-left: auto; /* Bade screens par controls ko right side dhakelne ke liye */
+    z-index: 1000; 
+}
+
+/* MESSAGE ICON CONTAINER (Updated styles for global placement) */
+.controls .message-icon-container {
+    position: relative; 
+    display: flex; /* Jab visible hoga to flex display karega */
+    align-items: center;
+    justify-content: center;
+    height: 40px; 
+    width: 40px;  
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 50%; 
+}
+
+.controls .message-icon-container:hover {
+    background-color: rgba(255, 255, 255, 0.1); 
+}
+
+/* Notification dot (existing styles are fine) */
+.notification-dot {
+    position: absolute;
+    top: -2px; 
+    right: -2px; 
+    width: 12px;
+    height: 12px;
+    background-color: var(--accent);
+    border-radius: 50%;
+    display: block;
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 5px rgba(230, 57, 70, 0.5);
+    z-index: 1; 
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+  /* Navbar elements ka order adjust karein choti screens par */
+  .navbar {
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: space-between; 
+    align-items: center;
+    /* padding: 1rem 2rem; (yeh pehle se hai, isko chhod dein) */
+  }
+
+  /* Brand ko left side (order 1) */
+  .brand {
+    order: 1; 
+  }
+
+  /* Message button (controls) ko center mein (order 2) */
+  .controls {
+    order: 2;
+    margin: 0 auto; /* Left aur right se auto margin, isse yeh center mein aayega */
+  }
+
+  /* Hamburger icon ko right side (order 3) */
+  .hamburger {
+    order: 3;
+    margin-left: 0; /* Hamburger par se koi extra auto margin hatayen */
+  }
+
+  /* nav-links (dropdown) poori width par show karein */
+  .nav-links {
+    width: 100%; 
+    left: 0; 
+    top: 100%; 
+    padding: 1rem 0; 
+    border-top: 1px solid rgba(255, 255, 255, 0.1); 
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15); 
+    border-bottom-left-radius: 8px; 
+    border-bottom-right-radius: 8px; 
+    background-color: var(--bg); 
+    /* Login/name button ke neeche dikhne ka masla theek karne ke liye: */
+    /* Item spacing ko behtar karne ke liye flex container banayen */
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; /* Items ke beech thoda kam space */
+    padding: 0.5rem 0; /* Dropdown container ka thoda kam padding */
+  }
+
+  /* Ensure nav-links (dropdown) has enough height for all items */
+  #menu-toggle-checkbox:checked ~ .nav-links {
+    max-height: 600px; /* Ya aur zyada agar aapke paas bohot zyada items hain */
+    opacity: 1;
+    visibility: visible;
+    overflow: auto; /* Agar items zyada ho to scroll ho sake */
+  }
+
+  /* Nav links ke individual items ke liye padding */
+  .nav-links li a {
+    padding: 0.8rem 1rem; /* Har link ko apni padding dein */
+  }
+
+  /* Message icon dot ki positioning */
+  .controls .message-icon-container .notification-dot {
+    top: -5px; 
+    right: -5px; 
+  }
+}
+
+/* Bade screens ke liye (769px aur usse upar) */
+@media (min-width: 769px) {
+    /* nav-links ko horizontally align karein */
+    .nav-links {
+        display: flex; 
+        position: static; 
+        width: auto; 
+        max-height: none; 
+        padding: 0; 
+        background: none; 
+        box-shadow: none;
+        border: none;
+        flex-direction: row; 
+        gap: 1.5rem; 
+        order: unset; 
+    }
+    /* Hamburger icon bade screens par hide karein */
+    .hamburger {
+      display: none;
+    }
+    /* Controls aur nav-links ke beech space */
+    .controls {
+      order: unset; 
+      margin-left: 2rem; 
+    }
+}

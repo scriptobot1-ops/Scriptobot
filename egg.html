@@ -1,0 +1,2181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secret Code</title>
+  <!-- Google Fonts for Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome for Icons (NEW) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Global Styles */
+    body {
+      background-color: #0c0c0c;
+      color: white;
+      font-family: "Poppins", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start; /* Content ko top align karein */
+      min-height: 100vh; /* Changed to min-height to allow content to expand */
+      overflow-x: hidden; /* Prevent horizontal scroll */
+      transition: all 0.6s ease;
+      position: relative;
+      padding: 20px; /* Add some padding for overall content */
+      box-sizing: border-box; /* Include padding in element's total width and height */
+    }
+
+    /* NEW: Initial Welcome Section Styles */
+    .initial-welcome {
+        text-align: center;
+        margin-bottom: 40px;
+        opacity: 0;
+        transform: translateY(-20px);
+        animation: fadeIn 1s forwards ease;
+        animation-delay: 0.3s;
+    }
+
+    .initial-welcome h1 {
+        font-size: 3em;
+        color:#3b82f6; /* Green highlight */
+        margin-bottom: 10px;
+        letter-spacing: 2px;
+    }
+
+    .initial-welcome p {
+        font-size: 1.1em;
+        color: #bcbcbc;
+        max-width: 600px;
+        line-height: 1.6;
+    }
+
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+
+    h2 {
+      color: #14b5e6;
+      font-size: 1.8em;
+      margin-bottom: 30px;
+      letter-spacing: 1px;
+      text-align: center;
+    }
+
+    /* Password Input Styles */
+    .password {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px; /* Space between password and output */
+    }
+
+    .password input {
+      width: 35px;
+      height: 45px;
+      text-align: center;
+      background-color: transparent;
+      border: none;
+      border-bottom: solid 2px rgb(20, 181, 230);
+      font-size: 22px;
+      color: white;
+      outline: none;
+      transition: border-bottom-color 0.3s ease;
+    }
+    .password input:focus {
+        border-bottom-color: #37ff8b; /* Highlight on focus */
+    }
+
+    /* Animated Name (Wahid) */
+    .reveal {
+      font-size: 3em;
+      font-weight: 700;
+      background: linear-gradient(90deg, #37ff8b, #14b5e6, #ffdd00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 1s forwards ease;
+    }
+
+    /* Futures Section */
+    .futures {
+      margin-top: 15px;
+      font-size: 1.1em;
+      line-height: 1.7em;
+      color: #bcbcbc;
+      max-width: 700px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 1s 0.6s forwards ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px; /* Space between content blocks */
+    }
+
+    .futures-text {
+        margin-bottom: 20px;
+    }
+
+    .dynamic-features {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        max-width: 500px;
+        margin-bottom: 30px; /* Space before social links */
+    }
+
+    .feature-button {
+        padding: 10px 20px;
+        font-size: 1em;
+        background-color: #3b82f6; /* Blue button */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .feature-button:hover {
+        background-color: #2563eb;
+        transform: translateY(-2px);
+    }
+    .feature-button:active {
+        transform: translateY(0);
+    }
+
+    .feature-content {
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 8px;
+        text-align: left;
+        color: #e0e0e0;
+        font-size: 0.95em;
+        line-height: 1.6;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+    .feature-content h3 {
+        color: #37ff8b; /* Green highlight for headings */
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 1.2em;
+    }
+
+    /* Social Links Section Styles */
+    .social-links {
+        display: flex;
+        gap: 25px;
+        margin-top: 30px; /* Futures section se upar space */
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeUp 1s 0.9s forwards ease; /* Delay for animation */
+    }
+
+    .social-links a {
+        color: #14b5e6; /* Initial color */
+        font-size: 2.2em;
+        transition: color 0.3s ease, transform 0.3s ease;
+        text-decoration: none;
+    }
+
+    .social-links a:hover {
+        color: #37ff8b; /* Hover color */
+        transform: translateY(-5px) scale(1.1);
+    }
+
+    /* Keyframe Animations */
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Output Area for Content & Buttons */
+    #output {
+      text-align: center;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px; /* Space from password box */
+      width: 100%;
+      max-width: 800px; /* Max width for readability */
+    }
+
+    /* Wrong Code Message */
+    .wrong-code-message {
+      color: #ff4141; /* Red color */
+      font-weight: bold;
+      margin-top: 20px;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeInDown 0.5s forwards ease;
+    }
+
+    @keyframes fadeInDown {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Chat with AI Trigger Button (new design specific CSS - positioning adjust) */
+    #new-ai-chat-button {
+      margin-top: 50px; /* Password/Output se neeche margin */
+      /* Specific button styles are now handled by the new button's CSS below */
+    }
+
+    /* --- From Uiverse.io by Cobp (AI Input Component ki CSS) --- */
+    .container-ai-input {
+      --perspective: 1000px;
+      --translateY: 45px;
+      position: fixed; /* Full screen overlay */
+      inset: 0; /* top, right, bottom, left: 0 */
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      transform-style: preserve-3d;
+      pointer-events: none; /* Default mein non-interactive */
+      z-index: 100; /* Password aur output se upar */
+      background-color: rgba(0, 0, 0, 0.7); /* Thoda background blur */
+      opacity: 0; /* Initially hidden */
+      visibility: hidden; /* Initially hidden */
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      place-items: center; /* Center the card in the grid */
+    }
+
+    .container-ai-input.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto; /* Jab active ho to interactive ho jaye */
+    }
+
+    .area {
+      pointer-events: auto; /* Hover effects ke liye areas ko interactive banaya */
+    }
+
+    .container-wrap {
+      display: flex;
+      align-items: center;
+      justify-items: center;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      z-index: 99; /* AI input container ke andar upar */
+      transform-style: preserve-3d;
+      cursor: pointer;
+      padding: 4px;
+      transition: all 0.3s ease;
+      pointer-events: auto; /* Card ke andar ke elements interactive rahein */
+    }
+
+    .container-wrap:hover {
+      padding: 0;
+    }
+
+    .container-wrap:active {
+      transform: translateX(-50%) translateY(-50%) scale(0.95);
+    }
+
+    .container-wrap:after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%) translateY(-55%);
+      width: 12rem;
+      height: 11rem;
+      background-color: #dedfe0;
+      border-radius: 3.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .container-wrap:hover:after {
+      transform: translateX(-50%) translateY(-50%);
+      height: 12rem;
+    }
+
+    .container-wrap input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+
+    .container-wrap input:checked + .card .eyes {
+      opacity: 0;
+    }
+
+    /* Adjusted size for the chat window when active */
+    .container-wrap input:checked + .card .content-card {
+      width: 320px; /* Increased width */
+      height: 480px; /* Increased height */
+    }
+
+    .container-wrap input:checked + .card .background-blur-balls {
+      border-radius: 20px;
+    }
+
+    .container-wrap input:checked + .card .container-ai-chat {
+      opacity: 1;
+      visibility: visible;
+      z-index: 99999;
+      pointer-events: visible;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card {
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: all 0.6s ease;
+      border-radius: 3rem;
+      display: flex;
+      align-items: center;
+      transform: translateZ(50px);
+      justify-content: center;
+      position: relative; /* Essential for absolute positioning of children like the close button */
+    }
+
+    .card:hover {
+      box-shadow:
+        0 10px 40px rgba(0, 0, 60, 0.25),
+        inset 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .background-blur-balls {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      width: 100%;
+      height: 100%;
+      z-index: -10;
+      border-radius: 3rem;
+      transition: all 0.3s ease;
+      background-color: rgba(255, 255, 255, 0.8);
+      overflow: hidden;
+    }
+    .balls {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      animation: rotate-background-balls 10s linear infinite;
+    }
+
+    .container-wrap:hover .balls {
+      animation-play-state: paused;
+    }
+
+    .background-blur-balls .ball {
+      width: 6rem;
+      height: 6rem;
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(30px);
+    }
+
+    .background-blur-balls .ball.violet {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #9147ff;
+    }
+
+    .background-blur-balls .ball.green {
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #34d399;
+    }
+
+    .background-blur-balls .ball.rosa {
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      background-color: #ec4899;
+    }
+
+    .background-blur-balls .ball.cyan {
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      background-color: #05e0f5;
+    }
+
+    .content-card {
+      width: 12rem;
+      height: 12rem;
+      display: flex;
+      border-radius: 3rem;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .background-blur-card {
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(50px);
+    }
+
+    .eyes {
+      position: absolute;
+      left: 50%;
+      bottom: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 52px;
+      gap: 2rem;
+      transition: all 0.3s ease;
+    }
+    .eyes .eye {
+      width: 26px;
+      height: 52px;
+      background-color: #fff;
+      border-radius: 16px;
+      animation: animate-eyes 10s infinite linear;
+      transition: all 0.3s ease;
+    }
+
+
+    .eyes.happy {
+      display: none;
+      color: #fff;
+      gap: 0;
+    }
+    .eyes.happy svg {
+      width: 60px;
+    }
+
+
+    .container-wrap:hover .eyes .eye {
+      display: none;
+    }
+
+    .container-wrap:hover .eyes.happy {
+      display: flex;
+    }
+
+    .container-ai-chat {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      padding: 6px;
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container-wrap .card .chat {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-radius: 15px;
+      width: 100%;
+      height: 100%;
+      padding: 4px;
+      overflow: hidden;
+      background-color: #ffffff;
+      position: relative;
+    }
+
+    .chat-messages {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-bottom: 10px;
+      min-height: 50px;
+    }
+
+    .chat-messages::-webkit-scrollbar {
+      width: 6px;
+      height: 10px;
+    }
+
+    .chat-messages::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: #dedfe0;
+      border-radius: 5px;
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb:hover {
+      background: #8b8b8b;
+      cursor: pointer;
+    }
+
+    .chat-message {
+      max-width: 80%;
+      padding: 8px 12px;
+      border-radius: 15px;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    .chat-message.user {
+      align-self: flex-end;
+      background-color: #3b82f6;
+      color: white;
+      border-bottom-right-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+
+    .chat-message.ai {
+      align-self: flex-start;
+      background-color: #e0e0e0;
+      color: #333;
+      border-bottom-left-radius: 5px;
+      border-top-left-radius: 5px;
+    }
+
+    .card .chat .chat-bot {
+      position: relative;
+      display: flex;
+      flex-shrink: 0;
+      height: auto;
+      min-height: 40px;
+      margin-top: auto;
+      margin-bottom: 5px;
+    }
+
+    .card .chat .chat-bot textarea {
+      background-color: transparent;
+      border-radius: 16px;
+      border: none;
+      width: 100%;
+      height: auto;
+      min-height: 40px;
+      max-height: 80px;
+      color: #8b8b8b;
+      font-family: sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      padding: 10px;
+      resize: none;
+      outline: none;
+      overflow-y: auto;
+    }
+    .card .chat .chat-bot textarea::-webkit-scrollbar {
+      width: 6px;
+      height: 10px;
+    }
+
+    .card .chat .chat-bot textarea::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .card .chat .chat-bot textarea::-webkit-scrollbar-thumb {
+      background: #dedfe0;
+      border-radius: 5px;
+    }
+
+    .card .chat .chat-bot textarea::-webkit-scrollbar-thumb:hover {
+      background: #8b8b8b;
+      cursor: pointer;
+    }
+
+    .card .chat .chat-bot textarea::placeholder {
+      color: #dedfe0;
+      transition: all 0.3s ease;
+    }
+    .card .chat .chat-bot textarea:focus::placeholder {
+        color: #8b8b8b;
+    }
+
+    .card .chat .options {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding: 0px 10px 10px 10px;
+      flex-shrink: 0;
+    }
+
+    .card .chat .options .btns-add {
+      display: flex;
+      gap: 8px;
+    }
+
+    .card .chat .options .btns-add button {
+      display: flex;
+      color: rgba(0, 0, 0, 0.1);
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .card .chat .options .btns-add button:hover {
+      transform: translateY(-5px);
+      color: #8b8b8b;
+    }
+
+    .card .chat .options .btn-submit {
+      display: flex;
+      padding: 2px;
+      background-image: linear-gradient(to top, #ff4141, #9147ff, #3b82f6);
+      border-radius: 10px;
+      box-shadow: inset 0 6px 2px -4px rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      border: none;
+      outline: none;
+      opacity: 0.7;
+      transition: all 0.15s ease;
+    }
+
+    .card .chat .options .btn-submit i {
+      width: 30px;
+      height: 30px;
+      padding: 6px;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      backdrop-filter: blur(3px);
+      color: #cfcfcf;
+    }
+    .card .chat .options .btn-submit svg {
+      transition: all 0.3s ease;
+    }
+    .card .chat .options .btn-submit:hover {
+      opacity: 1;
+    }
+    .card .chat .options .btn-submit:focus svg {
+      color: #f3f6fd;
+      filter: drop-shadow(0 0 5px #ffffff);
+      transform: scale(1.2) rotate(45deg) translateX(-2px) translateY(1px);
+    }
+
+    .card .chat .options .btn-submit:active {
+      transform: scale(0.92);
+    }
+
+    /* Close button for AI Chat and Face */
+    .chat-close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 1.2em;
+        line-height: 1;
+        opacity: 0; /* Hidden by default */
+        transition: opacity 0.3s ease;
+        z-index: 10;
+    }
+
+    /* Make the close button visible when the entire AI overlay is active */
+    .container-ai-input.active .chat-close-btn {
+        opacity: 1;
+    }
+
+    /* Uiverse.io 3D hover effects (unchanged for full overlay) */
+    .area:nth-child(15):hover ~ .container-wrap .card,
+    .area:nth-child(15):hover ~ .container-wrap .eyes .eye {
+      transform: perspective(var(--perspective)) rotateX(-15deg) rotateY(15deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+    .area:nth-child(14):hover ~ .container-wrap .card,
+    .area:nth-child(14):hover ~ .container-wrap .eyes .eye {
+      transform: perspective(var(--perspective)) rotateX(-15deg) rotateY(7deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+    .area:nth-child(13):hover ~ .container-wrap .card,
+    .area:nth-child(13):hover ~ .container-wrap .eyes .eye {
+      transform: perspective(var(--perspective)) rotateX(-15deg) rotateY(0)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+    .area:nth-child(12):hover ~ .container-wrap .card,
+    .area:nth-child(12):hover ~ .container-wrap .eyes .eye {
+      transform: perspective(var(--perspective)) rotateX(-15deg) rotateY(-7deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+    .area:nth-child(11):hover ~ .container-wrap .card,
+    .area:nth-child(11):hover ~ .container-wrap .eyes .eye {
+      transform: perspective(var(--perspective)) rotateX(-15deg) rotateY(-15deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+
+    .area:nth-child(10):hover ~ .container-wrap .card,
+    .area:nth-child(10):hover ~ .container-wrap .eyes .eye {
+      transform: perspective(var(--perspective)) rotateX(0) rotateY(15deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+    .area:nth-child(9):hover ~ .container-wrap .card,
+    .area:nth-child(9):hover ~ .container-wrap .eyes .eye {
+      transform: perspective(var(--perspective)) rotateX(0) rotateY(7deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+    .area:nth-child(8):hover ~ .container-wrap .card,
+    .area:nth-child(8):hover ~ .container-wrap .eyes .eye {
+      transform: perspective(var(--perspective)) rotateX(0) rotateY(0)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+    .area:nth-child(7):hover ~ .container-wrap .card,
+    .area:nth-child(7):hover ~ .container-wrap .eyes .eye {
+      transform: perspective(var(--perspective)) rotateX(0) rotateY(-7deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+    .area:nth-child(6):hover ~ .container-wrap .card,
+    .area:nth-child(6):hover ~ .container-wrap .eyes .eye {
+      transform: perspective(var(--perspective)) rotateX(0) rotateY(-15deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+
+    .area:nth-child(5):hover ~ .container-wrap .card,
+    .area:nth-child(5):hover ~ .container-wrap .eyes .eye {
+      transform: perspective(var(--perspective)) rotateX(15deg) rotateY(15deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+    .area:nth-child(4):hover ~ .container-wrap .card,
+    .area:nth-child(4):hover ~ .container-wrap .eyes .eye {
+      transform: perspective(var(--perspective)) rotateX(15deg) rotateY(7deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+    .area:nth-child(3):hover ~ .container-wrap .card,
+    .area:nth-child(3):hover ~ .container-wrap .eyes .eye {
+      transform: perspective(var(--perspective)) rotateX(15deg) rotateY(0)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+    .area:nth-child(2):hover ~ .container-wrap .card,
+    .area:nth-child(2):hover ~ .container-wrap .eyes .eye {
+      transform: perspective(var(--perspective)) rotateX(15deg) rotateY(-7deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+    .area:nth-child(1):hover ~ .container-wrap .card,
+    .area:nth-child(1):hover ~ .container-wrap .eyes .eye {
+      transform: perspective(var(--perspective)) rotateX(15deg) rotateY(-15deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+
+    .area:nth-child(15):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .options
+      button,
+    .area:nth-child(15):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .chat-bot {
+      transform: perspective(var(--perspective)) rotateX(-10deg) rotateY(8deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+
+    .area:nth-child(14):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .options
+      button,
+    .area:nth-child(14):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .chat-bot {
+      transform: perspective(var(--perspective)) rotateX(-10deg) rotateY(4deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+
+    .area:nth-child(13):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .options
+      button,
+    .area:nth-child(13):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .chat-bot {
+      transform: perspective(var(--perspective)) rotateX(-10deg) rotateY(0deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+
+    .area:nth-child(12):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .options
+      button,
+    .area:nth-child(12):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .chat-bot {
+      transform: perspective(var(--perspective)) rotateX(-10deg) rotateY(-4deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+
+    .area:nth-child(11):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .chat-bot {
+      transform: perspective(var(--perspective)) rotateX(-10deg) rotateY(-8deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+
+    .area:nth-child(10):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .options
+      button,
+    .area:nth-child(10):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .chat-bot {
+      transform: perspective(var(--perspective)) rotateX(0deg) rotateY(8deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+
+    .area:nth-child(9):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .options
+      button,
+    .area:nth-child(9):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .chat-bot {
+      transform: perspective(var(--perspective)) rotateX(0deg) rotateY(4deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+
+    .area:nth-child(8):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .options
+      button,
+    .area:nth-child(8):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .chat-bot {
+      transform: perspective(var(--perspective)) rotateX(0deg) rotateY(0deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+
+    .area:nth-child(7):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .options
+      button,
+    .area:nth-child(7):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .chat-bot {
+      transform: perspective(var(--perspective)) rotateX(0deg) rotateY(-4deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+
+    .area:nth-child(6):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .chat-bot {
+      transform: perspective(var(--perspective)) rotateX(0deg) rotateY(-8deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+
+    .area:nth-child(5):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .chat-bot {
+      transform: perspective(var(--perspective)) rotateX(10deg) rotateY(8deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+
+    .area:nth-child(4):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .chat-bot {
+      transform: perspective(var(--perspective)) rotateX(10deg) rotateY(4deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+
+    .area:nth-child(3):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .chat-bot {
+      transform: perspective(var(--perspective)) rotateX(10deg) rotateY(0deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+
+    .area:nth-child(2):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .chat-bot {
+      transform: perspective(var(--perspective)) rotateX(10deg) rotateY(-4deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+
+    .area:nth-child(1):hover
+      ~ .container-wrap
+      .card
+      .container-ai-chat
+      .chat
+      .chat-bot {
+      transform: perspective(var(--perspective)) rotateX(10deg) rotateY(-8deg)
+        translateZ(var(--translateY)) scale3d(1, 1, 1);
+    }
+@keyframes rotate-background-balls {
+  from {
+    transform: translateX(-50%) translateY(-50%) rotate(360deg);
+  }
+  to {
+    transform: translateX(-50%) translateY(-50%) rotate(0);
+  }
+}
+
+@keyframes animate-eyes {
+  46% {
+    height: 52px;
+  }
+  48% {
+    height: 20px;
+  }
+  50% {
+    height: 52px;
+  }
+  96% {
+    height: 52px;
+  }
+  98% {
+    height: 20px;
+  }
+  100% {
+    height: 52px;
+  }
+}
+
+/* From Uiverse.io by marcelodolza (New Button's CSS) */
+/* The .area class is already defined above, but this section adds specific styles for the new button's .area */
+#new-ai-chat-button { /* Using an ID to avoid conflicts with other .area elements if any */
+  --ease: cubic-bezier(0.5, 0, 0.3, 1);
+  --ease-elastic: cubic-bezier(0.5, 2, 0.3, 0.8);
+  --radius: 26px;
+  --primary: #45f8f8;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.6s var(--ease-elastic);
+  /* Add display flex/align-items/justify-content to center the button itself if needed, or rely on body's flex */
+  display: flex; /* Ensure it respects margin-top */
+  justify-content: center;
+  align-items: center;
+}
+
+#new-ai-chat-button input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute; /* Added absolute positioning for the hidden input */
+}
+
+#new-ai-chat-button .button {
+  outline: none;
+  cursor: pointer;
+  border: 0;
+  border-radius: var(--radius);
+  position: relative;
+  width: 240px;
+  height: 74px;
+  pointer-events: none; /* Changed to none to allow label click to propagate */
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  transition:
+    background-color 2s linear,
+    box-shadow 0.5s ease,
+    transform 0.6s ease;
+  transform: rotateX(4deg);
+  background: var(--primary);
+  box-shadow:
+    inset 0 0 30px rgb(34, 124, 136),
+    0 5px 10px -2px rgba(0, 10, 20, 0.5),
+    0 40px 30px -15px rgba(10, 20, 30, 0.3),
+    inset 0 -2px 0 -1px #484e60,
+    inset 0 0 2px 4px #888ea3;
+  font-size: 21px;
+  font-family: Arial;
+  letter-spacing: 1px;
+}
+
+#new-ai-chat-button .button::before,
+#new-ai-chat-button .button::after {
+  content: "";
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  background: white;
+  position: absolute;
+  display: block;
+  filter: blur(40px);
+  mix-blend-mode: plus-lighter;
+  margin: auto;
+  inset: 0;
+  top: 10px;
+  transition: all 1s ease;
+}
+
+@keyframes pulse-out {
+  40% {
+    transform: scale(1);
+  }
+}
+
+#new-ai-chat-button .button:after {
+  transform: scale(0);
+  animation: pulse-out 3s var(--ease-elastic) infinite;
+}
+
+#new-ai-chat-button .button:before,
+#new-ai-chat-button input:not(:checked) ~ .button::after {
+  opacity: 0;
+}
+
+#new-ai-chat-button input:not(:checked) ~ .button::before {
+  opacity: 1;
+}
+
+#new-ai-chat-button .wrap {
+  border-radius: calc(var(--radius) * 0.85);
+  inset: 0;
+  padding: 0;
+  background: linear-gradient(to bottom, #6e96b6 0%, #00ffd2 50%, #00ffb7 100%);
+  position: absolute;
+  transform-origin: top;
+  transform: scale(0.99, 1) translate(0px, -7px);
+  transition: all 0.7s ease;
+  animation: cover-close 0.9s ease forwards;
+}
+
+#new-ai-chat-button input:not(:checked) ~ .button {
+  .wrap {
+    animation: cover-open 0.9s ease forwards;
+  }
+}
+
+@keyframes cover-open {
+  0% {
+    transform: translate3d(0, -7px, 10px);
+    box-shadow: none;
+  }
+  20% {
+    transform: translate3d(0, 0, 10px);
+  }
+  80% {
+    transform: translate3d(0, 0, 10px) rotateY(0) rotateX(74deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 10px) rotateY(0) rotateX(70deg);
+    box-shadow:
+      rgb(121, 133, 147) 0px 5px 1px -1px,
+      rgb(77, 97, 118) 0px 9px 0 -2px,
+      rgb(0, 0, 0) 0px 60px 40px -30px;
+  }
+}
+
+@keyframes cover-close {
+  from {
+    transform: translate3d(0px, 0px, 10px) rotateY(0) rotateX(70deg);
+    box-shadow:
+      0 5px 1px -1px #798593,
+      0 10px 0px -1px #4d6176,
+      0 60px 40px -30px black;
+  }
+  to {
+    transform: scale(0.99, 1) translate3d(0px, -7px, 10px);
+    box-shadow: none;
+  }
+}
+
+#new-ai-chat-button .reflex {
+  position: absolute;
+  z-index: 9;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+#new-ai-chat-button .reflex:before {
+  content: "";
+  position: absolute;
+  width: 300px;
+  background-color: rgba(255, 255, 255, 0.2);
+  background: linear-gradient(
+    to right,
+    rgba(221, 249, 255, 0.2) 10%,
+    rgba(221, 245, 255, 0.5) 60%,
+    rgba(221, 246, 255, 0.4) 60%,
+    rgba(221, 255, 254, 0.2) 90%
+  );
+  top: -40%;
+  bottom: -40%;
+  left: -132%;
+  transform: translateX(0) skew(-30deg);
+  transition: all 0.7s var(--ease);
+}
+#new-ai-chat-button:hover .reflex:before {
+  transform: translate(192%, 0) skew(-30deg);
+}
+
+#new-ai-chat-button .path {
+  position: absolute;
+  left: 50%;
+  top: 87%;
+  transform: translateX(-50%);
+  stroke-dasharray: 60 150;
+  stroke-dashoffset: 60;
+  pointer-events: none;
+  overflow: visible;
+  animation: path-in 0.6s linear forwards;
+  stroke-width: 2px;
+}
+#new-ai-chat-button input:not(:checked) ~ .button .path {
+  animation: path-out 1.2s ease forwards;
+}
+@keyframes path-out {
+  from {
+    transform: translateX(-50%) translateY(-15px);
+    stroke: white;
+  }
+  to {
+    stroke-dashoffset: -150;
+    stroke: var(--primary);
+    transform: translateX(-50%) translateY(15px);
+  }
+}
+
+@keyframes path-in {
+  from {
+    stroke-dashoffset: -150;
+    transform: translateX(-50%) translateY(-5px);
+    stroke: white;
+  }
+  to {
+    stroke: var(--primary);
+    transform: translateX(-50%) translateY(-16px);
+  }
+}
+
+#new-ai-chat-button .wave {
+  position: absolute;
+  margin: auto;
+  transition: all 0.5s ease;
+  border-radius: 70px;
+  width: 110%;
+  height: 150%;
+  left: 50%;
+  top: 56%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+#new-ai-chat-button .wave::before,
+#new-ai-chat-button .wave::after {
+  content: "";
+  position: absolute;
+  border-radius: inherit;
+  border-bottom: 3px solid white;
+  border-top: 3px solid white;
+  filter: blur(3px);
+  inset: 0;
+  transform: translate(50%);
+  animation: wave 1.5s linear infinite;
+}
+#new-ai-chat-button .wave::after {
+  animation-delay: 0.4s;
+}
+
+#new-ai-chat-button input:not(:checked) ~ .button .wave {
+  opacity: 1;
+}
+
+@keyframes wave {
+  0% {
+    transform: scale(1);
+    opacity: 0;
+    box-shadow: 0 0 30px white;
+  }
+  35% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+  70%,
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+    box-shadow: 0 0 100px var(--primary);
+  }
+}
+
+#new-ai-chat-button .content {
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  position: relative;
+  height: 100%;
+  gap: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  border-radius: calc(var(--radius) * 0.85);
+}
+
+#new-ai-chat-button .content::before,
+#new-ai-chat-button .content::after {
+  content: "";
+  inset: 0px;
+  position: absolute;
+  transition: all 1s var(--ease);
+  border-radius: inherit;
+  z-index: -1;
+}
+#new-ai-chat-button .content::before {
+  filter: blur(2px);
+  top: -2px;
+  background: linear-gradient(to bottom, #dde0e1 30%, #aeb2b8 90%);
+}
+#new-ai-chat-button .content::after {
+  box-shadow:
+    inset 0 -7px 1px 0 rgba(40, 70, 100, 0.2),
+    inset 0 -4px 1px 0 rgba(40, 70, 100, 0.4),
+    inset 0 -2px 0 0 rgba(20, 40, 60, 0.6),
+    inset 0 -3px 0 0 white;
+}
+
+#new-ai-chat-button .text {
+  transition: all 0.3s ease;
+  transform: translateY(-2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  inset: 0;
+}
+#new-ai-chat-button .text span {
+  display: block;
+  color: transparent;
+  position: relative;
+}
+#new-ai-chat-button .text.state-1 span:nth-child(3) {
+  margin-right: 10px;
+}
+
+#new-ai-chat-button .text span::before,
+#new-ai-chat-button .text span::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 0;
+  color: #3c5d7d;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
+}
+#new-ai-chat-button .text span::before {
+  opacity: 0;
+  transform: translateY(-100%);
+}
+
+#new-ai-chat-button .text.state-2 {
+  span::before,
+  span::after {
+    color: #6b99b0;
+  }
+}
+
+#new-ai-chat-button input:checked ~ .button .text.state-2 {
+  span {
+    filter: blur(5px);
+  }
+}
+
+#new-ai-chat-button:hover .text span::before {
+  animation: char-in 0.8s ease calc(var(--i) * 0.04s) forwards;
+}
+
+#new-ai-chat-button:hover .text span::after,
+#new-ai-chat-button input:not(:checked) ~ .button .text.state-1 span::before,
+#new-ai-chat-button input:not(:checked) ~ .button .text.state-1 span::after,
+#new-ai-chat-button input:checked ~ .button .text.state-2 span::before,
+#new-ai-chat-button input:checked ~ .button .text.state-2 span::after {
+  opacity: 0;
+  animation: char-out 1.2s ease calc(var(--i) * 0.04s) backwards;
+}
+
+@keyframes char-in {
+  0% {
+    opacity: 0;
+    transform: scale(10) translateX(-100%);
+    filter: blur(10px);
+    color: rgb(0, 251, 255);
+  }
+  25% {
+    transform: translateY(10%)
+      translateX(calc(-40px + ((var(--i) - 1) / 10) * 80px)) scale(2);
+    opacity: 1;
+    filter: blur(1px);
+    color: transparent;
+  }
+  50% {
+    transform: translateY(20%);
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+@keyframes char-out {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  40% {
+    color: white;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-80%) scale(4);
+    filter: blur(4px);
+    color: black;
+    text-shadow: 0 4px 2px #00ffd2;
+  }
+}
+
+#new-ai-chat-button:hover {
+  .button {
+    transition:
+      all 0.6s var(--ease-elastic),
+      background 1s ease;
+    transform: rotateX(0deg) translateY(5px);
+  }
+  .content::before {
+    transform: scale(0.97, 0.92);
+  }
+}
+
+#new-ai-chat-button:active {
+  .button {
+    transform: rotateX(0deg) translateY(8px);
+  }
+  .wrap {
+    transform: scale(1) translate(0);
+  }
+  .wave {
+    opacity: 0;
+  }
+  .content::before {
+    filter: blur(13px);
+    transform: scaleX(0.95);
+  }
+}
+
+#new-ai-chat-button .sparks {
+  pointer-events: none;
+  position: absolute;
+  margin: auto;
+
+  transform: translateZ(100px);
+  stroke: rgba(255, 153, 0, 1);
+  left: 54px;
+  top: 10px;
+  height: 58px;
+  opacity: 0;
+
+  path {
+    stroke-width: 5px;
+    stroke-dasharray: 30 150;
+    stroke-dashoffset: 30;
+    animation: sparks 0.6s ease infinite;
+    animation-delay: calc(var(--i) * 1s);
+    animation-duration: calc(var(--i) * 0.05s + 0.6s);
+  }
+}
+
+@keyframes sparks {
+  0% {
+    stroke-dasharray: 30 150;
+  }
+  50%,
+  100% {
+    stroke-dashoffset: -150;
+  }
+}
+
+#new-ai-chat-button input:not(:checked) ~ .button {
+  .gears,
+  .sparks {
+    opacity: 1;
+  }
+  .sparks {
+    transition: all 1.5s ease;
+  }
+}
+
+#new-ai-chat-button .gears {
+  overflow: hidden;
+  border-radius: inherit;
+  opacity: 0;
+  position: absolute;
+  inset: 4px;
+  bottom: 1px;
+  transition: all 1s ease;
+
+  svg {
+    width: 80%;
+    fill: #49b9c2;
+    top: 50%;
+    position: relative;
+    transform: translate(-50%, -50%);
+    left: 43%;
+
+    path {
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+    .shadow {
+      fill: rgba(36, 113, 125, 0.2);
+      translate: 2px 8px;
+    }
+    .small {
+      animation: spin 2.5s infinite linear;
+    }
+    .medium {
+      animation: spin reverse 3.75s infinite linear;
+    }
+    .large {
+      translate: 3px -6px;
+      animation: spin 5s infinite linear;
+    }
+  }
+}
+#new-ai-chat-button .gears::before,
+#new-ai-chat-button .gears::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  bottom: 11px;
+  height: 7px;
+  width: 7px;
+  background: rgba(155, 155, 155, 0.3);
+  box-shadow: inset 0px 2px rgba(0, 0, 0, 0.2);
+}
+#new-ai-chat-button .gears::before {
+  left: 12px;
+}
+#new-ai-chat-button .gears::after {
+  right: 12px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+/* Footer Styles */
+footer {
+    margin-top: auto; /* Push to the bottom */
+    padding: 20px;
+    color: #8b8b8b;
+    font-size: 0.9em;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+    opacity: 0; /* Initially hidden */
+    animation: fadeIn 1s 1s forwards ease; /* Animate in after other content */
+}
+/* From Uiverse.io by ShrinilDhorda */
+.btn {
+  font-size: 1.2rem;
+  padding: 1rem 2.5rem;
+  border: none;
+  outline: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  background-color: rgb(14, 14, 26);
+  color: rgb(234, 234, 234);
+  font-weight: 700;
+  transition: 0.6s;
+  box-shadow: 0px 0px 60px #1f4c65;
+  -webkit-box-reflect: below 10px linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.4));
+}
+
+.btn:active {
+  scale: 0.92;
+}
+
+.btn:hover {
+  background: rgb(2,29,78);
+  background: linear-gradient(270deg, rgba(2, 29, 78, 0.681) 0%, rgba(31, 215, 232, 0.873) 60%);
+  color: rgb(4, 4, 38);
+}
+  </style>
+</head>
+<body>
+
+  <!-- NEW: Initial Welcome Section -->
+  <div class="initial-welcome" id="initial-welcome-section">
+      <h1>Welcome to My Portfolio</h1>
+      <p>Explore the innovative projects and the vision that drives me. Enter the secret code below to get something magical!</p>
+  </div>
+
+  <h2 id="heading">Enter the code</h2>
+
+  <div class="password" id="password-box">
+    <input maxlength="1" class="input" type="text" />
+    <input maxlength="1" class="input" type="text" />
+    <input maxlength="1" class="input" type="text" />
+    <input maxlength="1" class="input" type="text" />
+    <input maxlength="1" class="input" type="text" />
+    <input maxlength="1" class="input" type="text" />
+  </div>
+
+  <div id="output"></div>
+
+  <!-- New AI Chat Trigger Button -->
+  <label for="button" class="area" id="new-ai-chat-button">
+    <input type="checkbox" checked="" id="button" />
+    <button class="button">
+      <div class="wave"></div>
+      <div class="wrap">
+        <div class="reflex"></div>
+        <div class="content">
+          <span class="text state-1">
+            <span style="--i: 1" data-label="C">C</span>
+            <span style="--i: 2" data-label="H">H</span>
+            <span style="--i: 3" data-label="AT">AT</span>
+            <span style="--i: 4" data-label="W">W</span>
+            <span style="--i: 5" data-label="I">I</span>
+            <span style="--i: 6" data-label="T">T</span>
+            <span style="--i: 7" data-label="H">H</span>
+                <span style="--i: 10" data-label="">.</span>
+            <span style="--i: 10" data-label="AI">AI</span>
+          </span>
+          <span class="text state-2">
+            <span style="--i: 1" data-label="⎯">⎯</span>
+            <span style="--i: 2" data-label="⎯">⎯</span>
+            <span style="--i: 3" data-label="⎯">⎯</span>
+            <span style="--i: 4" data-label="⎯">⎯</span>
+            <span style="--i: 5" data-label="⎯">⎯</span>
+            <span style="--i: 6" data-label="⎯">⎯</span>
+            <span style="--i: 7" data-label="⎯">⎯</span>
+            <span style="--i: 8" data-label="⎯">⎯</span>
+            <span style="--i: 9" data-label="⎯">⎯</span>
+            <span style="--i: 10" data-label="⎯">⎯</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="gears">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 635 523">
+          <defs>
+            <filter id="filter">
+              <feGaussianBlur
+                result="blur"
+                stdDeviation="5"
+                in="SourceGraphic"
+              ></feGaussianBlur>
+              <feColorMatrix
+                result="goo"
+                values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -8"
+                type="matrix"
+                in="blur"
+              ></feColorMatrix>
+              <feBlend in2="goo" in="SourceGraphic"></feBlend>
+            </filter>
+          </defs>
+          <g filter="url(#filter)">
+            <path
+              class="large shadow"
+              d="M635 192V171L606 167C605 157 603 148 600 139L625 125L617 106L589 113C584 105 579 97 573 89L592 66L577 51L554 68C547 62 539 57 530 52L537 24L518 16L504 41C495 38 486 36 476 35L472 8H451L447 37C437 38 428 40 419 43L405 18L386 26L393 54C385 59 377 64 369 70L346 53L331 66L348 89C342 96 337 104 332 113L304 106L296 125L321 139C318 148 316 157 315 167L286 171V192L315 196C316 206 318 215 321 224L296 238L304 257L332 250C337 258 342 266 348 274L331 297L346 312L369 295C376 301 384 306 393 311L386 339L405 347L419 322C428 325 437 327 447 328L451 357H472L476 328C486 327 495 325 504 322L518 347L537 339L530 311C538 306 546 301 554 295L577 312L592 297L575 274C581 267 586 259 591 250L619 257L627 238L602 224C605 215 607 206 608 196L635 192ZM461 292C400 292 351 243 351 182C351 121 401 72 461 72C521 72 571 121 571 182C571 243 522 292 461 292Z"
+            ></path>
+            <path
+              class="medium shadow"
+              d="M392 398V377L364 373C363 363 360 354 357 345L380 328L369 310L342 321C336 313 329 307 322 301L333 275L315 264L298 287C289 283 280 281 270 280L266 252H245L241 280C231 281 222 284 213 287L196 264L178 275L189 301C181 307 175 314 169 321L143 310L132 328L155 345C151 354 149 363 148 373L120 377V398L148 402C149 412 152 421 155 430L132 447L143 465L169 454C175 462 182 468 189 474L178 500L196 511L213 488C222 492 231 494 241 495L245 523H266L270 495C280 494 289 491 298 488L315 511L333 500L322 474C330 468 336 461 342 454L368 465L379 439L356 430C360 421 362 412 363 402L392 398ZM255 461C214 461 181 428 181 387C181 346 214 313 255 313C296 313 329 346 329 387C328 428 295 461 255 461Z"
+            ></path>
+            <path
+              class="small shadow"
+              d="M200 244V223L171 219C169 209 165 201 160 193L178 170L163 155L140 173C132 168 123 164 114 162L110 133H90L86 162C76 164 68 168 60 173L37 155L22 170L40 193C35 201 31 210 29 219L0 223V244L29 248C31 258 35 266 40 274L22 297L37 312L60 294C68 299 77 303 86 305L90 334H111L115 305C125 303 133 299 141 294L164 312L179 297L161 274C166 258 170 249 172 248L200 244ZM100 270C80 270 63 253 63 233C63 213 80 196 100 196C120 196 137 213 137 233C137 253 121 270 100 270Z"
+            ></path>
+          </g>
+        </svg>
+      </div>
+
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 478 224"
+        class="sparks"
+      >
+        <path
+          stroke-linecap="round"
+          d="M172.675 130.318C176.079 94.8544 183.101 52.6838 262.101 32.6837"
+          style="--i: 1"
+        ></path>
+        <path
+          stroke-linecap="round"
+          d="M286.569 127.661C299.204 94.3501 317.096 55.5231 398.574 57.0604"
+          style="--i: 4"
+        ></path>
+        <path
+          stroke-linecap="round"
+          d="M335.954 194.26C370.153 182.301 412.468 170.335 474.474 222.038"
+          style="--i: 6"
+        ></path>
+        <path
+          stroke-linecap="round"
+          d="M265.974 116.351C261.897 79.6629 253.871 36.3728 169.162 24.4022"
+          style="--i: 10"
+        ></path>
+        <path
+          stroke-linecap="round"
+          d="M131.475 153.296C107.914 126.572 77.4904 96.5377 1.77821 126.682"
+          style="--i: 3"
+        ></path>
+        <path
+          stroke-linecap="round"
+          d="M153.453 170.383C161.298 135.631 167.803 93.3778 99.0048 49.6985"
+          style="--i: 5"
+        ></path>
+        <path
+          stroke-linecap="round"
+          d="M309.315 154.41C341.202 155.086 380.493 154.234 434.104 111.701"
+          style="--i: 12"
+        ></path>
+        <path d="M109 193C54.6 140.2 66.3333 99 79 85" style="--i: 7"></path>
+      </svg>
+
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 401 68"
+        height="68"
+        width="401"
+        class="path"
+      >
+        <path
+          stroke-opacity="0.2"
+          stroke-linecap="round"
+          d="M313.89 11.6484C322.652 28.147 374.652 31.5 397.652 0.999998"
+        ></path>
+        <path
+          stroke-opacity="0.3"
+          stroke-linecap="round"
+          d="M290.652 17.0773C294.773 34.8416 359.652 50.5 387.152 24"
+        ></path>
+        <path
+          stroke-opacity="0.5"
+          stroke-linecap="round"
+          d="M265.152 17.0773C274.152 38 323.652 68 362.152 42"
+        ></path>
+        <path
+          stroke-opacity="0.7"
+          stroke-linecap="round"
+          d="M241.75 17.0773C251.653 45 302.152 74.5 332.152 46.5"
+        ></path>
+        <path
+          stroke-opacity="0.9"
+          stroke-linecap="round"
+          d="M220.152 17.0773C230.055 45 274.652 81.5 288.652 47"
+        ></path>
+        <path
+          stroke-linecap="round"
+          d="M200.982 17.0773C209.652 55 239.152 80 245.652 58.5"
+        ></path>
+        <path
+          stroke-linecap="round"
+          d="M200.67 17.0773C192 55 162.5 80 156 58.5"
+        ></path>
+        <path
+          stroke-opacity="0.9"
+          stroke-linecap="round"
+          d="M181.5 17.0773C171.597 45 127 81.5 113 47"
+        ></path>
+        <path
+          stroke-opacity="0.7"
+          stroke-linecap="round"
+          d="M159.903 17.0773C150 45 99.4999 74.5 69.4999 46.5"
+        ></path>
+        <path
+          stroke-opacity="0.5"
+          stroke-linecap="round"
+          d="M136.5 17.0773C127.5 38 77.9999 68 39.4999 42"
+        ></path>
+        <path
+          stroke-opacity="0.3"
+          stroke-linecap="round"
+          d="M111 17.0773C106.879 34.8416 41.9999 50.5 14.4999 24"
+        ></path>
+        <path
+          stroke-opacity="0.2"
+          stroke-linecap="round"
+          d="M87.7628 11.6484C78.9999 28.147 27 31.5 4.00004 0.999998"
+        ></path>
+      </svg>
+    </button>
+  </label>
+
+
+  <!-- AI Input Component Yahan se Shuru Hota Hai -->
+  <div class="container-ai-input">
+    <!-- The 'area' divs are for the interactive 3D effect -->
+    <div class="area"></div>
+    <div class="area"></div>
+    <div class="area"></div>
+    <div class="area"></div>
+    <div class="area"></div>
+    <div class="area"></div>
+    <div class="area"></div>
+    <div class="area"></div>
+    <div class="area"></div>
+    <div class="area"></div>
+    <div class="area"></div>
+    <div class="area"></div>
+    <div class="area"></div>
+    <div class="area"></div>
+    <div class="area"></div>
+    <label class="container-wrap">
+      <input type="checkbox" id="chat-toggle" />
+      <div class="card">
+        <button class="chat-close-btn" id="ai-chat-main-close-btn">&times;</button>
+        <div class="background-blur-balls">
+          <div class="balls">
+            <span class="ball rosa"></span>
+            <span class="ball violet"></span>
+            <span class="ball green"></span>
+            <span class="ball cyan"></span>
+          </div>
+        </div>
+        <div class="content-card">
+          <div class="background-blur-card">
+            <div class="eyes">
+              <span class="eye"></span>
+              <span class="eye"></span>
+            </div>
+            <div class="eyes happy">
+              <svg fill="none" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M8.28386 16.2843C8.9917 15.7665 9.8765 14.731 12 14.731C14.1235 14.731 15.0083 15.7665 15.7161 16.2843C17.8397 17.8376 18.7542 16.4845 18.9014 15.7665C19.4323 13.1777 17.6627 11.1066 17.3088 10.5888C16.3844 9.23666 14.1235 8 12 8C9.87648 8 7.61556 9.23666 6.69122 10.5888C6.33728 11.1066 4.56771 13.1777 5.09858 15.7665C5.24582 16.4845 6.16034 17.8376 8.28386 16.2843Z"
+                ></path>
+              </svg>
+              <svg fill="none" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M8.28386 16.2843C8.9917 15.7665 9.8765 14.731 12 14.731C14.1235 14.731 15.0083 15.7665 15.7161 16.2843C17.8397 17.8376 18.7542 16.4845 18.9014 15.7665C19.4323 13.1777 17.6627 11.1066 17.3088 10.5888C16.3844 9.23666 14.1235 8 12 8C9.87648 8 7.61556 9.23666 6.69122 10.5888C6.33728 11.1066 4.56771 13.1777 5.09858 15.7665C5.24582 16.4845 6.16034 17.8376 8.28386 16.2843Z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="container-ai-chat">
+          <div class="chat">
+            <div class="chat-messages" id="ai-chat-messages">
+              <div class="chat-message ai">
+                <p>Hello! How can I help you today?</p>
+              </div>
+            </div>
+            <div class="chat-bot">
+              <textarea
+                placeholder="Imagine Something...✦˚"
+                name="chat_bot"
+                id="chat_bot"
+              ></textarea>
+            </div>
+            <div class="options">
+              <div class="btns-add">
+                <!-- Extra buttons removed as requested -->
+              </div>
+              <button class="btn-submit" id="send-message-btn" aria-label="Send message">
+                <i>
+                  <svg viewBox="0 0 512 512">
+                    <path
+                      d="M473 39.05a24 24 0 0 0-25.5-5.46L47.47 185h-.08a24 24 0 0 0 1 45.16l.41.13l137.3 58.63a16 16 0 0 0 15.54-3.59L422 80a7.07 7.07 0 0 1 10 10L226.66 310.26a16 16 0 0 0-3.59 15.54l58.65 137.38c.06.2.12.38.19.57c3.2 9.27 11.3 15.81 21.09 16.25h1a24.63 24.63 0 0 0 23-15.46L478.39 64.62A24 24 0 0 0 473 39.05"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                </i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </label>
+  </div>
+  <!-- AI Input Component Yahan Par Khatam Hota Hai -->
+<br><br><br><br>
+<!-- From Uiverse.io by ShrinilDhorda -->
+<button class="btn" onclick="goToIndex()">
+go back to home
+</button>
+
+  <!-- Footer Section -->
+  <footer>
+    <p>&copy; 2025 <span id="dynamic-name-footer">Scriptobot</span>. All rights reserved. Designed with passion for technology. 💡</p>
+  </footer>
+
+  <script type="module">
+    // Firebase SDK imports for client-side functionality (Analytics, etc.)
+    // Note: This Firebase config is NOT used for the AI chat logic.
+    // The AI chat is now entirely client-side and "fake" for security.
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCu-j4jpX89hE3zihqb6Ibet22syYFDh1o",
+      authDomain: "scriptobot-1.firebaseapp.com",
+      projectId: "scriptobot-1",
+      storageBucket: "scriptobot-1.firebasestorage.app",
+      messagingSenderId: "463059915239",
+      appId: "1:463059915239:web:9a5446d23c2c19286b6d42",
+      measurementId: "G-X027DDY1PN"
+    };
+
+    // Initialize Firebase client-side services (e.g., Analytics)
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const chatInput = document.getElementById('chat_bot');
+      const sendMessageBtn = document.getElementById('send-message-btn');
+      const chatToggle = document.getElementById('chat-toggle');
+      const aiInputContainer = document.querySelector('.container-ai-input');
+      const aiChatMainCloseButton = document.getElementById('ai-chat-main-close-btn');
+      const chatMessagesContainer = document.getElementById('ai-chat-messages');
+      const newAiChatButton = document.getElementById('new-ai-chat-button');
+      const output = document.getElementById("output");
+      const inputs = document.querySelectorAll(".password .input");
+      const initialWelcomeSection = document.getElementById('initial-welcome-section');
+      // NEW: Reference to the dynamic footer name span
+      const dynamicNameFooter = document.getElementById('dynamic-name-footer');
+
+
+      // Function to add messages to the chat display
+      function addMessageToChat(sender, text) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('chat-message', sender);
+        messageDiv.innerHTML = `<p>${text}</p>`;
+        chatMessagesContainer.appendChild(messageDiv);
+        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+      }
+
+      // --- FAKE AI RESPONSE LOGIC (CLIENT-SIDE ONLY) ---
+      const getFakeAIResponse = async (userMessage) => {
+        const normalizedMessage = userMessage.toLowerCase().trim();
+
+        // Simulate a small delay for "thinking"
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        if (normalizedMessage.includes("hi") || normalizedMessage.includes("hello")) {
+            return "Hello! Welcome to my portfolio. How can I assist you today?";
+        } else if (normalizedMessage === "how are you") {
+          return "I'm just a program, but I'm doing great! How about you?";
+        } else if (
+          normalizedMessage.includes("about this site") ||
+          normalizedMessage.includes("what is this site") ||
+          normalizedMessage.includes("tell me about this site") ||
+          normalizedMessage.includes("your portfolio")
+        ) {
+          return "This is my personal portfolio website where you can explore my projects, skills, and experience. Feel free to browse around!";
+        } else if (normalizedMessage === "15-5-2008") {
+            return "To see the magic, first type 'script' into the code area and press Enter, then type 'tobot' and press Enter. Enjoy the show!";
+        }
+        else {
+          return "Sorry, I can only chat about specific topics right now. Try asking 'hi', 'how are you', or 'about this site'.";
+        }
+      };
+      // --- END FAKE AI RESPONSE LOGIC ---
+
+
+      // Function to send message
+      const sendMessage = async () => {
+        const userMessage = chatInput.value.trim();
+
+        if (userMessage) {
+          addMessageToChat('user', userMessage);
+          chatInput.value = '';
+          chatInput.style.height = 'auto'; // Reset textarea height
+          chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+
+          addMessageToChat('ai', 'Typing...'); // Show typing indicator
+          chatMessagesContainer.scrollTop = chatMessagesContainer.lastChild.offsetTop; // Scroll to typing message
+
+          const aiText = await getFakeAIResponse(userMessage); // Get fake AI response
+
+          // Remove typing indicator before showing the actual response
+          const lastMessage = chatMessagesContainer.lastChild;
+          if (lastMessage && lastMessage.classList.contains('ai') && lastMessage.querySelector('p').innerText === 'Typing...') {
+              lastMessage.remove();
+          }
+          addMessageToChat('ai', aiText);
+        }
+      };
+
+      // Send button click listener
+      sendMessageBtn.addEventListener('click', sendMessage);
+
+      // Enter key listener for chat input
+      chatInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+          event.preventDefault();
+          sendMessage();
+        }
+      });
+
+      // Auto-adjust textarea height
+      chatInput.addEventListener('input', () => {
+        chatInput.style.height = 'auto';
+        chatInput.style.height = (chatInput.scrollHeight) + 'px';
+        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Keep scroll at bottom
+      });
+
+      // --- Customization for AI Chat Opening Behavior ---
+
+      // 1. New trigger button click: Shows the AI face (overlay) but keeps chatbox closed.
+      if (newAiChatButton) {
+          newAiChatButton.addEventListener('click', (event) => {
+              // The internal checkbox of the new button handles its own visual state.
+              // We just need this outer click to activate the AI chat overlay.
+              aiInputContainer.classList.add('active'); // AI overlay ko dikhayein
+              chatToggle.checked = false; // Chat card ko initialy expand na karein, sirf face dikhayein.
+          });
+      }
+
+      // 2. Face (card) par click karne se chatbox khulega (chatToggle checkbox se controlled).
+      // 'change' event listener on the checkbox to handle chatbox opening/focusing
+      chatToggle.addEventListener('change', () => {
+        if (chatToggle.checked) {
+          // Chatbox ab open ho gaya hai, input par focus karein
+          setTimeout(() => { // Thoda delay dein CSS transition ke liye
+            chatInput.focus();
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+          }, 100);
+        } else {
+          // Chatbox band ho raha hai, focus hata dein
+          chatInput.blur();
+        }
+      });
+
+      // 3. AI chat main close button functionality: Overlay aur chat dono ko band karega.
+      if (aiChatMainCloseButton) {
+        aiChatMainCloseButton.addEventListener('click', (event) => {
+            event.stopPropagation(); // Event ko label tak bubble hone se rokein
+            aiInputContainer.classList.remove('active'); // Hide the entire AI overlay
+            chatToggle.checked = false; // Ensure chat card is collapsed (face bhi band ho jayega)
+            chatInput.blur(); // Chat input se focus hata dein
+        });
+      }
+
+      // --- End Customization for AI Chat Opening Behavior ---
+
+
+      // Password logic
+      let wrongCodeTimeout; // To clear previous wrong code messages
+
+      function displayWrongCodeMessage() {
+        // Clear any existing wrong code message
+        hideWrongCodeMessage();
+
+        const wrongCodeDiv = document.createElement('div');
+        wrongCodeDiv.id = 'wrong-code-output';
+        wrongCodeDiv.classList.add('wrong-code-message');
+        wrongCodeDiv.innerHTML = '⚠️ Wrong Code! Please try again.';
+        output.appendChild(wrongCodeDiv);
+
+        // Remove after 3 seconds
+        wrongCodeTimeout = setTimeout(() => {
+          hideWrongCodeMessage();
+        }, 3000);
+      }
+
+      function hideWrongCodeMessage() {
+        clearTimeout(wrongCodeTimeout); // Clear any pending timeout
+        const wrongCodeDiv = document.getElementById('wrong-code-output');
+        if (wrongCodeDiv) {
+          wrongCodeDiv.remove();
+        }
+      }
+
+      inputs.forEach((input, i) => {
+        input.addEventListener("input", () => {
+          hideWrongCodeMessage(); // Hide on any new input
+          if (input.value && i < inputs.length - 1) {
+            inputs[i + 1].focus();
+          }
+        });
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Backspace" && !input.value && i > 0) {
+            inputs[i - 1].focus();
+            hideWrongCodeMessage(); // Hide on backspace
+          }
+        });
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          const code = Array.from(inputs).map(i => i.value).join("").toLowerCase();
+
+          if (code === "script") {
+            inputs.forEach(i => i.value = "");
+            inputs[0].focus();
+            output.innerHTML = "";
+            hideWrongCodeMessage();
+            // Hide initial welcome section
+            if (initialWelcomeSection) {
+                initialWelcomeSection.style.display = 'none';
+            }
+            // NEW: Footer name ko Scriptobot rakhein
+            if (dynamicNameFooter) {
+                dynamicNameFooter.textContent = 'Scriptobot';
+            }
+          } else if (code === "tobot") {
+            document.getElementById("heading").style.display = "none";
+            document.getElementById("password-box").style.display = "none";
+            document.body.style.background = "black";
+            hideWrongCodeMessage(); // Hide wrong code if it was there
+
+            // Hide initial welcome section
+            if (initialWelcomeSection) {
+                initialWelcomeSection.style.display = 'none';
+            }
+
+            output.innerHTML = `
+              <div class="reveal">Wahid</div>
+              <div class="futures">
+                <div class="futures-text">
+                  The future belongs to those who understand the language of technology.
+                  Artificial Intelligence is not just reshaping industries — it’s redefining
+                  what’s possible. From automation and creative intelligence to self-evolving
+                  systems, AI is building a world where innovation has no boundaries.
+                  My vision is to stand at the forefront of this transformation, creating
+                  intelligent systems that think, learn, and inspire.
+                  In a future driven by data and powered by imagination,
+                  only those who dare to innovate will truly lead the way. 🚀
+                </div>
+                <div id="dynamic-features" class="dynamic-features">
+                  <button id="feature-1-btn" class="feature-button">My Project Ideas</button>
+                  <div id="feature-1-content" class="feature-content" style="display:none;">
+                    <h3>Project 1: Smart Home Assistant</h3>
+                    <p>This AI-powered assistant can control smart devices, manage schedules, and learn user preferences. It uses natural language processing for voice commands and integrates with various APIs.</p>
+                  </div>
+
+                  <button id="feature-2-btn" class="feature-button">AI Ethics & Principles</button>
+                  <div id="feature-2-content" class="feature-content" style="display:none;">
+                    <h3>Ethical AI Development</h3>
+                    <p>Focus on fairness, transparency, and accountability. Avoid bias in datasets, ensure user privacy, and design for human well-being. Regular audits and community feedback are crucial.</p>
+                  </div>
+
+                  <button id="feature-3-btn" class="feature-button">Upcoming Innovations</button>
+                  <div id="feature-3-content" class="feature-content" style="display:none;">
+                    <h3>Next-Gen AI Research</h3>
+                    <p>Exploring advanced neural architectures, quantum computing integration for AI, and personalized learning systems that adapt in real-time. Stay tuned for breakthroughs!</p>
+                  </div>
+                </div>
+                <!-- UPDATED: Social Media Links (WhatsApp, Facebook, Email) -->
+                <div class="social-links">
+                    <a href="https://wa.me/YOUR_WHATSAPP_NUMBER_HERE" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp fa-2x"></i></a>
+                    <a href="https://www.facebook.com/YOUR_FACEBOOK_PROFILE_HERE" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f fa-2x"></i></a>
+                    <a href="mailto:YOUR_EMAIL@example.com" target="_blank" aria-label="Email"><i class="fas fa-envelope fa-2x"></i></a>
+                </div>
+              </div>
+            `;
+            // Dynamic features buttons ke liye event listeners
+            document.getElementById('feature-1-btn').addEventListener('click', () => {
+              const content = document.getElementById('feature-1-content');
+              content.style.display = content.style.display === 'none' ? 'block' : 'none';
+            });
+            document.getElementById('feature-2-btn').addEventListener('click', () => {
+              const content = document.getElementById('feature-2-content');
+              content.style.display = content.style.display === 'none' ? 'block' : 'none';
+            });
+            document.getElementById('feature-3-btn').addEventListener('click', () => {
+              const content = document.getElementById('feature-3-content');
+              content.style.display = content.style.display === 'none' ? 'block' : 'none';
+            });
+
+            // NEW: Footer name ko Wahid main tabdeel karein
+            if (dynamicNameFooter) {
+                dynamicNameFooter.textContent = 'Wahid';
+            }
+
+          } else {
+            displayWrongCodeMessage();
+          }
+        }
+      });
+    });
+  </script>
+  <script>
+  function goToIndex() {
+    window.location.href = "index.html";
+  }
+</script>
+</body>
+</html>

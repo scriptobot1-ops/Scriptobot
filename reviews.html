@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — User Reviews</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif;}
+
+    body {
+      background: #f9fafb;
+      padding: 40px;
+      color: #222;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 30px;
+      color: #111827;
+    }
+
+    .reviews-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .review-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      transition: 0.3s;
+      position: relative;
+    }
+
+    .review-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .reviewer-name {
+      font-weight: 600;
+      color: #059669;
+      font-size: 1.2rem;
+      margin-bottom: 6px;
+    }
+
+    .review-message {
+      color: #333;
+      font-size: 0.95rem;
+      margin: 6px 0 10px;
+      line-height: 1.4;
+    }
+
+    .review-rating {
+      color: #fbbf24;
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+
+    .review-time {
+      color: #6b7280;
+      font-size: 0.8rem;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .refresh-btn, .back-btn {
+      background: linear-gradient(90deg, #2563eb, #1d4ed8);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      text-decoration: none;
+    }
+
+    .refresh-btn:hover, .back-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .no-reviews {
+      text-align: center;
+      color: #555;
+      margin-top: 40px;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <h1>All User Reviews (Realtime)</h1>
+    <div>
+      <a href="admin.html" class="back-btn">⬅ Back</a>
+    </div>
+  </div>
+
+  <div id="reviews-container" class="reviews-container"></div>
+  <p id="no-reviews" class="no-reviews">Loading reviews...</p>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <script>
+    // --- Your Firebase Config ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyCu-j4jpX89hE3zihqb6Ibet22syYFDh1o",
+      authDomain: "scriptobot-1.firebaseapp.com",
+      projectId: "scriptobot-1",
+      storageBucket: "scriptobot-1.firebasestorage.app",
+      messagingSenderId: "463059915239",
+      appId: "1:463059915239:web:9a5446d23c2c19286b6d42"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const container = document.getElementById("reviews-container");
+    const noReviews = document.getElementById("no-reviews");
+
+    // ✅ Load reviews (no orderBy if timestamp missing)
+    async function loadReviews() {
+      try {
+        const snapshot = await db.collection("reviews").get();
+        container.innerHTML = "";
+        if (snapshot.empty) {
+          noReviews.textContent = "No reviews yet 😔";
+          return;
+        }
+        noReviews.style.display = "none";
+
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const name = data.name || "Anonymous";
+          const message = data.message || data.comment || "(No comment)";
+          const rating = data.rating || 0;
+          const stars = "⭐".repeat(rating);
+          const time = data.createdAt?.toDate
+            ? data.createdAt.toDate().toLocaleString()
+            : "No date";
+
+          const card = document.createElement("div");
+          card.className = "review-card fade-in";
+          card.innerHTML = `
+            <div class="reviewer-name">${name}</div>
+            <div class="review-rating">${stars}</div>
+            <div class="review-message">"${message}"</div>
+            <div class="review-time">Posted: ${time}</div>
+          `;
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error("Error fetching reviews:", err);
+        noReviews.textContent = "Error loading reviews.";
+      }
+    }
+
+    // Run it
+    loadReviews();
+  </script>
+</body>
+</html>

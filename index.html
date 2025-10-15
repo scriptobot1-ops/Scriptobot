@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scriptobot — Home</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- LOADING SCREEN OVERLAY -->
+  <div class="loading-screen" id="loadingScreen">
+    <video autoplay loop muted playsinline preload="auto" class="loading-video">
+      <source src="myloading.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+    <!-- WELCOME TOAST NOTIFICATION -->
+  <div id="toast-notification" class="toast-notification"></div>
+
+<!-- NAVBAR -->
+<header class="site-header">
+  <!-- Yeh block aapko apni index.html file mein dhoond kar replace karna hai -->
+<nav class="navbar">
+  <a class="brand" href="index.html">Scriptobot</a>
+  
+  <!-- Hamburger menu toggle -->
+  <input type="checkbox" id="menu-toggle-checkbox" class="hamburger-checkbox-hidden">
+  <label for="menu-toggle-checkbox" class="hamburger" aria-label="Toggle navigation">
+    <svg viewBox="0 0 32 32">
+      <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+      <path class="line" d="M7 16 27 16"></path>
+    </svg>
+  </label>
+  
+  <!-- Main Navigation Links (chote screens par dropdown menu bante hain) -->
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="portfolio.html">Portfolio</a></li>
+    <li><a href="blog.html">Blog</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <!-- USER NAME YA LOGIN LINK (Yeh nav-links mein hi rahega) -->
+    <li id="auth-link-container">
+      <a href="login.html" id="auth-nav-link">Login</a>
+    </li>
+    <!-- ADMIN DASHBOARD LINK yahan Javascript se add hoga agar user admin hai -->
+  </ul>
+
+  <!-- Controls for items always visible in the header (jaise message icon) -->
+  <div class="controls">
+    <!-- MESSAGE ICON (Yeh login hone par hamesha header mein dikhega) -->
+    <div class="message-icon-container auth-hidden" id="global-message-icon-container">
+      <a href="chat.html" id="message-icon-link" class="nav-link" aria-label="Messages">
+        <svg class="message-svg-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM20 16H6L4 18V4H20V16Z"></path>
+          <path d="M7 9H17V11H7V9ZM7 12H14V14H7V12Z"></path>
+        </svg>
+        <span id="notification-dot" class="notification-dot hidden"></span>
+      </a>
+    </div>
+    <!-- Doosre possible control elements yahan aa sakte hain -->
+  </div>
+</nav>
+</header>
+<!-- HERO SECTION -->
+<section id="hero" class="hero">
+  <div class="hero-left glass">
+    <h1 class="hero-title">
+      Hi, I'm <span class="accent">Scriptobot</span>
+      <br>
+      <span class="animated"></span>
+    </h1>
+    <p class="lead hero-lead">
+      I craft <span class="animated-word">interactive</span> frontends and <span class="animated-word">modern</span> web experiences with <span class="animated-word">smooth animations</span> and cutting-edge technology.
+    </p>
+    <div class="hero-cta">
+      <a class="btn primary" href="portfolio.html">View Portfolio</a>
+      <a class="btn outline" href="contact.html">Let's Talk</a>
+    </div>
+    <p class="micro-hint"><kbd></kbd> </p>
+  </div>
+  <div class="hero-right">
+    <!-- Loop video -->
+    <video autoplay loop muted playsinline class="hero-video">
+      <source src="hero.mp4" type="video/mp4">
+    </video>
+  </div>
+</section>
+
+  <!-- SERVICES PREVIEW -->
+ <section id="services" class="services-preview">
+  <h2>Our Services</h2>
+  <div class="services-cards">
+    <div class="card glass">
+      <img src="UI.png" alt="UI Design" class="service-icon">
+      <h3>UI/UX Design</h3>
+      <p>Glassmorphism, Neumorphism & micro-interactions for modern frontends.</p>
+    </div>
+    <div class="card glass">
+      <img src="Web.jpg" alt="Web Development" class="service-icon">
+      <h3>Web Development</h3>
+      <p>Realtime functional websites with Firebase backend support.</p>
+    </div>
+    <div class="card glass">
+      <img src="3D.jpg" alt="3D Experiences" class="service-icon">
+      <h3>3D Experiences</h3>
+      <p>Three.js powered 3D hero sections & interactive elements.</p>
+    </div>
+  </div>
+  <a class="btn primary" href="services.html">Explore Services</a>
+</section>
+
+<!-- dynamic review cards -->
+<section class="reviews-carousel" id="reviews">
+  <h2>What People Say</h2>
+
+  <div class="slider-container">
+    <button class="slider-btn left" id="slideLeft">❮</button>
+    <div class="slider-track" id="sliderTrack">
+
+      <!-- CARD 1 --> 
+      <div class="review-card">
+        <img src="data:image/jpeg;base64,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" alt="Ali Raza" />
+        <h3>Ali Raza <span>🇵🇰 Karachi</span></h3>
+        <p>“Scriptobot ne meri website lightning fast bana di. Bro, animation dekho to maza aa gaya 🔥 Highly recommend!”</p>
+        <div class="stars">★★★★★</div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="review-card">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQE3tCf1nz88Dk4k_7_zkXjR0jXXR697jAcCw&s" alt="Fatima Shah" />
+        <h3>Fatima Shah <span>🇵🇰 Peshawar</span></h3>
+        <p>“Design dekha aur literally wow! Interface ekdum soft feel kar raha tha. Love the micro-interactions 💖”</p>
+        <div class="stars">★★★★★</div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="review-card">
+        <img src="https://i.pravatar.cc/150?img=56" alt="John Carter" />
+        <h3>John Carter <span>🇬🇧 London</span></h3>
+        <p>“Top-class visuals, minimal lag, and clean transitions — Scriptobot is seriously impressive!”</p>
+        <div class="stars">★★★☆☆</div>
+      </div>
+
+      <!-- CARD 4 -->
+      <div class="review-card">
+        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAJQAlAMBIgACEQEDEQH/xAAbAAABBQEBAAAAAAAAAAAAAAAGAAIDBAUBB//EAEIQAAEDAgQCBQgHBgYDAAAAAAEAAgMEEQUSITEGQRMiUWFxcnOBkbGywdEHFDI0NUKhFSQlM1LwI2J0ouHxVGOC/8QAGQEAAgMBAAAAAAAAAAAAAAAAAgQBAwUA/8QAIhEAAgICAgIDAQEAAAAAAAAAAAECAxEhBDESMhMiQUIU/9oADAMBAAIRAxEAPwDKw0fw6k8yz3QreXRVcM+4UvmGe6Fc5KsIblXbWXVxQSccFwCxunc0tCNFxwimkKOWeOP7TgO7n6lD9YZmAyvvvayHKCUWyc7ppVWSugYeu4t8QpGyB7Q+Nwc07FpvdTnJzTRK77JSGyYHaJNd2LiB5CaQurhXEDCFG5SOUZUnERUTgpXbqN64gGcf0rh5A+K4lj+tePIHxSRnBthv3Cl8wz3QrSp4b+H0vmGe6FYvqhIyS3XLptxbU2VatrGUURkfqTo1vaVDCSbJqipjpo+kleG6aA81jVOLPkuIuo3u3WPW4hJPIXyuu88uTfQq3TOc8RxdaV3+0dqrbbLVFLs1jVue8hkjWBovJKdmD5qkcWlkeIqGJzhsLXLn96j6P6zPDh1KScz+sf63cyvRsEwSmw2nHQxjOftPI1KqlNRGaqnMDqfCsfrWtc+nEbD2usVfg4cxSlceiqGkEdZt/wDhHIb2aDsXC3kqHcxj/PEAp4cTw+Nz5Q90Y1ILQf13TKHF4Kh2QOynmDojx8THizm3B3ug7ifhRrwavDQI5m65eTu7xV1d+dMpt42sos5gkShrBcWd0hpa0FsjNCDpqiIG9/0TKEJJxZ0lRuTidExx0UkEblG9PconFcQDeP8A34eQPikuY8f34eQPikiODLDr/s+l8wz3QrGqgw/8PpfMM90KyB3XUEHHENYXONgNSUGY1iRqKhz83VGjQeQRDxFU/V8ONjYyGwQBVS53Ek6DsUdlkdLJL0j3nq2F/tPOwVmmPQxExG7pOZ5hZIkMjhG29idAOZWzO3oImsI65GvchnoOOzf4EphU426a1xDGbeJXpIXkeAY9Pg0j3U0MLw/RwkJBPh2ItoOOqWQhtfSyQE82HMPmlLYSb0P02RjHAY3TbqvRV1LXQ9LRzslZ2tKnKWaaGU0+jq5I1r2EEXuuJKAgB49wboQ3FKRpzR/zQOY7VFglaKuns53Wb+oR5WQtqIHxyAFrm5TfbVeWULXYZi8tLJp0cpaB3ck/x5+Sw/wzuVUk8oKSmO2XS64uNimlMCIxxUTk926jdspOBvHvvw8gfFJLHfvo8gfFcREBrh/4fS+YZ7oVppVTD/uFL5hnuhWQboTgU48qcslLENBZzrepB5NzfvR5XYO3FcSkmlc7o4OoW9qyuIKT9kPaaMiGRhF7MAI7CD2IVOOcF/xS8clfhjBZamqfPNE4Mp9S0ixJO3zU7KY1VQ7XQgvJOoDb7rTwGY0/CdXUOeX1FTKbE7uJ0+av8MYfn+sOmLb5mtI3+zr7VTZN7GK61o2qGjpW4fHTzU8b2kDM0xXA08FSrOFaCpBdRl1O4/lHWZ6twiEN5jZMkjznS4fydz/6SnyNPI98UWsMA/2XjeDVgkpWyOve8kOt/EL0SgdNJQ076luWYxgyDsdbVKG5YCRZ3OyscgonPyOjV4MQFza26D8S42igc6Olp+lOYhri6wI7UWzvayMg7u0aEPSYPhETulkpIQXHTPrddBx/pEzjJ9Myo+OTciow+7eeST5ocx2vp6/HHVdIHtZI1lw7fNzRy7BcJnFzQxC/NoLUF8QYdFRcQdBSMeGFjHBo6xFzy+SZplBy0KciFkYfZ5Ruxn/CZ5ITidFYmwrEKWkZPPSSxwkDrOtceI3HpVS6aTT6M9xcexrionFPcVC86G26kHsH8cP76PIHxSWhxjTtpa6khLTmFIwu8SSSkuUiz4WEWHn9wpfMs90KyD2qrQfcKXzDPdCnJsFxSPw/K18xO7pj7AsvG4217K67AWkFrX9jm/BXaZxFRMNgCHBRD7jUMtrHnDvG5P63SfU8movtUkZfC8fTUlLC8gRwnpHaXGlz7VZqsMxmOqE2HMLOiv1musXXNySCrvCdKI5HG12MhbfyiiUEqLLMSLqqVKIEP4g4mpMoqMP0G5MJ19S5FxrWmduagaW88ua/oRzlXGsbcHKPUh+SH6gvgmupCwqsirqOOpia5offquFi08wVevooWns25J7XahLy7GEnjZXrXASOc5wa2Mbk2VRsbHnpjZzrdU3uAO5S1tNFWxTwVAJjebO1tog2t4bxfC3OnwOslkjv/Kzda3sKshFS7eAJylDaWQyaNd7oWqhk4/p5LBwETPQdVS/a/FsLB0mHE2/MYd1Xo5a93E0E+J9Sdz4rttazSDYWV1dTi28/gvdcpRSx+nqskv12hfG7XMLFeeEFpIduCQV6DTtyssOZQNisfQYlUxkWs8kenVFx3h4KudHSkU3FdpGiWsgjIvmkaLduqY4q5w63pMcpuxhMh9A+dkzN4ixCtZmkZv0iuDsfabW/d26elySb9IZvjzSd+gb7SuIIeqHZ+zNigP8AD6XzDPdClJUFCbUFL5lg/wBoTpJg1pNthqFaZwx7wJ2HOAC6zj3HRaDqCGrpn1EJLZMjgHN/NbTUcwgfFsQkqpct8sbdLNKjp+LcWo6Q0cUsbomizS9l3N8CqJ1+Tyh2m3wjhh9wtKJ6R9tzEw+kXC2ACOSGPo9kzt6Mm96e5P8A9ElGOQJSxYkaVMsxRXAJ5LoaVZEa7ktyVZdkrucGOawnrO2C7qeYTaql6azs72Oa0gFp2vb5BZrW1NKXsdO6UbszDW3ZfmpWzkW5S5lS3MDkfpr2p7yWjRQQx1VRIx9U4ZGataN7qd+yFomPZCXaEbeCCsTcBxG+Z2vRzQj2fNGUhyAk7BB87frHTzW1e8uHwTHGWWxXnTSikenQkFgI7LoW4ypslRDUtGjwWOPeNlv4TOJ6SF7LEFotc9yqcVQmbDX5Rfo+v6t11bxMG6PnSAzitfhKMOrqiTmyEAeJcPksYrf4NZc1j+zKPamrX9GZvHWbUDX0g/jrP9O32ldTvpE/Hmf6dvtcuKYeqL7H9madFrQUwO3RM90Kjj1a2OEsZyGtu1WKZ7hQQZdAIW6nwGyHsbltZh3Jzu+CMTgjHmlObQ681WF3B5/u66TmcSeasvhyU4DTck5nEexStBMOfo4lEhaRa8TSx+utjsvQN7E72XjHC+KyYJiMdVlzQvcWyR23b/wvZoZGzRMljeHMe0OaRzCS5EcSyafFnmGCOrgdUQGOOQxOuHB47QbrHqcfmo6h9PV0YDhs9r+q7vGn6LfsqWKUf1lgkjaDIwbH8w7EumhpGVJj07heOBrGn8xJPwTGYzOWkujgd2WuPipIAI7mnlkgdsWi1h4g6KZ00ro3Nkgw55It0r6UZh6rIvqWNNdE2H4gyqJa4Bsrd2338FZc29/gsnB8Ia5wnmkke1h6uuXX0LbIAB/L4oWt6AbwYWOT9BSFv55jkb/fhdD56rQ0bAWT6nEP2lis7muvDAckfZ3lRn7XoHxT9EPGBk8qz5JhdwdIHYaIj9qJ5b6N/ityoja+F7HjquBB70B4RiVRh5qHUzGSNd1i1zrfZGvI6oira2ebDqeeKQmKQgSSQ6g3FwGnwIvp2pW2DUsocpsTrSYE1UToJpYidY3Ft0R8F6U9V50exZmMUxc1ssMVQ+V2sgawkDTS57eS1uFIJKfDnzSNc0SSEgOHK1lfOadQpTW43At9Iv4+y3/jt9rklH9IDi/HWu/9DfaUlbD1RM/Zk5m6PDob3P8AhNNjz0CF6+QykuJu5x1K3ZnkYawjQdA21+WnxWFMy7S7kNPSjFVpFamizTeAurkxDIw24ubekplJlYyeV3IgDvVaaUyVN7Wa3UKWjiTdjW9pPtXp/D1eaGlpxIS6nkY0kb5SRv4dy8xhaZHtDBff2r0qkiaMLoza4MLRfs0St47xe2FzC17Q9hDmkXBGt07VDFBVy0OkfXhJuYjy7x8kQ0tVDVMzQODu0fmb3EJRpj6IavD4Z3BxBDv62mx9KhZhTA4dI+R/cXD4LRKaSR4KNhZeBgaI2hjbADYAWWHj+INax1FE/K+QZXvbuwHs703FuIIWZ6egcHyAkF41DT8UO3JJJcSTuSd+9M01Z2xDkX40jHwFxp6uelfo4nMPRofh61rv+26/csfE43U9ayoiNr9b07FaEVQJohIDuNe4p0zy9hUcc2IsD42vaWm4cL7dyMIY42RhrGta3fK0WF0G4I/+Jx+S5Epqco308UnfqRocTcdmzC9sTLNNvAqGokD2kE3HeVkOq8w0d+qfRTGapbHe7RcuPYEvjA3rOQH49i6PGowedOw/qUlJ9Izg7H2EG4+rt28XJLQh6ozZv7Mo1Lj9RgjG5Y0nwtoqj4i7JHtYGR3q0V1jAKWKSc7saSB/SBoPYojmkD3kgGU6dwCMoXRizuPVjubDUd65SU01TII4W53E38B2lWaTDKvE6psFJE6SR2vYGjtJ5L0DCOG4sLp2xufnmk/myW7th3IbLFBE11SnIwcMwTo45nOadIi1neUYYcGOw+OIgZejA07kypgbFGwM2Ybf36VBhjujzRD8hIt3XSc5eezQrh4aJHxmN1nevtSBIkD2EtcNA4HUK5I1sjbHlsVWdG5p01QIYySiurGCwnJ8poKgmqJpmu6aVzwBe2w9S7ldzFk8tYI3AbuaQu0DLoDqd3WeTe7jdWc+gCqNBjkLSprrQj0ZE+3kVU0TQ6i9jt2jn/fcqDGuppHEEkEa/wCYdvitC+llA5guRvzZ4cwiBXZp8PDPisJGrcrj6LIzocMgfK583WaNmoX4Rw+Vsrq17C2HJkiB59pHci6CTIQPWkb5Zlo0+JHEdlyahoxtTx6bdVKkihjmLYoomXbc2YNU2SYOY087aqBswZMHk6AG6pwxvCPPPpODTxGywt+7M2Fubl1Q/SLIJMfa5uo+rt19LkloQ9UZc19mZou9kEZPVsz3bq5SwtqMRhgfcMke5hy6EADkkkum2kVVLPZ6DR0FLhsPQ0cQjaLXI3d4lOm+wT2G4SSWe3lmlFaKtUP8GX/K0kehZUTi3GSwbEEn1JJI49HPs1NkwkgpJISw446Ku8kG6SSlAMGMQaGzXH9RUbHEjw0SST9fqZVvsOV3A6WKtxaOGcExtBdlGl9Dukkpl6s6vc0HBAADQAB2BNOySSzjY/BBxJsoy46i6SSNHHnfHbj+22+Yb7SkkknY9Iz5+zP/2Q==" alt="Sara Malik" />
+        <h3>Sara Malik <span>🇵🇰 Multan</span></h3>
+        <p>“Portfolio dekha to laga cinematic feel aa rahi hai! Loved the details and smooth effects ✨”</p>
+        <div class="stars">★★★★★</div>
+      </div>
+
+      <!-- CARD 5 -->
+      <div class="review-card">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIh0hpeXs_RSnBc9BpsemVjoJ95jxz5XIBxw&s" alt="Ayesha Noor" />
+        <h3>Ayesha Noor <span>🇵🇰 Faisalabad</span></h3>
+        <p>“Animations bohat natural lagti hain — scroll krte waqt har cheez zinda feel hoti hai 😍”</p>
+        <div class="stars">★★★★☆</div>
+      </div>
+
+      <!-- CARD 6 -->
+      <div class="review-card">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQW8UDJTbwtP-L14S9vrMsv7qUQkW6ya3yT3Q&s" alt="Hira Khan" />
+        <h3>Hira Khan <span>🇵🇰 Lahore</span></h3>
+        <p>“Incredible design sense! The UI was crisp, responsive, and so elegant — totally exceeded expectations.”</p>
+        <div class="stars">★★★★★</div>
+      </div>
+<!-- CARD 7 -->
+<div class="review-card">
+  <img src="data:image/jpeg;base64,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" alt="Zain Ali" />
+  <h3>Zain Ali <span>🇵🇰 Islamabad</span></h3>
+  <p>“Website itni clean aur fast bani ke mujhe khud yaqeen nahi hua! Scriptobot ne kamaal kar dia 🔥”</p>
+  <div class="stars">★★★☆☆</div>
+</div>
+
+<!-- CARD 8 -->
+<div class="review-card">
+  <img src="https://i.pravatar.cc/150?img=45" alt="Emily Carter" />
+  <h3>Emily Carter <span>🇺🇸 New York</span></h3>
+  <p>“Loved the sleek animations and the overall UX polish — it honestly feels like a high-end studio built it.”</p>
+  <div class="stars">★★★☆☆</div>
+</div>
+
+<!-- CARD 9 -->
+<div class="review-card">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVCHywHxDFVk0j8PEgX8FELCQ8Vbiu2a49Xg&s" alt="Ahmed Khan" />
+  <h3>Ahmed Khan <span>🇵🇰 Lahore</span></h3>
+  <p>“Animations aur scroll effect to next level hain. Har section smooth aur alive lagta hai 👏”</p>
+  <div class="stars">★★★★★</div>
+</div>
+
+<!-- CARD 10 -->
+<div class="review-card">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOOOp7Ae6JdqU8o-6BLyjvrep4SEd8mfKx2w&s" alt="Jessica Brown" />
+  <h3>Jessica Brown <span>🇨🇦 Toronto</span></h3>
+  <p>“Really appreciate the attention to micro-interactions. Every pixel feels thoughtful and responsive.”</p>
+  <div class="stars">★★★★★</div>
+</div>
+
+<!-- CARD 11 -->
+<div class="review-card">
+  <img src="https://i.pravatar.cc/150?img=14" alt="Bilal Asif" />
+  <h3>Bilal Asif <span>🇵🇰 Sialkot</span></h3>
+  <p>“Bhai interface itna responsive ke mobile pr bhi har cheez butter smooth chal rahi hai 💫”</p>
+  <div class="stars">★★★★☆</div>
+</div>
+
+<!-- CARD 12 -->
+<div class="review-card">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw_5BPX2nHP1V0ZLWFGcl_4li_KV5RTA3Fiw&s" alt="Sophie Müller" />
+  <h3>Sophie Müller <span>🇩🇪 Berlin</span></h3>
+  <p>“I adore how the website feels — modern, fluid, and full of character. Easily one of the best UIs I’ve seen!”</p>
+  <div class="stars">★★★☆☆</div>
+</div>
+
+
+    </div>
+    <button class="slider-btn right" id="slideRight">❯</button>
+  </div>
+</section>
+
+<!-- end of dynamic cards -->
+  <!-- Existing Reviews List -->
+
+  <!-- Review Form -->
+  <div class="review-form">
+    <h3>Add Your Review</h3>
+    <form id="reviewForm">
+      <input type="text" id="reviewerName" placeholder="Your Name" required />
+      <textarea id="reviewMessage" placeholder="Write your feedback..." required></textarea>
+      <button type="submit" class="btn primary">Submit Review</button>
+    </form>
+    <p id="reviewStatus" style="margin-top:10px; font-size:0.9rem;"></p>
+  </div>
+</section>
+
+  <!-- FOOTER -->
+ <footer class="site-footer">
+  <div class="footer-content">
+    <div class="footer-section about">
+      <h3 class="brand">Scriptobot</h3>
+      <p>We are a company dedicated to providing the best services. Learn more about us.</p>
+      <div class="social-links">
+        <!-- WhatsApp Button -->
+        <a href="#" class="social-btn whatsapp">
+          <div class="sign">
+            <svg class="socialSvg whatsappSvg" viewBox="0 0 16 16">
+              <path
+                d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"
+              ></path>
+            </svg>
+          </div>
+          <div class="text">Whatsapp</div>
+        </a>
+
+        <!-- Facebook Button -->
+        <a href="#" class="social-btn facebook">
+          <div class="sign">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
+              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+              <g id="SVGRepo_iconCarrier">
+                <path d="M12 2.03998C6.5 2.03998 2 6.52998 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.84998C10.44 7.33998 11.93 5.95998 14.22 5.95998C15.31 5.95998 16.45 6.14998 16.45 6.14998V8.61998H15.19C13.95 8.61998 13.56 9.38998 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96C15.9164 21.5878 18.0622 20.3855 19.6099 18.57C21.1576 16.7546 22.0054 14.4456 22 12.06C22 6.52998 17.5 2.03998 12 2.03998Z"></path>
+              </g>
+            </svg>
+          </div>
+          <div class="text">Facebook</div>
+        </a>
+        <!-- Add other social media buttons here following the same pattern -->
+      </div>
+    </div>
+
+    
+    <!-- From Uiverse.io by vinodjangid07 --> 
+<button class="reward-btn">
+  <span class="IconContainer">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 60 20"
+      class="box-top box"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-width="4"
+        stroke="#6A8EF6"
+        d="M2 18L58 18"
+      ></path>
+      <circle
+        stroke-width="5"
+        stroke="#6A8EF6"
+        fill="#101218"
+        r="7"
+        cy="9.5"
+        cx="20.5"
+      ></circle>
+      <circle
+        stroke-width="5"
+        stroke="#6A8EF6"
+        fill="#101218"
+        r="7"
+        cy="9.5"
+        cx="38.5"
+      ></circle>
+    </svg>
+
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 58 44"
+      class="box-body box"
+    >
+      <mask fill="white" id="path-1-inside-1_81_19">
+        <rect rx="3" height="44" width="58"></rect>
+      </mask>
+      <rect
+        mask="url(#path-1-inside-1_81_19)"
+        stroke-width="8"
+        stroke="#6A8EF6"
+        fill="#101218"
+        rx="3"
+        height="44"
+        width="58"
+      ></rect>
+      <line
+        stroke-width="6"
+        stroke="#6A8EF6"
+        y2="29"
+        x2="58"
+        y1="29"
+        x1="-3.61529e-09"
+      ></line>
+      <path
+        stroke-linecap="round"
+        stroke-width="5"
+        stroke="#6A8EF6"
+        d="M45.0005 20L36 3"
+      ></path>
+      <path
+        stroke-linecap="round"
+        stroke-width="5"
+        stroke="#6A8EF6"
+        d="M21 3L13.0002 19.9992"
+      ></path>
+    </svg>
+
+    <span class="coin"></span>
+  </span>
+  <span class="text">Rewards</span>
+</button>
+
+    <div class="footer-section links">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="blog.html">Blog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section newsletter">
+      <h3>Subscribe to our Newsletter</h3>
+      <form id="newsletter-form">
+        <input type="email" placeholder="Enter your email" required>
+        <button type="submit" class="btn primary">Subscribe</button>
+      </form>
+      <p class="micro-hint">Get the latest updates directly in your inbox.</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 Scriptobot. All rights reserved.</p>
+  </div>
+</footer>
+<!-- Scroll to Top Button -->
+<button id="scrollToTopBtn" title="Go to top">↑</button>
+  <!-- ==================== FIREBASE SDK (v8) ==================== -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <!-- ==================== FIREBASE INIT ==================== -->
+  <script>
+    // Tumhara real config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCu-j4jpX89hE3zihqb6Ibet22syYFDh1o",
+      authDomain: "scriptobot-1.firebaseapp.com",
+      projectId: "scriptobot-1",
+      storageBucket: "scriptobot-1.firebasestorage.app",
+      messagingSenderId: "463059915239",
+      appId: "1:463059915239:web:9a5446d23c2c19286b6d42",
+      measurementId: "G-X027DDY1PN"
+    };
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+    const db = firebase.firestore();
+    // new script
+     const auth = firebase.auth(); 
+  </script>
+<script>
+const track = document.getElementById("sliderTrack");
+const btnLeft = document.getElementById("slideLeft");
+const btnRight = document.getElementById("slideRight");
+
+let scrollAmount = 0;
+const cardWidth = 320; // card width + gap
+
+btnLeft.addEventListener("click", () => {
+  scrollAmount -= cardWidth;
+  if (scrollAmount < 0) scrollAmount = 0;
+  track.style.transform = `translateX(-${scrollAmount}px)`;
+});
+
+btnRight.addEventListener("click", () => {
+  const maxScroll = track.scrollWidth - track.clientWidth;
+  scrollAmount += cardWidth;
+  if (scrollAmount > maxScroll) scrollAmount = maxScroll;
+  track.style.transform = `translateX(-${scrollAmount}px)`;
+});
+
+// Optional auto-slide
+setInterval(() => {
+  const maxScroll = track.scrollWidth - track.clientWidth;
+  scrollAmount += cardWidth;
+  if (scrollAmount > maxScroll) scrollAmount = 0;
+  track.style.transform = `translateX(-${scrollAmount}px)`;
+}, 4000);
+</script>
+<script>
+  const rewardBtn = document.querySelector(".reward-btn");
+
+rewardBtn.addEventListener("click", () => {
+  // 👇 yeh new page open karega jahan tumhara Easter Egg code hoga
+  window.open("egg.html", "_blank");
+});
+
+</script>
+<script>
+  // nav toggle
+document.addEventListener('DOMContentLoaded', () => {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    if (menuToggle && navLinks) {
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            menuToggle.classList.toggle('active'); // Toggle button icon (hamburger to X) ke liye
+        });
+
+        // Optional: Menu ko band karein jab kisi link par click kiya jaye
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                menuToggle.classList.remove('active');
+            });
+        });
+    }
+});
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const loadingScreen = document.getElementById("loadingScreen");
+
+  // ✅ Failsafe: agar video thoda time le, fir bhi 2s me hide kar do
+  setTimeout(() => {
+    if (loadingScreen) {
+      loadingScreen.classList.add("hidden");
+      setTimeout(() => {
+        loadingScreen.remove();
+      }, 800);
+    }
+  }, 200);
+});
+
+</script>
+<script>
+  // --- SCROLL TO TOP BUTTON ---
+  const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+  // جب یوزر اسکرول کرے تو بٹن کی visibility کو کنٹرول کریں
+  window.onscroll = function() {scrollFunction()};
+
+  function scrollFunction() {
+    // اگر 50px سے زیادہ اسکرول ہو تو بٹن دکھائیں، ورنہ چھپا دیں
+    if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+      scrollToTopBtn.style.display = "block";
+    } else {
+      scrollToTopBtn.style.display = "none";
+    }
+  }
+
+  // بٹن پر کلک کرنے پر صفحے کو سب سے اوپر اسکرول کریں
+  scrollToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // ہموار (smooth) اسکرولنگ اینیمیشن کے لیے
+    });
+  });
+</script>
+  <!-- ==================== GLOBAL SCRIPT ==================== -->
+
+  <!-- YAHAN NAYA JAVASCRIPT CODE ADD KAREIN -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const authNavLink = document.getElementById('auth-nav-link');
+        const menuToggleCheckbox = document.getElementById('menu-toggle-checkbox');
+        const toastNotification = document.getElementById('toast-notification');
+        const notificationDot = document.getElementById('notification-dot');
+
+        // --- HELPER FUNCTION: TOAST NOTIFICATION ---
+        function showToast(message) {
+            toastNotification.textContent = message;
+            toastNotification.classList.add('show');
+            setTimeout(() => {
+                toastNotification.classList.remove('show');
+            }, 3000); // 3 seconds tak toast dikhega
+        }
+
+        // --- FUNCTION: CHECK FOR NEW MESSAGES (Firestore Listener) ---
+        // Assuming you have a 'users' collection in Firestore,
+        // and each user's document (user.uid) has a 'hasNewMessages' boolean field.
+        function setupNewMessageListener(userId) {
+            if (!userId) {
+                notificationDot.classList.add('hidden');
+                return;
+            }
+
+            // Real-time listener set up for the user's document
+            db.collection('users').doc(userId).onSnapshot((doc) => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    if (userData.hasNewMessages) {
+                        notificationDot.classList.remove('hidden'); // Dot dikhao
+                    } else {
+                        notificationDot.classList.add('hidden'); // Dot chhupao
+                    }
+                } else {
+                    // Agar user document nahi mila, toh koi message nahi hai
+                    notificationDot.classList.add('hidden');
+                }
+            }, (error) => {
+                console.error("Error fetching new message status:", error);
+                notificationDot.classList.add('hidden');
+            });
+        }
+
+
+        // --- AUTHENTICATION STATE CHANGE LISTENER ---
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // User logged in hai
+                const userName = user.displayName || user.email;
+                authNavLink.textContent = userName;
+                authNavLink.href = 'profile.html'; // Profile page par le jayega
+                
+                showToast(`Welcome back, ${userName}!`); // Welcome message toast
+
+                setupNewMessageListener(user.uid); // Naye messages ke liye sunna shuru karein
+
+            } else {
+                // User logged out hai
+                authNavLink.textContent = 'Login';
+                authNavLink.href = 'login.html'; // Login page par le jayega
+                
+                notificationDot.classList.add('hidden'); // Jab logout ho toh dot hide kar do
+                // showToast('Please log in to continue.'); // Optional: login prompt
+            }
+        });
+
+        // --- MOBILE MENU BEHAVIOR ---
+        // Mobile menu ko band karein jab auth link par click kiya jaye
+        authNavLink.addEventListener('click', () => {
+            if (menuToggleCheckbox && menuToggleCheckbox.checked) {
+                menuToggleCheckbox.checked = false; // Hamburger menu ko band kar do
+            }
+        });
+        // Mobile menu ko band karein jab message icon par click kiya jaye
+        document.getElementById('message-icon-link').addEventListener('click', () => {
+            if (menuToggleCheckbox && menuToggleCheckbox.checked) {
+                menuToggleCheckbox.checked = false; // Hamburger menu ko band kar do
+            }
+        });
+    });
+
+    // chat script
+      // ... (auth.onAuthStateChanged के अंदर का existing code) ...
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // User logged in hai
+                const userName = user.displayName || user.email;
+                authNavLink.textContent = userName;
+                authNavLink.href = 'profile.html';
+                
+                showToast(`Welcome back, ${userName}!`);
+
+                setupNewMessageListener(user.uid); // Naye messages ke liye sunna shuru karein
+
+                // --- NAYA: ADMIN LINK DISPLAY ---
+                const ADMIN_UIDS_INDEX_PAGE = ["YOUR_ADMIN_FIREBASE_UID"]; // <-- Yahan apne Admin ka UID daalein
+                if (ADMIN_UIDS_INDEX_PAGE.includes(user.uid)) {
+                    // Agar user admin hai, toh admin chat dashboard ka link add karein
+                    const adminChatListItem = document.createElement('li');
+                    adminChatListItem.classList.add('nav-item');
+                    adminChatListItem.innerHTML = `<a href="admin-chat.html" class="nav-link" id="admin-dashboard-link">Admin Dashboard</a>`;
+                    // सुनिश्चित करें कि यह navbar में सही जगह पर लगे, उदाहरण के लिए:
+                    // अगर auth-link-container आखिरी आइटम है, तो उसके पहले लगा सकते हैं
+                    const authLinkContainer = document.getElementById('auth-link-container');
+                    authLinkContainer.parentNode.insertBefore(adminChatListItem, authLinkContainer);
+
+                    // Mobile menu ke liye bhi click listener
+                    adminChatListItem.querySelector('a').addEventListener('click', () => {
+                        if (menuToggleCheckbox && menuToggleCheckbox.checked) {
+                            menuToggleCheckbox.checked = false;
+                        }
+                    });
+                }
+                // --- END ADMIN LINK DISPLAY ---
+
+            } else {
+                // ... (existing code for logged out user) ...
+            }
+        });
+  </script>
+<!-- Yeh block aapko apni index.html file mein, script tags ke andar dhoond kar replace karna hai -->
+  <script>
+    // In variables ko global ya module scope mein define karein
+    let authNavLink = null;
+    let menuToggleCheckbox = null;
+    let toastNotification = null;
+    let notificationDot = null;
+    let adminDashboardLink = null; 
+    let globalMessageIconContainer = null; 
+
+    // --- HELPER FUNCTION: TOAST NOTIFICATION ---
+    function showToast(message) {
+        if (toastNotification) { 
+            toastNotification.textContent = message;
+            toastNotification.classList.add('show');
+            setTimeout(() => {
+                toastNotification.classList.remove('show');
+            }, 3000); 
+        } else {
+            console.warn("showToast called before toastNotification element was initialized.");
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Ab yahan unko initialize karein
+        authNavLink = document.getElementById('auth-nav-link');
+        menuToggleCheckbox = document.getElementById('menu-toggle-checkbox');
+        toastNotification = document.getElementById('toast-notification');
+        notificationDot = document.getElementById('notification-dot');
+        globalMessageIconContainer = document.getElementById('global-message-icon-container'); 
+        
+        // --- Naya: Initial hide for message icon ---
+        // Jaise hi DOM load ho, message icon ko chhupa do,
+        // jab tak Firebase auth status confirm na ho jaye.
+        if (globalMessageIconContainer) {
+            globalMessageIconContainer.classList.add('auth-hidden');
+        }
+        // --- End initial hide ---
+
+        // adminDashboardLink ko sirf tab initialize karein jab woh DOM mein ho (admin login hone par)
+        // adminDashboardLink = document.getElementById('admin-dashboard-link'); 
+
+        // --- FUNCTION: CHECK FOR NEW MESSAGES (Firestore Listener) ---
+        function setupNewMessageListener(userId) {
+            if (!userId) {
+                if (notificationDot) notificationDot.classList.add('hidden');
+                return;
+            }
+
+            db.collection('chats').doc(userId).onSnapshot((doc) => {
+                if (doc.exists) {
+                    const chatData = doc.data();
+                    if (chatData.userHasNewMessages) { 
+                        if (notificationDot) notificationDot.classList.remove('hidden');
+                    } else {
+                        if (notificationDot) notificationDot.classList.add('hidden');
+                    }
+                } else {
+                    if (notificationDot) notificationDot.classList.add('hidden');
+                }
+            }, (error) => {
+                console.error("Error fetching new message status:", error);
+                if (notificationDot) notificationDot.classList.add('hidden');
+            });
+        }
+
+
+        // --- AUTHENTICATION STATE CHANGE LISTENER ---
+        auth.onAuthStateChanged(user => {
+            console.log("Firebase Auth State Changed. User:", user); 
+
+            if (user) {
+                const userName = user.displayName || user.email;
+                if (authNavLink) { 
+                    authNavLink.textContent = userName;
+                    authNavLink.href = 'profile.html'; 
+                }
+                
+                showToast(`Welcome back, ${userName}!`); 
+
+                setupNewMessageListener(user.uid); 
+
+                // User logged in hai, message icon dikhao
+                if (globalMessageIconContainer) {
+                    globalMessageIconContainer.classList.remove('auth-hidden'); 
+                }
+
+                // --- ADMIN LINK DISPLAY ---
+                // "YOUR_ADMIN_FIREBASE_UID" ko apne asal Firebase Admin UID se badalna na bhoolein!
+                const ADMIN_UIDS_INDEX_PAGE = ["YOUR_ADMIN_FIREBASE_UID"]; 
+                if (ADMIN_UIDS_INDEX_PAGE.includes(user.uid)) {
+                    if (!document.getElementById('admin-dashboard-link')) { 
+                        const adminChatListItem = document.createElement('li');
+                        adminChatListItem.classList.add('nav-item');
+                        adminChatListItem.innerHTML = `<a href="admin-chat.html" class="nav-link" id="admin-dashboard-link">Admin Dashboard</a>`;
+                        
+                        const authLinkContainer = document.getElementById('auth-link-container');
+                        if (authLinkContainer) { 
+                            authLinkContainer.parentNode.insertBefore(adminChatListItem, authLinkContainer);
+
+                            adminChatListItem.querySelector('a').addEventListener('click', () => {
+                                if (menuToggleCheckbox && menuToggleCheckbox.checked) {
+                                    menuToggleCheckbox.checked = false;
+                                }
+                            });
+                        }
+                    }
+                }
+                // Agar user admin nahi hai, to admin link ko remove karein
+                else {
+                    const existingAdminLink = document.getElementById('admin-dashboard-link');
+                    if (existingAdminLink && existingAdminLink.parentNode) {
+                        existingAdminLink.parentNode.removeChild(existingAdminLink); 
+                    }
+                }
+                // --- END ADMIN LINK DISPLAY ---
+
+            } else {
+                // User logged out hai, message icon chupao
+                if (globalMessageIconContainer) {
+                    globalMessageIconContainer.classList.add('auth-hidden'); 
+                }
+
+                if (authNavLink) { 
+                    authNavLink.textContent = 'Login';
+                    authNavLink.href = 'login.html'; 
+                }
+                
+                if (notificationDot) notificationDot.classList.add('hidden'); 
+
+                // Agar user logged out hai, to admin link ko remove karein
+                const existingAdminLink = document.getElementById('admin-dashboard-link');
+                if (existingAdminLink && existingAdminLink.parentNode) {
+                    existingAdminLink.parentNode.removeChild(existingAdminLink); 
+                }
+            }
+        });
+
+        // --- EVENT LISTENERS FOR MOBILE MENU ---
+        // Jab auth link par click ho to mobile menu band ho jaye
+        if (authNavLink) { 
+            authNavLink.addEventListener('click', () => {
+                if (menuToggleCheckbox && menuToggleCheckbox.checked) {
+                    menuToggleCheckbox.checked = false;
+                }
+            });
+        }
+        
+        // Jab message icon par click ho to mobile menu band ho jaye (ab ye hamesha header mein hai)
+        const messageIconLink = document.getElementById('message-icon-link');
+        if (messageIconLink) { 
+            messageIconLink.addEventListener('click', () => {
+                if (menuToggleCheckbox && menuToggleCheckbox.checked) {
+                    menuToggleCheckbox.checked = false;
+                }
+            });
+        }
+
+        // Existing menu toggle for main nav-links, ensure it works.
+        // It's already tied to the checkbox.
+    });
+  </script>
+<script src="script.js"></script>
+<!-- mai ny aaj es page key coding khatam kr lee hai  -->
+</body>
+</html>
