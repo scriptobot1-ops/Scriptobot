@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scriptobot Blog</title>
+  <!-- Font Awesome CDN for real icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+  /* Base Reset */
+* { margin:0; padding:0; box-sizing:border-box; }
+body { 
+  font-family: 'Segoe UI', Arial, sans-serif; 
+  background:var(--bg); 
+  color:var(--text); 
+  transition: background 0.3s ease, color 0.3s ease; 
+  line-height: 1.6; 
+  -webkit-font-smoothing: antialiased; 
+  -moz-osx-font-smoothing: grayscale; 
+  text-rendering: optimizeLegibility; 
+}
+
+/* Theme Variables - Dark Mode Default */
+:root {
+  --bg: #121212; /* Dark background */
+  --text: #f5f5f5; /* Light text */
+  --accent: #e63946; /* Red accent */
+  --glass: rgba(0, 0, 0, 0.3); /* Darker glass effect */
+  --card-bg: rgba(255, 255, 255, 0.05); /* Subtle white overlay for cards */
+  --input-bg: rgba(255, 255, 255, 0.08); /* Darker input background */
+  --shadow-dark: rgba(0, 0, 0, 0.2); 
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 5px; border: 2px solid var(--bg); }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* Text Selection Style */
+::selection { background-color: var(--accent); color: var(--bg); }
+
+/* Focus States (Accessibility & UX) */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+.btn:focus-visible, .hero-left:focus-visible, .card:focus-visible, .review-card:focus-visible, input:focus-visible, textarea:focus-visible { border-radius: 8px; }
+
+/* Header and Navbar */
+.site-header {
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+}
+
+.navbar {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  position: relative; /* For absolute-positioned nav-links */
+}
+
+.brand {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.3s ease, text-shadow 0.3s ease-in-out;
+  text-shadow: 0 0 5px rgba(230, 57, 70, 0.4);
+}
+.brand:hover {
+    color: #ff6b6b; 
+    text-shadow: 0 0 10px rgba(230, 57, 70, 0.7), 0 0 20px rgba(230, 57, 70, 0.3);
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li a {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: bold; 
+  transition: color 0.3s ease, transform 0.2s ease, text-shadow 0.3s ease-in-out;
+  position: relative;
+  padding: 0.5rem 0.7rem; 
+  border-radius: 4px; 
+  padding-bottom: 5px; 
+}
+
+.nav-links li a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: width 0.3s ease;
+}
+
+.nav-links li a:hover {
+  color: var(--accent);
+  transform: translateY(-2px); 
+  text-shadow: 0 0 8px rgba(230, 57, 70, 0.4); 
+}
+.nav-links li a:hover::after {
+    width: 100%;
+}
+
+/* Hamburger Menu (Uiverse-style) */
+.hamburger-checkbox-hidden {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.hamburger {
+  cursor: pointer;
+  display: none; 
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  z-index: 1001; 
+}
+
+.hamburger:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.hamburger-checkbox-hidden:checked + .hamburger svg {
+  transform: rotate(-45deg);
+}
+
+.hamburger-checkbox-hidden:checked + .hamburger .line-top-bottom {
+  stroke-dasharray: 20 300;
+  stroke-dashoffset: -32.42;
+}
+
+.hamburger svg {
+  height: 2.2em;
+  width: 2.2em;
+  transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.line {
+  fill: none;
+  stroke: var(--text);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+  transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
+              stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.line-top-bottom {
+  stroke-dasharray: 12 63;
+}
+
+/* General Layout */
+.container {
+  max-width: 960px;
+  margin: 30px auto;
+  padding: 15px;
+}
+
+/* Card Styles */
+.card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  overflow: hidden;
+  animation: cardFadeIn 0.6s ease-out forwards; 
+  opacity: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1); 
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); 
+}
+
+.card:hover {
+  transform: translateY(-10px) scale(1.02); 
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.4);
+  background: rgba(0,0,0,0.4); 
+}
+
+.card h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: var(--text);
+    transition: color 0.3s ease;
+}
+.card:hover h2 { color: var(--accent); }
+.card img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  display: block;
+  transition: transform 0.5s ease;
+}
+.card:hover img { transform: scale(1.05); }
+
+.meta {
+  font-size: 0.9rem; color: #aaa; margin-bottom: 12px; opacity: 0.7; display: flex; gap: 15px; align-items: center;
+}
+.meta::before { content: ''; display: inline-block; width: 1px; height: 12px; background-color: rgba(255, 255, 255, 0.2); margin-right: 10px; }
+
+.content p { line-height: 1.7; margin-bottom: 20px; font-size: 1.05rem; color: var(--text); opacity: 0.9; }
+
+/* Read More button style */
+.read-more-btn {
+    background: var(--accent);
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+    display: inline-block; 
+}
+
+.read-more-btn:hover {
+    background: #e22a2a;
+    transform: translateY(-2px);
+}
+
+
+/* Actions Section */
+.actions {
+  margin-top: 20px;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
+}
+
+button {
+  padding: 10px 18px; margin: 8px 6px; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; outline: none;
+}
+
+.like-btn {
+  background: var(--accent); color: #fff; box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+}
+.like-btn:hover { background: #e22a2a; transform: translateY(-3px); box-shadow: 0 6px 20px rgba(230, 57, 70, 0.5); }
+
+/* Share Button Styles */
+.share-button-container {
+  position: relative; display: inline-block; margin-top: 10px;
+}
+.share-fab {
+  background-color: var(--accent); color: white; border: none; width: 50px; height: 50px; border-radius: 50%;
+  font-size: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer;
+  box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.share-fab:hover { transform: translateY(-3px) rotate(15deg); box-shadow: 0 6px 20px rgba(230, 57, 70, 0.6); }
+
+.share-options {
+  position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px;
+  transition: opacity 0.3s ease, transform 0.3s ease; opacity: 0; pointer-events: none;
+}
+.share-options.active {
+  opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(-10px);
+}
+.share-option {
+  width: 40px; height: 40px; border-radius: 50%; background: var(--card-bg); color: var(--text);
+  display: flex; justify-content: center; align-items: center; font-size: 20px; cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+.share-option:hover {
+  transform: scale(1.1);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--accent);
+}
+.share-option i { transition: color 0.3s ease; }
+
+/* Comment Box */
+.comment-box {
+  margin-top: 20px; display: flex; gap: 12px; align-items: center; background: var(--card-bg); padding: 15px; border-radius: 8px;
+}
+.comment-box input {
+  flex-grow: 1; padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--input-bg); color: var(--text); outline: none; font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.comment-box input:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(230, 57, 70, 0.3); }
+.comment-box button { background: var(--accent); color: #fff; padding: 10px 18px; border-radius: 8px; }
+.comment-box button:hover { background: #e22a2a; transform: translateY(-2px); }
+
+.comment {
+  font-size: 0.95rem; background: rgba(255, 255, 255, 0.08); padding: 10px 12px; border-radius: 6px;
+  margin-top: 8px; text-align: left; color: var(--text); opacity: 0.9; transition: background-color 0.3s ease;
+}
+.comment:hover { background-color: rgba(255, 255, 255, 0.12); }
+
+/* Rating Stars */
+.stars {
+  display: flex; 
+  justify-content: center; 
+  line-height: 1; 
+  gap: 0 3px; 
+}
+.stars span {
+  font-size: 24px; 
+  cursor: pointer; 
+  color: #666; /* Default inactive color */
+  transition: color 0.3s ease; 
+  display: inline-block;
+  line-height: 1; 
+}
+
+.rating-info { margin-top: 15px; font-size: 0.95rem; color: var(--text); opacity: 0.8; }
+.rating-info span { font-weight: bold; color: var(--accent); }
+
+/* Animations */
+@keyframes cardFadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Footer Styles */
+.site-footer {
+  padding: 2rem; 
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  margin-top: 2rem;
+  color: var(--text); 
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+.site-footer p {
+  text-align: center;
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+/* Scroll to Top Button Styling */
+#scrollToTopBtn {
+  display: none; 
+  position: fixed; 
+  bottom: 30px; 
+  right: 30px; 
+  background-color: #ff3b3b; 
+  color: #fff; 
+  border: none; 
+  border-radius: 50%; 
+  width: 50px; 
+  height: 50px; 
+  font-size: 1.8rem; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  line-height: 1; 
+  text-align: center; 
+  cursor: pointer; 
+  z-index: 900; 
+  box-shadow: 0 5px 15px rgba(255, 59, 59, 0.4); 
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease; 
+}
+
+#scrollToTopBtn:hover {
+  background-color: #e22a2a; 
+  box-shadow: 0 8px 20px rgba(255, 59, 59, 0.5); 
+  transform: translateY(-2px); 
+}
+
+/* Search Bar Styling */
+.search-container {
+  max-width: 960px;
+  margin: 20px auto 30px auto;
+  padding: 0 15px;
+  text-align: center;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--input-bg);
+  color: var(--text);
+  font-size: 1.1rem;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 15px rgba(230, 57, 70, 0.4), inset 0 2px 5px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Full Post Modal (Read More) Styles */
+.full-post-modal-overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 10000; /* Above everything else */
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto; /* For scrollable content */
+    animation: fadeIn 0.3s ease-out;
+}
+
+.full-post-modal-content {
+    background: var(--card-bg); /* Use card background for consistency */
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 800px;
+    width: 90%;
+    margin: 40px auto; /* Centered with vertical margin for scroll */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+    animation: slideIn 0.3s ease-out;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    max-height: 90vh; /* Limit height for scrollability */
+    overflow-y: auto;
+}
+
+.full-post-modal-content::-webkit-scrollbar { width: 8px; }
+.full-post-modal-content::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px;}
+.full-post-modal-content::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+.full-post-modal-content::-webkit-scrollbar-thumb:hover { background: #e22a2a; }
+
+.full-post-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 2.2rem;
+    color: var(--text);
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.2s ease;
+    line-height: 1; /* Fix alignment */
+}
+
+.full-post-modal-close:hover {
+    color: var(--accent);
+    transform: rotate(90deg);
+}
+
+.full-post-modal-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: var(--accent); /* Make title stand out */
+    text-align: center;
+}
+
+.full-post-modal-content img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.full-post-modal-content .meta {
+    font-size: 1rem;
+    justify-content: center;
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+.full-post-modal-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text);
+    margin-bottom: 20px;
+    text-align: justify;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* --- Responsive Adjustments for Navbar (Mobile Dropdown Fix and Hover) --- */
+@media (max-width: 768px) {
+  .site-header {
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.08);
+  }
+  .navbar {
+    padding: 0.8rem 1.5rem;
+    flex-wrap: wrap; 
+  }
+
+  .brand { order: 1; } 
+  .hamburger { order: 2; display: flex; margin-left: auto; }
+
+  .nav-links {
+    display: flex; 
+    flex-direction: column; 
+    position: absolute;
+    top: 100%; 
+    left: 0; 
+    width: 100%; 
+    
+    background-color: var(--bg); /* Solid background color for mobile menu */
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    border-top: none; 
+    border-radius: 0 0 10px 10px; 
+
+    box-shadow: 0 12px 25px rgba(0,0,0,0.4); 
+    
+    padding: 0;
+    max-height: 0; /* Hidden by default */
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    text-align: center;
+    transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out, visibility 0.4s ease-in-out, transform 0.4s ease-in-out;
+    z-index: 1002;
+    box-sizing: border-box;
+    transform: translateY(-10px); 
+  }
+
+  /* When hamburger is checked, show nav links */
+  #menu-toggle-checkbox:checked ~ .nav-links {
+    max-height: 80vh; 
+    padding: 1rem 0;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0); 
+    overflow-y: auto; 
+  }
+
+  .nav-links li {
+    margin: 0.5rem 0;
+    width: 100%;
+  }
+
+  .nav-links li a {
+    padding: 0.8rem 1rem;
+    display: block;
+    text-decoration: none;
+    font-weight:700;
+    font-size:1.1em;
+    color: var(--text);
+    background-color: transparent;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  }
+  
+  /* Mobile Dropdown Links hover effect */
+  .nav-links li a:hover,
+  .nav-links li a:active,
+  .nav-links li a:focus {
+      background-color: rgba(255, 255, 255, 0.05) !important; 
+      color: var(--accent) !important; 
+      text-shadow: none !important;
+      outline: none !important; 
+  }
+
+  .nav-links li a::after {
+    display: none; /* Hide underline on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+      padding: 0.8rem 1rem;
+    }
+
+    .full-post-modal-content {
+        padding: 20px;
+    }
+
+    .full-post-modal-content h2 {
+        font-size: 2rem;
+    }
+
+    .full-post-modal-close {
+        font-size: 1.8rem;
+        top: 10px;
+        right: 15px;
+    }
+}
+
+/* Responsive Adjustments for Scroll to Top Button */
+@media (max-width: 768px) {
+  #scrollToTopBtn {
+    bottom: 20px; 
+    right: 20px; 
+    width: 45px; 
+    height: 45px; 
+    font-size: 1.5rem; 
+  }
+}
+
+/* Loading Screen Styles */
+#loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; /* Poore viewport ki width use karega */
+  height: 100vh; /* Poore viewport ki height use karega */
+  background-color: #0e0e0e; /* Aapke dark-bg ke mutabiq */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999; /* Sabse upar */
+  opacity: 1;
+  transition: opacity 0.5s ease-out; /* Fade-out transition */
+}
+#loading-video {
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%; /* Video ko screen ki poori width dega */
+  height: 100%; /* Video ko screen ki poori height dega */
+  object-fit: cover; /* Video ko screen mein cover karega, aspect ratio maintain rakhte hue */
+  /* object-position: center; */ /* Agar zarurat pade to center karne ke liye */
+}
+
+/* Card Grid Auto Adjustments */
+/* Yeh media queries already hain par main ensures karta hoon ke auto-fit sahi chalay */
+
+/* Skills Grid */
+@media (max-width: 600px) {
+  .skills-grid {
+    grid-template-columns: 1fr; /* Single column on small screens */
+  }
+}
+
+/* Portfolio Grid */
+@media (max-width: 768px) {
+  .portfolio-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+  }
+}
+@media (max-width: 480px) {
+  .portfolio-grid {
+    grid-template-columns: 1fr; 
+  }
+}
+
+/* Services Grid */
+@media (max-width: 768px) {
+  .services-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+  }
+}
+@media (max-width: 500px) {
+  .services-grid {
+    grid-template-columns: 1fr; 
+  }
+}
+  </style>
+</head>
+<body>
+  <!-- LOADING SCREEN HTML: Body tag ke theek baad yahi aayega -->
+  <div id="loading-screen">
+    <video id="loading-video" autoplay loop muted playsinline>
+      <source src="myloading.mp4" type="video/mp4">
+      <!-- <source src="myloading.webm" type="video/webm"> -->
+      Your browser does not support the video tag.
+    </video>
+  </div>
+  <!-- LOADING SCREEN HTML END -->
+
+<!-- Header Section -->
+<header class="site-header">
+  <nav class="navbar">
+    <a class="brand" href="index.html">Scriptobot</a>
+    
+    <!-- This checkbox input will be hidden and control the menu -->
+    <input type="checkbox" id="menu-toggle-checkbox" class="hamburger-checkbox-hidden">
+    
+    <!-- This label is now linked to the checkbox above with the 'for' attribute -->
+    <label for="menu-toggle-checkbox" class="hamburger" aria-label="Toggle navigation">
+      <svg viewBox="0 0 32 32">
+        <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+        <path class="line" d="M7 16 27 16"></path>
+      </svg>
+    </label>
+    
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="login.html">Login</a></li>
+    </ul>
+  </nav>
+</header>
+<!-- End of Header Section -->
+
+<!-- Search Bar Section -->
+<div class="search-container">
+  <input type="text" id="blogSearchInput" class="search-input" placeholder="Search blog posts by title or content...">
+</div>
+<!-- End Search Bar Section -->
+
+  <div class="container" id="posts"></div>
+
+  <!-- Full Post Modal Structure -->
+  <div id="fullPostModal" class="full-post-modal-overlay">
+    <div class="full-post-modal-content">
+      <span class="full-post-modal-close" onclick="closeFullPostModal()">&times;</span>
+      <h2 id="modalPostTitle"></h2>
+      <img id="modalPostImage" src="" alt="Post Image" style="display: none;">
+      <div class="meta" id="modalPostMeta"></div>
+      <div id="modalPostContent"></div>
+      <!-- You can choose to add like/comment/share functionality here as well,
+           but for simplicity, we are just showing the content. -->
+    </div>
+  </div>
+  <!-- End Full Post Modal Structure -->
+
+  <!-- Scroll to Top Button -->
+  <button id="scrollToTopBtn" title="Go to top">↑</button>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>&copy; 2025 Scriptobot. All rights reserved.</p>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCu-j4jpX89hE3zihqb6Ibet22syYFDh1o",
+      authDomain: "scriptobot-1.firebaseapp.com",
+      projectId: "scriptobot-1",
+      storageBucket: "scriptobot-1.appspot.com",
+      messagingSenderId: "463059915239",
+      appId: "1:463059915239:web:9a5446d23c2c19286b6d42"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    // firebase.auth().signInAnonymously().catch(err => console.error("Auth error:", err)); // REMOVED: This was the culprit for nulling email
+
+    // Global variable to store all blog posts once loaded
+    let allBlogPosts = [];
+    const POST_PREVIEW_LENGTH = 300; // Character limit for post preview
+
+    // Hamburger menu toggle logic (controlled by checkbox in HTML/CSS)
+    const menuToggleCheckbox = document.getElementById('menu-toggle-checkbox');
+    // Ensure menu closes if an anchor link is clicked within the mobile menu
+    document.querySelectorAll('.nav-links a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetElement = document.querySelector(this.getAttribute('href'));
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+          if (menuToggleCheckbox) {
+              menuToggleCheckbox.checked = false; // Close menu after click
+          }
+        }
+      });
+    });
+
+    function loadBlogs() {
+      const postsDiv = document.getElementById("posts");
+      postsDiv.innerHTML = `<p style="text-align:center; padding: 50px; color: var(--text); opacity: 0.7;">Loading blog posts...</p>`;
+      
+      db.collection("blogs").orderBy("timestamp","desc").onSnapshot(snapshot => {
+        allBlogPosts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        filterAndRenderBlogs(""); // Initially render all blogs
+      }, error => {
+        console.error("Error loading blogs:", error);
+        postsDiv.innerHTML = `<p style="text-align:center; padding: 50px; color: red;">Failed to load blog posts.</p>`;
+      });
+    }
+
+    function filterAndRenderBlogs(searchTerm) {
+        const postsDiv = document.getElementById("posts");
+        postsDiv.innerHTML = "";
+        const lowerCaseSearchTerm = searchTerm.toLowerCase();
+
+        const filteredPosts = allBlogPosts.filter(post => {
+            const title = (post.title || "").toLowerCase();
+            const content = (post.content || "").toLowerCase();
+            return title.includes(lowerCaseSearchTerm) || content.includes(lowerCaseSearchTerm);
+        });
+
+        if (filteredPosts.length === 0) {
+            postsDiv.innerHTML = `<p style="text-align:center; padding: 50px; color: var(--text); opacity: 0.7;">No blog posts found matching your search.</p>`;
+            return;
+        }
+
+        filteredPosts.forEach((postData, index) => {
+            renderPost(postData.id, postData, postsDiv, index);
+        });
+    }
+
+    function renderPost(id, post, container, index) {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.id = "post-" + id;
+      div.style.animationDelay = `${index * 0.15}s`;
+      const timestamp = post.timestamp?.toDate?.() || new Date();
+      const formattedTimestamp = new Date(timestamp).toLocaleString();
+      const postTitle = post.title || "Untitled Post";
+      const fullContent = post.content || "This post is currently empty.";
+
+      let displayContent = fullContent;
+      let readMoreButton = '';
+
+      if (fullContent.length > POST_PREVIEW_LENGTH) {
+        displayContent = fullContent.substring(0, POST_PREVIEW_LENGTH) + '...';
+        readMoreButton = `<button class="read-more-btn" onclick="openFullPostModal('${id}')">Read More</button>`;
+      }
+
+      div.innerHTML = `
+        <h2>${postTitle}</h2>
+        ${post.imageUrl ? `<img src="${post.imageUrl}" alt="${postTitle}">` : ''}
+        <div class="meta">
+          <span>${post.category || "Uncategorized"}</span> |
+          <span title="${formattedTimestamp}">${formattedTimestamp}</span>
+        </div>
+        <p>${displayContent}</p>
+        ${readMoreButton}
+        <div class="actions">
+          <button class="like-btn" id="like-${id}" aria-label="Like Post">👍 <span id="likes-count-${id}">0</span></button>
+          
+          <div class="stars" id="stars-${id}" title="Rate this post">
+            ${[1, 2, 3, 4, 5].map(n => `<span data-val="${n}">&#9733;</span>`).join("")}
+          </div>
+          <p class="rating-info">⭐ Avg Rating: <span id="avg-${id}">0.0</span></p>
+
+          <!-- Updated Animated Share Button with Real Icons -->
+          <div class="share-button-container">
+            <button class="share-fab" onclick="toggleShareOptions('${id}')"><i class="fas fa-share-alt"></i></button>
+            <div class="share-options" id="share-options-${id}">
+                <div class="share-option" onclick="sharePost('${id}','copy', '${postTitle}')" title="Copy Link"><i class="fas fa-copy"></i></div>
+                <div class="share-option" onclick="sharePost('${id}','whatsapp', '${postTitle}')" title="Share on WhatsApp"><i class="fab fa-whatsapp"></i></div>
+                <div class="share-option" onclick="sharePost('${id}','twitter', '${postTitle}')" title="Share on Twitter"><i class="fab fa-twitter"></i></div>
+                <div class="share-option" onclick="sharePost('${id}','facebook', '${postTitle}')" title="Share on Facebook"><i class="fab fa-facebook"></i></div>
+                <div class="share-option" onclick="sharePost('${id}','linkedin', '${postTitle}')" title="Share on LinkedIn"><i class="fab fa-linkedin"></i></div>
+                <div class="share-option" onclick="sharePost('${id}','telegram', '${postTitle}')" title="Share on Telegram"><i class="fab fa-telegram"></i></div>
+                <div class="share-option" onclick="sharePost('${id}','reddit', '${postTitle}')" title="Share on Reddit"><i class="fab fa-reddit-alien"></i></div>
+            </div>
+          </div>
+
+          <div class="comment-box">
+            <input id="cmt-${id}" placeholder="Add a comment...">
+            <button onclick="addComment('${id}')">Post</button>
+          </div>
+          <div id="comments-${id}"></div>
+        </div>
+      `;
+      container.appendChild(div);
+
+      document.getElementById("like-" + id).onclick = () => toggleLike(id);
+      
+      const stars = document.querySelectorAll(`#stars-${id} span`);
+      const starsContainer = document.getElementById(`stars-${id}`);
+
+      stars.forEach(star => {
+        star.onclick = () => submitRating(id, parseInt(star.dataset.val));
+        
+        star.addEventListener('mouseover', function() {
+            const hoverValue = parseInt(this.dataset.val);
+            stars.forEach(s => { 
+                if (parseInt(s.dataset.val) <= hoverValue) {
+                    s.style.color = 'gold';
+                } else {
+                    s.style.color = '#666';
+                }
+            });
+        });
+      });
+
+      if (starsContainer) {
+          starsContainer.addEventListener('mouseout', function(e) {
+              if (!starsContainer.contains(e.relatedTarget)) {
+                  // On mouseout, call setupRealtimeListeners to re-render the stars to their actual state
+                  // This will show user's rating if available, otherwise grey stars.
+                  setTimeout(() => setupRealtimeListeners(id), 50); 
+              }
+          });
+      }
+
+      setupRealtimeListeners(id); // Initial setup for each post
+    }
+
+    function toggleShareOptions(blogId) {
+        document.getElementById(`share-options-${blogId}`).classList.toggle('active');
+    }
+
+    // Helper function to update star visuals based on a given rating value
+    function updateStarsVisual(blogId, ratingToDisplay = null) {
+        const starsContainer = document.getElementById("stars-" + blogId);
+        if (!starsContainer) return;
+        const stars = starsContainer.querySelectorAll('span');
+
+        stars.forEach(s => s.style.color = '#666'); // Reset all stars to inactive first
+
+        if (ratingToDisplay !== null) {
+            const integerRating = Math.round(ratingToDisplay); 
+            stars.forEach(s => {
+                if (parseInt(s.dataset.val) <= integerRating) {
+                    s.style.color = 'gold';
+                }
+            });
+        }
+    }
+
+    function setupRealtimeListeners(blogId) {
+      db.collection("blogs").doc(blogId).collection("likes").onSnapshot(snap => {
+        const el = document.getElementById("likes-count-" + blogId);
+        if (el) el.innerText = snap.size;
+      });
+
+      db.collection("blogs").doc(blogId).collection("ratings").onSnapshot(async snap => {
+        const elAvg = document.getElementById("avg-" + blogId);
+        const starsContainer = document.getElementById("stars-" + blogId);
+        
+        if (elAvg && starsContainer) {
+            let averageRating = 0.0;
+            let userRatingValue = null;
+            const user = firebase.auth().currentUser;
+
+            if (!snap.empty) {
+                const total = snap.docs.reduce((sum, doc) => sum + doc.data().value, 0);
+                averageRating = (total / snap.size);
+                elAvg.innerText = averageRating.toFixed(1); // Display full average rating
+
+                if (user) {
+                    const userRatingDoc = snap.docs.find(doc => doc.id === user.uid);
+                    if (userRatingDoc) {
+                        userRatingValue = userRatingDoc.data().value; // This is the exact integer rating user gave
+                    }
+                }
+            } else {
+                elAvg.innerText = "0.0";
+            }
+
+            // Decide which rating to visually display on the stars
+            // Only show yellow stars if the current user has rated this post.
+            // Otherwise, stars remain grey.
+            updateStarsVisual(blogId, userRatingValue); // Pass userRatingValue (null if not rated)
+        }
+      });
+
+      db.collection("blogs").doc(blogId).collection("comments").orderBy("timestamp").onSnapshot(snap => {
+        const el = document.getElementById("comments-" + blogId);
+        if (el) {
+          el.innerHTML = snap.docs.map(d => `<div class="comment">${d.data().text || ''}</div>`).join('');
+        }
+      });
+    }
+
+    async function toggleLike(blogId) {
+      const user = firebase.auth().currentUser;
+      if (!user) return alert("Please sign in to like posts.");
+      const likeRef = db.collection("blogs").doc(blogId).collection("likes").doc(user.uid);
+      const snap = await likeRef.get();
+      if (snap.exists) await likeRef.delete();
+      else await likeRef.set({ userId: user.uid });
+    }
+
+    async function submitRating(blogId, value) {
+      const user = firebase.auth().currentUser;
+      if (!user) return alert("Please sign in to rate posts.");
+      // The 'value' passed here is already an integer (1 to 5) from star.dataset.val
+      await db.collection("blogs").doc(blogId).collection("ratings").doc(user.uid).set({ value });
+      // After submitting, the realtime listener will automatically update the display
+    }
+
+    async function addComment(blogId) {
+      const user = firebase.auth().currentUser;
+      if (!user) return alert("Please sign in to comment.");
+      const input = document.getElementById("cmt-" + blogId);
+      const text = input.value.trim();
+      if (!text) return;
+      await db.collection("blogs").doc(blogId).collection("comments").add({
+        userId: user.uid,
+        text,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      input.value = "";
+    }
+
+    // Updated Share Post Functionality
+    function sharePost(blogId, type, title) {
+      const shareUrl = `${window.location.href.split('?')[0].split('#')[0]}?post=${blogId}#post-${blogId}`;
+      const text = encodeURIComponent(`Check out this post: ${title}`);
+
+      let url = '';
+      switch (type) {
+        case "copy":
+          navigator.clipboard.writeText(shareUrl)
+            .then(() => alert("🔗 Link copied to clipboard!"))
+            .catch(() => alert('Failed to copy link.'));
+          return;
+        case "whatsapp":
+          url = `https://wa.me/?text=${text}%20${encodeURIComponent(shareUrl)}`;
+          break;
+        case "twitter":
+          url = `https://www.twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(shareUrl)}`;
+          break;
+        case "facebook":
+          url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+          break;
+        case "linkedin":
+          url = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(shareUrl)}&title=${text}`;
+          break;
+        case "telegram":
+           url = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${text}`;
+           break;
+        case "reddit":
+            url = `https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${text}`;
+            break;
+        default:
+          return;
+      }
+      window.open(url, "_blank");
+    }
+
+    // MODIFIED: onAuthStateChanged to prevent overwriting existing user with anonymous sign-in
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        // A user is already signed in (could be anonymous or a real user).
+        // If it's a real user, we should not attempt anonymous sign-in, thus preserving their session.
+        loadBlogs(); 
+      } else {
+        // No user is signed in. Attempt anonymous sign-in to allow blog interactions.
+        firebase.auth().signInAnonymously().then(() => {
+            loadBlogs();
+        }).catch(err => console.error("Auth error on anonymous sign-in:", err));
+      }
+    });
+
+    // JavaScript for Scroll to Top Button
+    const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function() {
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        scrollToTopBtn.style.display = "flex"; 
+      } else {
+        scrollToTopBtn.style.display = "none";
+      }
+    };
+
+    // When the user clicks on the button, scroll to the top of the document
+    scrollToTopBtn.addEventListener("click", function() {
+      document.body.scrollTop = 0; // For Safari
+      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    });
+
+    // Search functionality event listener
+    document.getElementById("blogSearchInput").addEventListener("input", (event) => {
+        filterAndRenderBlogs(event.target.value);
+    });
+
+    // --- Full Post Modal Functions ---
+    function openFullPostModal(blogId) {
+        const post = allBlogPosts.find(p => p.id === blogId);
+        if (!post) return;
+
+        const modal = document.getElementById("fullPostModal");
+        const modalTitle = document.getElementById("modalPostTitle");
+        const modalImage = document.getElementById("modalPostImage");
+        const modalMeta = document.getElementById("modalPostMeta");
+        const modalContent = document.getElementById("modalPostContent");
+
+        const timestamp = post.timestamp?.toDate?.() || new Date();
+        const formattedTimestamp = new Date(timestamp).toLocaleString();
+
+        modalTitle.innerText = post.title || "Untitled Post";
+        modalContent.innerHTML = `<p>${post.content || "This post is currently empty."}</p>`;
+        modalMeta.innerHTML = `<span>${post.category || "Uncategorized"}</span> | <span title="${formattedTimestamp}">${formattedTimestamp}</span>`;
+
+        if (post.imageUrl) {
+            modalImage.src = post.imageUrl;
+            modalImage.style.display = 'block';
+        } else {
+            modalImage.style.display = 'none';
+            modalImage.src = ''; // Clear src
+        }
+
+        modal.style.display = 'flex'; // Use flex to center
+        document.body.style.overflow = 'hidden'; // Prevent scrolling on main body
+    }
+
+    function closeFullPostModal() {
+        const modal = document.getElementById("fullPostModal");
+        modal.style.display = 'none';
+        document.body.style.overflow = ''; // Restore scrolling on main body
+    }
+
+    // Close modal if overlay is clicked
+    document.getElementById("fullPostModal").addEventListener("click", function(event) {
+        if (event.target === this) {
+            closeFullPostModal();
+        }
+    });
+
+    // Close modal with ESC key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && document.getElementById("fullPostModal").style.display === 'flex') {
+            closeFullPostModal();
+        }
+    });
+
+  // LOADING SCREEN LOGIC
+  document.addEventListener('DOMContentLoaded', () => {
+    const loadingScreen = document.getElementById('loading-screen');
+    if (!loadingScreen) return; // Agar loading screen element na mile to exit
+
+    // 2 second ke baad loading screen ko hide karna shuru karein
+    setTimeout(() => {
+      loadingScreen.style.opacity = '0'; // Opacity ko 0 kar do (fade out shuru)
+
+      // Fade out transition complete hone tak wait karein (0.5s CSS transition time)
+      setTimeout(() => {
+        loadingScreen.style.display = 'none'; // Poori tarah layout se hata do
+        loadingScreen.remove(); // DOM se bhi remove kar do (optional, but good)
+      }, 500); // CSS transition duration ke barabar (0.5 seconds)
+
+    }, 2000); // Total 2 seconds (2000 milliseconds) tak loading screen dikhegi.
+  });
+
+  </script>
+</body>
+</html>

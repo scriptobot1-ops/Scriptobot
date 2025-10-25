@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+  <style>
+    /* Base Reset */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      transition:background 0.3s ease, color 0.3s ease; /* Transition for theme change */
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* Theme Variables */
+    :root {
+      --bg: #f5f5f5;
+      --text:#222;
+      --accent:#e63946; /* Reddish accent */
+      --accent-darker: #c0303c;
+      --glass: rgba(255,255,255,0.4);
+      --glass-darker: rgba(0,0,0,0.4);
+      --shadow-light: rgba(0,0,0,0.1);
+      --shadow-dark: rgba(0,0,0,0.2);
+    }
+    body.dark {
+      --bg:#121212;
+      --text:#f5f5f5;
+      --glass: rgba(0,0,0,0.4); /* Darker glass for dark mode */
+      --glass-darker: rgba(255,255,255,0.4); /* Lighter glass-darker for contrast */
+      --shadow-light: rgba(255,255,255,0.05); /* Lighter shadows for dark mode */
+      --shadow-dark: rgba(255,255,255,0.1);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 5px;
+      border: 2px solid var(--bg);
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-darker); }
+
+    /* Text Selection Style */
+    ::selection { background-color: var(--accent); color: var(--bg); }
+
+    /* Focus States (Accessibility & UX) */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+    .btn:focus-visible,
+    .profile-section:focus-visible,
+    .content-section:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible {
+      border-radius: 8px;
+    }
+
+    /* Navbar */
+    .site-header {
+      backdrop-filter: blur(15px);
+      background: var(--glass);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px var(--shadow-dark); /* Subtle shadow for depth */
+    }
+    .navbar {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:1rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .brand {
+      font-size:1.8rem;
+      font-weight:bold;
+      color:var(--accent);
+      text-decoration:none;
+      letter-spacing: 1px;
+      text-shadow: 0 0 5px rgba(230, 57, 70, 0.4); /* Subtle glow */
+    }
+    .nav-links {
+      display:flex;
+      list-style:none;
+      gap:2rem;
+      align-items: center; /* Align theme toggle */
+    }
+    .nav-links a {
+      text-decoration:none;
+      color:var(--text);
+      font-weight:bold;
+      transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -5px;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.3s ease-out;
+    }
+    .nav-links a:hover {
+      color: var(--accent);
+      text-shadow: 0 0 8px rgba(230, 57, 70, 0.4);
+    }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* Logout Button Specific Style */
+    #logout-btn.btn.outline {
+      padding: 0.6rem 1.2rem;
+      font-size: 0.9rem;
+    }
+
+    /* Uiverse Hamburger Styles */
+    .hamburger-checkbox-hidden {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .hamburger {
+      cursor: pointer;
+      display:none; /* Default hidden for larger screens */
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+      z-index: 1001;
+      background: none;
+      border: none;
+    }
+    .hamburger:hover { background-color: rgba(255, 255, 255, 0.1); }
+    .hamburger-checkbox-hidden:checked + .hamburger svg { transform: rotate(-45deg); }
+    .hamburger-checkbox-hidden:checked + .hamburger .line-top-bottom {
+      stroke-dasharray: 20 300;
+      stroke-dashoffset: -32.42;
+    }
+    .hamburger svg {
+      height: 2.2em;
+      width: 2.2em;
+      transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .line {
+      fill: none;
+      stroke: var(--text);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 3;
+      transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
+                  stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .line-top-bottom { stroke-dasharray: 12 63; }
+
+    /* Theme Toggle Switch CSS */
+    .theme-switch-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: 2rem;
+    }
+    .theme-switch {
+      display: inline-block;
+      height: 28px;
+      position: relative;
+      width: 50px;
+    }
+    .theme-switch input { display: none; }
+    .slider {
+      background-color: #ccc;
+      bottom: 0;
+      cursor: pointer;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    .slider:before {
+      background-color: #fff;
+      bottom: 4px;
+      content: "";
+      height: 20px;
+      left: 4px;
+      position: absolute;
+      transition: .4s;
+      width: 20px;
+      border-radius: 50%;
+    }
+    input:checked + .slider { background-color: var(--accent); }
+    input:checked + .slider:before { transform: translateX(22px); }
+    .theme-switch-label {
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap; /* Prevent label from wrapping */
+    }
+
+    /* Profile Section */
+    .profile-section {
+      padding:3rem 2rem;
+      text-align:center;
+      max-width: 800px;
+      margin: 2rem auto;
+      border-radius: 1.5rem;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 15px 30px var(--shadow-dark);
+      border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border for glass effect */
+      transition: all 0.5s ease-in-out;
+    }
+    .profile-section:hover {
+      transform: perspective(1000px) rotateY(3deg) scale(1.01); /* Subtle rotation on hover */
+      box-shadow: 0 15px 40px var(--shadow-dark);
+    }
+    .profile-section h2 {
+      font-size: 2.8rem;
+      margin-bottom: 0.75rem;
+      color: var(--accent);
+      font-weight: 700;
+      text-shadow: 2px 2px 8px rgba(230, 57, 70, 0.5); /* Text shadow for accent color */
+    }
+    .profile-section p {
+      font-size: 1.15rem;
+      color: var(--text);
+      opacity: 0.85;
+      margin-bottom: 2rem;
+    }
+
+    /* Update Name Form */
+    .update-name-form {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .update-name-form input[type="text"] {
+      padding: 0.85rem 1.2rem;
+      border-radius: 2.5rem;
+      border: 2px solid var(--accent);
+      background: var(--bg);
+      color: var(--text);
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      flex-grow: 1;
+      max-width: 350px;
+      box-shadow: inset 0 2px 5px var(--shadow-light);
+    }
+    .update-name-form input[type="text"]:focus {
+      outline: none;
+      border-color: var(--text);
+      box-shadow: 0 0 15px var(--accent);
+    }
+
+    /* Status Message */
+    #status-msg {
+      margin-top: 1.5rem;
+      font-weight: 600;
+      min-height: 1.8em;
+      color: var(--accent);
+      font-size: 1rem;
+    }
+    #status-msg.success { color: #28a745; } /* Green for success */
+    #status-msg.error { color: #dc3545; } /* Red for error */
+
+    /* Section Styling for Settings & Activity */
+    .content-section {
+      padding: 3rem 2rem;
+      text-align: center;
+      max-width: 800px;
+      margin: 2rem auto;
+      border-radius: 1.5rem;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 15px 30px var(--shadow-dark);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .content-section h3 {
+      font-size: 2.2rem;
+      margin-bottom: 2rem;
+      color: var(--accent-darker);
+      font-weight: 700;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+    }
+
+    /* Forms within sections */
+    .form-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: center;
+      max-width: 550px;
+      margin: 0 auto;
+    }
+    .form-group {
+      width: 100%;
+      text-align: left;
+    }
+    .form-group label {
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      display: block;
+      color: var(--text);
+      opacity: 0.9;
+    }
+
+    /* Input fields for forms */
+    .form-group input[type="text"],
+    .form-group input[type="password"],
+    .form-group input[type="email"],
+    .form-group input[type="file"],
+    .form-group textarea {
+      padding: 0.9rem 1.2rem;
+      border-radius: 2.5rem;
+      border: 2px solid rgba(255, 255, 255, 0.15); /* More subtle initial border */
+      background: var(--bg);
+      color: var(--text);
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      width: 100%;
+      box-shadow: inset 0 2px 5px var(--shadow-light);
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent); /* Accent color border on focus */
+      box-shadow: 0 0 12px rgba(230, 57, 70, 0.4); /* Stronger focus shadow */
+      background: var(--bg);
+    }
+
+    /* Password Toggle Specifics */
+    .password-toggle {
+      position: relative;
+      width: 100%;
+    }
+    .password-toggle input { margin-bottom: 0; }
+    .password-toggle-icon {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--text);
+      opacity: 0.7;
+      transition: color 0.3s ease;
+      font-size: 1.1rem;
+    }
+    .password-toggle-icon:hover { color: var(--accent); }
+
+    /* Buttons - Base */
+    .btn {
+      padding: 0.85rem 1.8rem;
+      border-radius: 2.5rem;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em; /* Slight letter spacing */
+    }
+    /* Primary Button */
+    .btn.primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+    }
+    .btn.primary:hover {
+      background: var(--accent-darker);
+      box-shadow: 0 6px 20px rgba(230, 57, 70, 0.6);
+      transform: translateY(-3px) scale(1.02);
+    }
+    /* Outline Button (used in Navbar) */
+    .btn.outline {
+      background: transparent;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+    }
+    .btn.outline:hover {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+    }
+    /* Danger Button */
+    .btn.danger {
+      background: #dc3545; /* Explicit red for danger */
+      color: #fff;
+      box-shadow: 0 5px 15px rgba(200, 35, 50, 0.3);
+    }
+    .btn.danger:hover {
+      background: #c82333;
+      box-shadow: 0 8px 20px rgba(180, 30, 40, 0.4);
+      transform: translateY(-3px);
+    }
+
+    /* Buttons within forms */
+    .form-container .btn {
+      width: 100%;
+      max-width: 250px;
+      margin-top: 0.5rem;
+    }
+    .delete-account-form .btn.danger {
+      max-width: none;
+    }
+
+    /* Micro Hint */
+    .micro-hint {
+      font-size: 0.85rem;
+      opacity: 0.7;
+      margin-top: 0.8rem;
+      display: block;
+      color: var(--text);
+    }
+
+    /* Scroll to Top Button Styling */
+    #scrollToTopBtn {
+      display: none;
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background-color: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 1.8rem;
+      line-height: 50px;
+      text-align: center;
+      cursor: pointer;
+      z-index: 900;
+      box-shadow: 0 5px 15px rgba(255, 59, 59, 0.4);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+    }
+    #scrollToTopBtn:hover {
+      background-color: var(--accent-darker);
+      box-shadow: 0 8px 20px rgba(255, 59, 59, 0.5);
+      transform: translateY(-2px);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px){
+      .navbar { padding: 0.8rem 1.5rem; } /* Adjusted padding for mobile */
+      .brand { font-size: 1.5rem; }
+
+      /* Mobile menu via checkbox */
+      .hamburger { display:flex; } /* Show hamburger on mobile */
+      .nav-links {
+        display: flex; /* Ensure flex for column layout */
+        flex-direction:column;
+        position:absolute;
+        top: 100%; /* Drop down directly below navbar */
+        left: 0;
+        width: 100%;
+        background: var(--glass);
+        backdrop-filter: blur(15px);
+        box-shadow: 0 8px 20px var(--shadow-light);
+        gap: 1rem;
+        padding: 0; /* Initial padding 0 for smooth reveal */
+        max-height: 0; /* Collapsed state */
+        overflow: hidden;
+        opacity: 0;
+        visibility: hidden;
+        transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+        border-bottom-left-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+      }
+      #menu-toggle-checkbox:checked ~ .nav-links {
+        max-height: 500px; /* Expand state */
+        padding: 1rem 0; /* Add padding when expanded */
+        opacity: 1;
+        visibility: visible;
+      }
+      .nav-links li { margin: 0.5rem 0; }
+      .nav-links a {
+        padding: 0.8rem 1rem;
+        display: block;
+        text-align: center;
+      }
+      .nav-links a::after { display: none; } /* Hide underline on mobile menu links */
+      .nav-links a:hover::after { width: 0; }
+
+      .theme-switch-wrapper {
+        justify-content: center; /* Center theme switch on mobile */
+        margin-left: 0;
+        margin-top: 1rem;
+      }
+
+      .profile-section, .content-section {
+        margin: 1rem auto;
+        padding: 2rem 1rem;
+      }
+      .profile-section h2 { font-size: 2rem; }
+      .content-section h3 { font-size: 1.8rem; margin-bottom: 1.5rem;}
+
+      .update-name-form {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .update-name-form input[type="text"] {
+        max-width: none;
+      }
+      .form-container {
+        max-width: none;
+      }
+      .form-container .btn {
+        width: 100%;
+        max-width: none;
+      }
+
+      #scrollToTopBtn {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="site-header">
+    <nav class="navbar">
+      <a href="index.html" class="brand">Scriptobot</a>
+      <!-- Hamburger Checkbox & Label for Uiverse effect -->
+      <input type="checkbox" id="menu-toggle-checkbox" class="hamburger-checkbox-hidden">
+      <label for="menu-toggle-checkbox" class="hamburger" aria-label="Toggle navigation">
+        <svg viewBox="0 0 32 32">
+          <path class="line line-top-bottom" d="M27 9L5 9.000001C5 9.000001 3.5 13.79375 8.358205 17.5414C13.21641 21.28905 27 21 27 21"></path>
+          <path class="line" d="M7 16H25"></path>
+          <path class="line line-top-bottom" d="M27 23L5 23.000001C5 23.000001 3.5 18.2062 8.358205 14.4586C13.21641 10.71095 27 11 27 11"></path>
+        </svg>
+      </label>
+
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="login.html">Login</a></li>
+        <!-- Theme Toggle Switch -->
+        <li class="theme-switch-wrapper">
+            <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox" />
+                <span class="slider round"></span>
+            </label>
+            <span class="theme-switch-label">Dark Mode</span>
+        </li>
+        <li><button id="logout-btn" class="btn outline">Logout</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Profile Section -->
+  <section class="profile-section" tabindex="0"> <!-- Added tabindex for accessibility -->
+    <h2 id="user-greeting">Welcome!</h2>
+    <p id="user-email-display">Loading email...</p>
+
+    <div class="update-name-form">
+      <input type="text" id="update-name" placeholder="Update your name">
+      <button id="update-btn" class="btn primary">Update Name</button>
+    </div>
+
+    <p id="status-msg"></p>
+  </section>
+
+  <!-- Account Settings Section -->
+  <section class="content-section account-settings-section" tabindex="0"> <!-- Added tabindex for accessibility -->
+    <h3>Account Settings</h3>
+    <div class="form-container">
+        <!-- Profile Picture Upload -->
+        <div class="form-group">
+            <label for="profile-pic">Profile Picture</label>
+            <input type="file" id="profile-pic" accept="image/*">
+            <p class="micro-hint">Max file size: 5MB. Upload functionality requires Firebase Storage setup.</p>
+        </div>
+
+        <!-- Change Password -->
+        <div class="form-group">
+            <label for="current-password">Current Password</label>
+            <div class="password-toggle">
+                <input type="password" id="current-password" placeholder="Current Password">
+                <span class="password-toggle-icon" onclick="togglePasswordVisibility('current-password')" role="button" aria-label="Toggle current password visibility">👁️</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="new-password">New Password</label>
+             <div class="password-toggle">
+                <input type="password" id="new-password" placeholder="New Password">
+                <span class="password-toggle-icon" onclick="togglePasswordVisibility('new-password')" role="button" aria-label="Toggle new password visibility">👁️</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="confirm-password">Confirm New Password</label>
+             <div class="password-toggle">
+                <input type="password" id="confirm-password" placeholder="Confirm New Password">
+                <span class="password-toggle-icon" onclick="togglePasswordVisibility('confirm-password')" role="button" aria-label="Toggle confirm password visibility">👁️</span>
+            </div>
+        </div>
+        <button id="change-password-btn" class="btn primary">Change Password</button>
+    </div>
+
+    <!-- Delete Account -->
+    <div class="form-container" style="margin-top: 2rem;">
+      <label style="text-align: center;">Or</label>
+      <button id="delete-account-btn" class="btn danger">Delete Account</button>
+      <p class="micro-hint">This action is irreversible and will delete all your data.</p>
+    </div>
+  </section>
+
+  <!-- "Recent Activity" section has been removed as per your request. -->
+
+  <!-- Scroll to Top Button -->
+  <button id="scrollToTopBtn" title="Go to top">↑</button>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCu-j4jpX89hE3zihqb6Ibet22syYFDh1o",
+      authDomain: "scriptobot-1.firebaseapp.com",
+      projectId: "scriptobot-1",
+      storageBucket: "scriptobot-1.firebasestorage.app",
+      messagingSenderId: "463059915239",
+      appId: "1:463059915239:web:9a5446d23c2c19286b6d42",
+      measurementId: "G-X027DDY1PN"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // DOM elements
+    const userGreetingEl = document.getElementById('user-greeting');
+    const userEmailDisplayEl = document.getElementById('user-email-display');
+    const updateNameInput = document.getElementById('update-name');
+    const updateNameBtn = document.getElementById('update-btn');
+    const statusMsgEl = document.getElementById('status-msg');
+    const logoutBtn = document.getElementById('logout-btn');
+    const menuToggleCheckbox = document.getElementById('menu-toggle-checkbox'); // New: for hamburger
+    const navLinks = document.querySelector('.nav-links');
+
+    // Account Settings elements
+    const profilePicInput = document.getElementById('profile-pic');
+    const currentPasswordInput = document.getElementById('current-password');
+    const newPasswordInput = document.getElementById('new-password');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+    const changePasswordBtn = document.getElementById('change-password-btn');
+    const deleteAccountBtn = document.getElementById('delete-account-btn');
+
+    // Theme Toggle elements
+    const themeToggle = document.getElementById('checkbox');
+    const themeLabel = document.querySelector('.theme-switch-label');
+
+    // Scroll to Top button
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+
+    // --- Helper Functions ---
+    function setStatusMessage(message, type = 'info') {
+      statusMsgEl.textContent = message;
+      statusMsgEl.className = 'status-message'; // Reset classes
+      if (type === 'success') {
+        statusMsgEl.classList.add('success');
+      } else if (type === 'error') {
+        statusMsgEl.classList.add('error');
+      } else {
+         statusMsgEl.classList.add('info');
+      }
+    }
+
+    function togglePasswordVisibility(inputId) {
+      const input = document.getElementById(inputId);
+      const icon = input.nextElementSibling;
+      if (input.type === "password") {
+        input.type = "text";
+        icon.textContent = "🙈"; // Changed to 'see off' icon
+        icon.setAttribute('aria-label', `Hide ${inputId.replace('-', ' ')}`);
+      } else {
+        input.type = "password";
+        icon.textContent = "👁️"; // Changed back to 'see' icon
+        icon.setAttribute('aria-label', `Show ${inputId.replace('-', ' ')}`);
+      }
+    }
+
+    // --- Theme Toggle Logic ---
+    function enableDarkMode() {
+        document.body.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+        themeLabel.textContent = 'Light Mode';
+    }
+
+    function enableLightMode() {
+        document.body.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+        themeLabel.textContent = 'Dark Mode';
+    }
+
+    function checkThemePreference() {
+        if (localStorage.getItem('theme') === 'dark') {
+            themeToggle.checked = true;
+            enableDarkMode();
+        } else {
+            themeToggle.checked = false;
+            enableLightMode();
+        }
+    }
+
+    themeToggle.addEventListener('change', () => {
+        if (themeToggle.checked) {
+            enableDarkMode();
+        } else {
+            enableLightMode();
+        }
+    });
+
+    // --- Scroll to Top Button Logic ---
+    window.onscroll = function() { scrollFunction() };
+
+    function scrollFunction() {
+      if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+        scrollToTopBtn.style.display = "block";
+      } else {
+        scrollToTopBtn.style.display = "none";
+      }
+    }
+
+    scrollToTopBtn.addEventListener('click', () => {
+      document.body.scrollTop = 0; // For Safari
+      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    });
+
+
+    // --- Main Initialization ---
+
+    // Check authentication state and load user data
+    auth.onAuthStateChanged(async user => {
+      if (user) {
+        let userName = user.displayName;
+        let userEmail = user.email;
+
+        // Agar displayName maujood nahi hai ya null string hai, toh Firestore se fetch karnay ki koshish karein
+        // Firebase Auth displayName 'null' string nahi deta, balki null/undefined deta hai.
+        // Phir bhi, robust rehne ke liye 'null' string ko bhi handle kar lete hain.
+        if (!userName || userName === 'null') {
+          try {
+            const userDoc = await db.collection("users").doc(user.uid).get();
+            if (userDoc.exists) {
+              const userData = userDoc.data();
+              if (userData && userData.name) {
+                userName = userData.name;
+                // Optionally, Firebase Auth displayName ko bhi update kar dein agar woh missing tha
+                // Taa'kay future mein seedha Auth object se mil jaye
+                if (!user.displayName || user.displayName === 'null') {
+                    await user.updateProfile({ displayName: userName });
+                }
+              }
+            }
+          } catch (error) {
+            console.error("Error fetching user data from Firestore:", error);
+            // Agar Firestore se bhi na mile, to generic naam use karein
+            userName = 'User';
+          }
+        }
+
+        userGreetingEl.textContent = `Welcome, ${userName || 'User'}!`;
+        userEmailDisplayEl.textContent = `Email: ${userEmail || 'N/A'}`; // Agar email bhi kisi wajah se na ho
+        updateNameInput.value = userName || "";
+
+      } else {
+        // Redirect to login if not logged in
+        window.location.href = "login.html";
+      }
+    });
+
+    // Run theme check on page load
+    checkThemePreference();
+
+    // Update Name
+    updateNameBtn.addEventListener('click', async () => {
+      const newName = updateNameInput.value.trim();
+      const user = auth.currentUser;
+
+      if (!user) { setStatusMessage("You must be logged in.", "error"); return; }
+      if (newName.length === 0) { setStatusMessage("Name cannot be empty.", "error"); return; }
+
+      try {
+        await user.updateProfile({ displayName: newName });
+        await db.collection("users").doc(user.uid).set({ name: newName }, { merge: true }); // Firestore update
+        userGreetingEl.textContent = `Welcome, ${newName}!`;
+        setStatusMessage("Name updated successfully!", "success");
+        updateNameInput.value = newName; // Naam update honay ke baad input field mein hi rahay ga
+      } catch (err) {
+        console.error("Error updating profile:", err);
+        setStatusMessage(`Error updating name: ${err.message}`, "error");
+      }
+    });
+
+    // Profile Picture Upload (Placeholder)
+    profilePicInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        if (file.size > 5 * 1024 * 1024) {
+          setStatusMessage("File is too large. Please upload a file smaller than 5MB.", "error");
+          profilePicInput.value = '';
+          return;
+        }
+        setStatusMessage(`Selected: ${file.name}. Upload pending...`, "info");
+        console.log("File selected:", file);
+        // Actual upload logic to Firebase Storage would go here
+      }
+    });
+
+    // Change Password
+    changePasswordBtn.addEventListener('click', async () => {
+      const user = auth.currentUser;
+      const currentPassword = currentPasswordInput.value;
+      const newPassword = newPasswordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+
+      if (!user) { setStatusMessage("You must be logged in.", "error"); return; }
+      if (!currentPassword || !newPassword || !confirmPassword) { setStatusMessage("Please fill in all password fields.", "error"); return; }
+      if (newPassword.length < 6) { setStatusMessage("Password must be at least 6 characters long.", "error"); return; }
+      if (newPassword !== confirmPassword) { setStatusMessage("New passwords do not match.", "error"); return; }
+
+      try {
+        const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
+        await user.reauthenticateWithCredential(credential);
+        await user.updatePassword(newPassword);
+
+        setStatusMessage("Password changed successfully! Please log in again.", "success");
+        currentPasswordInput.value = ""; newPasswordInput.value = ""; confirmPasswordInput.value = "";
+
+        auth.signOut().then(() => {
+          setTimeout(() => { window.location.href = "login.html"; }, 2500);
+        });
+      } catch (error) {
+        console.error("Password change error:", error);
+        if (error.code === 'auth/wrong-password') setStatusMessage("Incorrect current password.", "error");
+        else if (error.code === 'auth/requires-recent-login') {
+            setStatusMessage("For security, please log in again to change your password.", "error");
+             auth.signOut().then(() => { window.location.href = "login.html"; });
+        } else setStatusMessage(`Error changing password: ${error.message}`, "error");
+      }
+    });
+
+    // Delete Account
+    deleteAccountBtn.addEventListener('click', async () => {
+      const user = auth.currentUser;
+      if (user) {
+        if (confirm("Are you absolutely sure you want to delete your account? This action is irreversible and will permanently delete all your data.")) {
+          try {
+             const credential = firebase.auth.EmailAuthProvider.credential(user.email, prompt("Please enter your current password to confirm deletion:"));
+             await user.reauthenticateWithCredential(credential);
+
+            await db.collection("users").doc(user.uid).delete(); // Delete Firestore data
+            await user.delete(); // Delete Auth account
+
+            setStatusMessage("Account deleted successfully. Redirecting to login.", "success");
+            setTimeout(() => { window.location.href = "login.html"; }, 2500);
+
+          } catch (err) {
+            console.error("Account deletion error:", err);
+            if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') setStatusMessage("Incorrect password entered. Account deletion failed.", "error");
+            else if (err.code === 'auth/requires-recent-login') {
+              setStatusMessage("For security, please log in again to delete your account.", "error");
+               auth.signOut().then(() => { window.location.href = "login.html"; });
+            } else setStatusMessage(`Error deleting account: ${err.message}`, "error");
+          }
+        }
+      } else {
+        setStatusMessage("You must be logged in to delete your account.", "error");
+      }
+    });
+
+    // Logout Button Functionality
+    logoutBtn.addEventListener('click', async () => {
+        try {
+            await auth.signOut();
+            window.location.href = "login.html";
+        } catch (error) {
+            console.error("Logout error:", error);
+            setStatusMessage(`Error during logout: ${error.message}`, "error");
+        }
+    });
+
+    // Close mobile menu when a link is clicked
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (menuToggleCheckbox.checked) {
+                menuToggleCheckbox.checked = false; // Close the menu
+            }
+        });
+    });
+
+  </script>
+
+</body>
+</html>

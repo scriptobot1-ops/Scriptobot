@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup - Scriptobot</title>
+  <style>
+    /* Base Reset */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: Arial, sans-serif; transition:0.3s; }
+
+    /* Theme Variables - Defaulting to Dark theme for Black Background */
+    :root {
+      --bg:#121212; /* Dark background */
+      --text:#f5f5f5; /* Light text */
+      --accent:#e63946; /* Accent red color */
+      --glass: rgba(0,0,0,0.3); /* Dark transparent glass effect */
+      --shadow-dark: rgba(0,0,0,0.2);
+    }
+
+    /* General Body Enhancements */
+    body {
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      background:var(--bg); /* Ensure body background applies theme var */
+      color:var(--text); /* Ensure body text color applies theme var */
+      display: flex; /* Flexbox for sticky footer */
+      flex-direction: column; /* Stack children vertically */
+      min-height: 100vh; /* Minimum height is full viewport height */
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 5px;
+      border: 2px solid var(--bg);
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    /* Text Selection Style */
+    ::selection { background-color: var(--accent); color: var(--bg); }
+
+    /* Focus States (Accessibility & UX) */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+    .btn:focus-visible,
+    input:focus-visible {
+      border-radius: 8px;
+    }
+
+    /* Navbar */
+    .site-header {
+      backdrop-filter: blur(10px);
+      background: var(--glass); /* Transparent dark glass */
+      position: sticky;
+      top:0;
+      z-index:100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .navbar {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:1rem 2rem;
+    }
+    .brand {
+      font-size:1.5rem;
+      font-weight:bold;
+      color:var(--accent);
+      text-decoration:none;
+      text-shadow: 0 0 5px rgba(230, 57, 70, 0.4);
+    }
+    .nav-links {
+      display:flex;
+      list-style:none;
+      gap:1.5rem;
+    }
+    .nav-links a {
+      text-decoration:none;
+      color:var(--text);
+      font-weight:bold;
+      position: relative;
+      transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -5px;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.3s ease-out;
+    }
+    .nav-links a:hover {
+      color: var(--accent);
+      text-shadow: 0 0 8px rgba(230, 57, 70, 0.4);
+    }
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* Uiverse Hamburger Styles */
+    .hamburger-checkbox-hidden {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .hamburger {
+      cursor: pointer;
+      display: none; /* Hidden by default, shown on mobile */
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+      z-index: 1001;
+    }
+    .hamburger:hover { background-color: rgba(255, 255, 255, 0.1); }
+    .hamburger-checkbox-hidden:checked + .hamburger svg { transform: rotate(-45deg); }
+    .hamburger-checkbox-hidden:checked + .hamburger .line-top-bottom {
+      stroke-dasharray: 20 300;
+      stroke-dashoffset: -32.42;
+    }
+    .hamburger svg {
+      height: 2.2em;
+      width: 2.2em;
+      transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .line {
+      fill: none;
+      stroke: var(--text);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 3;
+      transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
+                  stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .line-top-bottom { stroke-dasharray: 12 63; }
+
+    /* Buttons General */
+    .btn {
+      padding:0.75rem 1.5rem;
+      border-radius:2rem;
+      font-weight:bold;
+      text-decoration:none;
+      transition:0.3s;
+      letter-spacing: 0.05em;
+      border: none;
+      cursor: pointer;
+      display: inline-flex; /* Changed to inline-flex for better button content alignment */
+      align-items: center; /* Center content vertically */
+      justify-content: center; /* Center content horizontally */
+      gap: 8px; /* Space between icon and text */
+    }
+    .btn.primary {
+      background:var(--accent);
+      color:#fff;
+      box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+    }
+    .btn.primary:hover {
+      opacity: 0.9;
+      box-shadow: 0 6px 20px rgba(230, 57, 70, 0.6);
+      transform: translateY(-2px); /* Slightly less aggressive transform */
+    }
+
+    /* Main Content Area */
+    main {
+      flex-grow: 1; /* Allows main content to take up available space, pushing footer down */
+      display: flex; /* Use flex to center auth-section */
+      align-items: center; /* Center vertically */
+      justify-content: center; /* Center horizontally */
+      padding: 2rem; /* Add some padding around the content */
+    }
+
+    /* Signup Section (Auth Form) */
+    .auth-section {
+      max-width: 400px;
+      width: 100%; /* Make it fill its container up to max-width */
+      padding: 2rem;
+      border-radius: 1rem;
+      background: var(--glass); /* Transparent dark glass */
+      backdrop-filter: blur(15px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    }
+    .auth-section::before,
+    .auth-section::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      z-index: 0;
+    }
+    .auth-section::before {
+      width: 200px; height: 200px;
+      background: rgba(230,57,70,0.2);
+      top: -50px; left: -50px;
+      animation: float1 6s ease-in-out infinite;
+    }
+    .auth-section::after {
+      width: 150px; height: 150px;
+      background: rgba(101,31,255,0.2);
+      bottom: -40px; right: -40px;
+      animation: float2 5s ease-in-out infinite;
+    }
+    @keyframes float1 {
+      0%,100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(20px) rotate(45deg); }
+    }
+    @keyframes float2 {
+      0%,100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(-30deg); }
+    }
+    .auth-section h2 {
+      font-size:2rem;
+      margin-bottom:0.5rem;
+      color:var(--accent);
+      position: relative;
+      z-index:1;
+      text-shadow: 1px 1px 5px rgba(230, 57, 70, 0.4);
+    }
+    .auth-section p { margin-bottom:1.5rem; color:var(--text); z-index:1; position: relative; }
+    .auth-section input {
+      width: 90%;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      border-radius: 2rem;
+      border: 2px solid rgba(230, 57, 70, 0.5);
+      background: rgba(0,0,0,0.1);
+      color: var(--text);
+      transition: all 0.3s ease;
+      position: relative;
+      z-index:1;
+    }
+    .auth-section input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 15px rgba(230, 57, 70, 0.6);
+      background: var(--bg);
+    }
+    .auth-section a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.3s;
+      z-index:1;
+      position: relative;
+    }
+    .auth-section a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    /* signupMsg p tag is no longer needed with toasts */
+
+    /* Video Background */
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -2; /* Even lower z-index than loading screen */
+    }
+    .video-background video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.4) saturate(1.2);
+    }
+
+    /* Loading Video Screen */
+    #loading-video-screen { /* Standardized ID from login page */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #000000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.7s ease-out, visibility 0.7s ease-out;
+    }
+    #loading-video-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    #loading-video-screen video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Scroll to Top Button Styling */
+    #scrollToTopBtn {
+      display: none;
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background-color: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 1.8rem;
+      line-height: 50px;
+      text-align: center;
+      cursor: pointer;
+      z-index: 900;
+      box-shadow: 0 5px 15px rgba(255, 59, 59, 0.4);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+    }
+    #scrollToTopBtn:hover {
+      background-color: #e22a2a;
+      box-shadow: 0 8px 20px rgba(255, 59, 59, 0.5);
+      transform: translateY(-2px);
+    }
+
+    /* Simple Footer Styles */
+    footer {
+      padding: 1.5rem 2rem;
+      text-align: center;
+      background: var(--glass); /* Transparent dark glass */
+      backdrop-filter: blur(10px);
+      color: var(--text);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      flex-shrink: 0; /* Prevents footer from shrinking */
+    }
+    footer p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    /* --- TOAST NOTIFICATION STYLES --- */
+    .toast-notification {
+      visibility: hidden; /* Default hidden */
+      min-width: 280px; /* Minimum width */
+      background-color: var(--glass); /* Glass background */
+      backdrop-filter: blur(10px); /* Blur effect */
+      color: var(--text); /* Text color from theme */
+      text-align: center; /* Centered text */
+      border-radius: 10px; /* Rounded corners */
+      padding: 16px 20px; /* Padding */
+      position: fixed; /* Fixed position */
+      z-index: 10000; /* On top of everything, higher than loading screen */
+      left: 50%; /* Center horizontally */
+      transform: translateX(-50%); /* Adjust for true centering */
+      top: 30px; /* Position from top */
+      font-size: 1.1rem; /* Font size */
+      font-weight: 600;
+      box-shadow: 0 4px 15px var(--shadow-dark); /* Subtle shadow */
+      opacity: 0; /* Hidden by default */
+      transition: visibility 0.5s, opacity 0.5s ease-in-out, background-color 0.3s, color 0.3s, border-color 0.3s; /* Smooth transition */
+      border: 1px solid transparent; /* Default transparent border */
+    }
+
+    .toast-notification.show {
+      visibility: visible; /* Show when 'show' class is added */
+      opacity: 1; /* Fully visible */
+    }
+
+    .toast-notification.success {
+      background-color: rgba(76, 175, 80, 0.8); /* Green for success */
+      color: white;
+      border-color: rgba(76, 175, 80, 1);
+    }
+
+    .toast-notification.error {
+      background-color: rgba(244, 67, 54, 0.8); /* Red for error */
+      color: white;
+      border-color: rgba(244, 67, 54, 0.8);
+    }
+
+    .toast-notification.info {
+      background-color: rgba(33, 150, 243, 0.8); /* Blue for info */
+      color: white;
+      border-color: rgba(33, 150, 243, 1);
+    }
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .navbar { padding: 0.8rem 1.5rem; }
+      .hamburger { display: flex; } /* Show hamburger on mobile */
+      .nav-links {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        max-height: 0; /* Hidden by default */
+        overflow: hidden;
+        opacity: 0;
+        visibility: hidden;
+        background-color: var(--bg);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+        text-align: center;
+        transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+        z-index: 999;
+      }
+      #menu-toggle-checkbox:checked ~ .nav-links {
+        max-height: 600px; /* Expand to show links */
+        padding: 1rem 0;
+        opacity: 1;
+        visibility: visible;
+      }
+      .nav-links li { margin: 0.5rem 0; }
+      .nav-links li a {
+        padding: 0.8rem 1rem;
+        display: block;
+      }
+      .nav-links a::after { display: none; } /* Hide underline on mobile dropdown */
+
+      #scrollToTopBtn {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+        font-size: 1.5rem;
+      }
+      main { padding: 1rem; } /* Adjust main padding for mobile */
+      /* .auth-section { margin: 5% auto; } removed because main centers it */
+      .btn.google-btn, .btn.primary { width: 100%; }
+
+      .toast-notification {
+        width: 90%; /* Smaller width on mobile */
+        min-width: unset;
+        font-size: 1rem;
+        padding: 12px 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Video Screen -->
+  <div id="loading-video-screen">
+    <video autoplay muted loop playsinline>
+      <source src="myloading.mp4" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast-notification" class="toast-notification"></div>
+
+  <!-- Header Section (Navbar) -->
+  <header class="site-header">
+    <nav class="navbar">
+      <a class="brand" href="index.html">Scriptobot</a>
+
+      <!-- This checkbox input will be hidden and control the menu -->
+      <input type="checkbox" id="menu-toggle-checkbox" class="hamburger-checkbox-hidden">
+
+      <!-- This label is now linked to the checkbox above with the 'for' attribute -->
+      <label for="menu-toggle-checkbox" class="hamburger" aria-label="Toggle navigation">
+        <svg viewBox="0 0 32 32">
+          <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+          <path class="line" d="M7 16 27 16"></path>
+        </svg>
+      </label>
+
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="portfolio.html">Portfolio</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Background Video -->
+  <div class="video-background">
+    <video autoplay muted loop playsinline>
+      <source src="Red News Background (Loop)  news background loop no copyright - KHAN GFX (1080p, h264).mp4" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
+  </div>
+
+  <!-- Main content area for signup form -->
+  <main>
+    <section class="auth-section">
+      <h2>Sign Up</h2>
+      <p>Create your account</p>
+
+      <input type="text" id="signup-name" placeholder="Full Name"><br>
+      <input type="email" id="signup-email" placeholder="Email"><br>
+      <input type="password" id="signup-password" placeholder="Password"><br>
+
+      <button id="signup-btn" class="btn primary">Sign Up</button>
+      <p style="margin-top:1rem;">Already have an account? <a href="login.html">Login</a></p>
+      <!-- <p id="signup-msg" style="color:var(--accent); margin-top:1rem;"></p> -->
+    </section>
+  </main>
+
+  <!-- Scroll to Top Button -->
+  <button id="scrollToTopBtn" title="Go to top">↑</button>
+
+  <!-- Simple Footer -->
+  <footer>
+    <p>&copy; 2025 Scriptobot. All rights reserved.</p>
+  </footer>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <script>
+    // ✅ Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCu-j4jpX89hE3zihqb6Ibet22syYFDh1o",
+      authDomain: "scriptobot-1.firebaseapp.com",
+      projectId: "scriptobot-1",
+      storageBucket: "scriptobot-1.firebasestorage.app",
+      messagingSenderId: "463059915239",
+      appId: "1:463059915239:web:9a5446d23c2c19286b6d42",
+      measurementId: "G-X027DDY1PN"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const signupBtn = document.getElementById('signup-btn');
+    const nameInput = document.getElementById('signup-name');
+    const emailInput = document.getElementById('signup-email');
+    const passwordInput = document.getElementById('signup-password');
+    // const signupMsg = document.getElementById('signup-msg'); // No longer needed with toasts
+
+    // Function to show a toast notification
+    function showToast(message, type = 'info') { // type can be 'success', 'error', 'info'
+      const toast = document.getElementById('toast-notification');
+      toast.textContent = message;
+      toast.className = 'toast-notification show'; // Reset classes
+      toast.classList.add(type); // Add type class for styling
+
+      setTimeout(() => {
+        toast.classList.remove('show');
+        // Optional: remove type classes after transition for next use
+        setTimeout(() => {
+          toast.className = 'toast-notification';
+        }, 500); // Match CSS transition duration
+      }, 3000); // Toast visible for 3 seconds
+    }
+
+    signupBtn.addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if(name && email && password){
+        auth.createUserWithEmailAndPassword(email, password)
+          .then(userCredential => {
+            const user = userCredential.user;
+            return user.updateProfile({ displayName: name })
+              .then(() => {
+                // Add user to Firestore
+                db.collection("users").doc(user.uid).set({ name: name, email: email, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                showToast("✅ Account created! Redirecting to inbox...", 'success');
+                setTimeout(() => window.location.href = "inbox.html", 1500); // Redirect to inbox.html
+              });
+          })
+          .catch(err => {
+            showToast("❌ Error: " + err.message, 'error');
+          });
+      } else {
+        showToast("⚠️ Please fill all fields.", 'info');
+      }
+    });
+
+    // --- Loading Screen Logic ---
+    // Standardized ID to loading-video-screen from login page
+    let loadingScreenHidden = false; // Flag to ensure it hides only once
+
+    function hideAndRemoveLoadingScreen() {
+      const loadingScreen = document.getElementById('loading-video-screen');
+      if (loadingScreen && !loadingScreenHidden) {
+        loadingScreen.classList.add('hidden'); // Use class for transition
+        loadingScreen.addEventListener('transitionend', () => {
+          loadingScreen.remove(); // Transition ke baad element ko DOM se hata dein
+          document.body.style.overflow = ''; // Scrolling ko wapas enable karein
+        }, { once: true });
+        loadingScreenHidden = true; // Mark as hidden
+      }
+    }
+
+    // Option 1: Hide after a maximum of 5 seconds (fallback)
+    setTimeout(hideAndRemoveLoadingScreen, 5000); // 5000 milliseconds = 5 seconds
+
+    // Option 2: Hide when the entire page (including all assets) has finished loading
+    window.addEventListener('load', hideAndRemoveLoadingScreen);
+
+    // Initial scroll ko disable karein jab DOM content load ho jaye
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.style.overflow = 'hidden';
+    });
+    // --- End Loading Screen Logic ---
+
+    // JavaScript for Scroll to Top Button
+    const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+    // Show or hide the button based on scroll position
+    window.onscroll = function() {
+      if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+        scrollToTopBtn.style.display = "block";
+      } else {
+        scrollToTopBtn.style.display = "none";
+      }
+    };
+
+    // When the user clicks on the button, scroll to the top of the document
+    scrollToTopBtn.addEventListener("click", () => {
+      document.body.scrollTop = 0; // For Safari
+      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    });
+
+    // Optional: Passive Event Listeners for performance
+    (function() {
+      if (typeof EventTarget !== 'undefined') {
+        const originalAddEventListener = EventTarget.prototype.addEventListener;
+        EventTarget.prototype.addEventListener = function(type, listener, options) {
+          let usesPassive = false;
+          if (type.includes('scroll') || type.includes('touch') || type.includes('wheel')) {
+            if (typeof options === 'object' && options !== null) {
+              usesPassive = options.passive;
+            } else if (typeof options === 'boolean') {
+              // Do nothing
+            } else {
+              usesPassive = true;
+            }
+          }
+
+          if (usesPassive && typeof options === 'object' && options !== null) {
+            options.passive = true;
+          } else if (usesPassive && typeof options === 'undefined') {
+            options = { passive: true };
+          }
+
+          return originalAddEventListener.call(this, type, listener, options);
+        };
+      }
+    })();
+  </script>
+</body>
+</html>

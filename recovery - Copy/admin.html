@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Scriptobot</title>
+    <style>
+        /* Basic Admin Panel Styling */
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #ff3b3b;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .admin-section {
+            background-color: #2c2c2c;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+        .admin-section h2 {
+            margin-top: 0;
+            font-size: 1.8rem;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        input[type="text"],
+        input[type="url"],
+        input[type="number"],
+        textarea,
+        select {
+            padding: 12px 15px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #3a3a3a;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus,
+        input[type="url"]:focus,
+        input[type="number"]:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #ff3b3b;
+        }
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        button.btn {
+            background-color: #ff3b3b;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            align-self: flex-start; /* Align button to the left */
+        }
+        button.btn:hover {
+            background-color: #e22a2a;
+            transform: translateY(-2px);
+        }
+        button.btn.primary {
+            background-color: #007aff;
+        }
+        button.btn.primary:hover {
+            background-color: #0056b3;
+        }
+
+        /* Styles for displaying existing data (e.g., reviews, blogs) */
+        .data-list {
+            margin-top: 20px;
+        }
+        .data-item {
+            background-color: #2c2c2c;
+            border: 1px solid #444;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .data-item-details {
+            flex-grow: 1;
+        }
+        .data-item-actions button {
+            background: #444;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: background 0.3s ease;
+        }
+        .data-item-actions button:hover {
+            background: #ff3b3b;
+        }
+        .data-item-actions button.edit { background-color: #007aff; }
+        .data-item-actions button.edit:hover { background-color: #0056b3; }
+        .data-item-actions button.delete { background-color: #dc3545; }
+        .data-item-actions button.delete:hover { background-color: #c82333; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-section {
+                padding: 15px;
+            }
+            form {
+                gap: 10px;
+            }
+            input, textarea, button {
+                font-size: 0.95rem;
+            }
+            .data-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .data-item-actions {
+                margin-top: 10px;
+                width: 100%;
+                display: flex;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Scriptobot Admin Panel</h1>
+
+    <section class="admin-section" id="blogs-section">
+        <h2>Manage Blog Posts</h2>
+        <form id="blog-form">
+            <input type="text" placeholder="Blog Title" id="blog-title" required>
+            <input type="text" placeholder="Category (e.g., design, ai)" id="blog-category">
+            <input type="text" placeholder="Tags (comma-separated, e.g., web3, tutorial)" id="blog-tags">
+            <input type="url" placeholder="Image URL (optional)" id="blog-image-url">
+            <textarea placeholder="Full Blog Content" id="blog-content" required></textarea>
+            <div>
+                <label for="is-featured">Featured:</label>
+                <input type="checkbox" id="is-featured" style="margin-left: 5px;">
+                <label for="is-trending" style="margin-left: 20px;">Trending:</label>
+                <input type="checkbox" id="is-trending" style="margin-left: 5px;">
+            </div>
+            <button type="submit" class="btn primary">Add New Blog Post</button>
+        </form>
+        <div id="admin-blogs">
+            <h3>Existing Blog Posts</h3>
+            <div id="blogs-list" class="data-list">
+                <!-- Blog posts will be loaded here -->
+            </div>
+        </div>
+
+        <!-- 🌟 Reviews Control Buttons (Add + Check) -->
+<div style="display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap;">
+  
+  <!-- Add Review Button -->
+  <button
+    onclick="window.open('add-review.html','_blank')"
+    style="
+      background: linear-gradient(90deg, #23c55e, #1ea950);
+      border: none;
+      color: white;
+      padding: 12px 26px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 5px 15px rgba(35,197,94,0.3);
+    "
+    onmouseover="this.style.transform='scale(1.05)'"
+    onmouseout="this.style.transform='scale(1)'"
+  >
+    ➕ Add New Review
+  </button>
+
+  <!-- Check Reviews Button -->
+  <button
+    onclick="window.open('reviews.html','_blank')"
+    style="
+      background: linear-gradient(90deg, #2563eb, #1e3a8a);
+      border: none;
+      color: white;
+      padding: 12px 26px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 5px 15px rgba(37,99,235,0.3);
+    "
+    onmouseover="this.style.transform='scale(1.05)'"
+    onmouseout="this.style.transform='scale(1)'"
+  >
+    👀 Check Reviews
+  </button>
+
+  <!-- Check Reviews Button -->
+  <button
+    onclick="window.open('admin-chat.html','_blank')"
+    style="
+      background: linear-gradient(90deg, #eb9525, #c5d303);
+      border: none;
+      color: white;
+      padding: 12px 26px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 5px 15px rgba(231, 68, 3, 0.3);
+    "
+    onmouseover="this.style.transform='scale(1.05)'"
+    onmouseout="this.style.transform='scale(1)'"
+  >
+    💬 Chat with Clients
+  </button>
+  <!-- Check Reviews Button -->
+  <button
+    onclick="window.open('index.html','_blank')"
+    style="
+      background: linear-gradient(90deg, #f80000, #cc690c);
+      border: none;
+      color: white;
+      padding: 12px 26px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 5px 15px rgba(231, 68, 3, 0.3);
+    "
+    onmouseover="this.style.transform='scale(1.05)'"
+    onmouseout="this.style.transform='scale(1)'"
+  >
+  Go to Homepage 🏠  
+  </button>
+
+</div>
+
+
+    </section>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script>
+        // --- Firebase Configuration (Directly embedded) ---
+        // Initialize Firebase
+        // Replace with your actual Firebase project details
+        const firebaseConfig = {
+          apiKey: "AIzaSyCu-j4jpX89hE3zihqb6Ibet22syYFDh1o", // <<< Apni API Key yahan daalen
+          authDomain: "scriptobot-1.firebaseapp.com",
+          projectId: "scriptobot-1",
+          storageBucket: "scriptobot-1.appspot.com",
+          messagingSenderId: "463059915239",
+          appId: "1:463059915239:web:9a5446d23c2c19286b6d42",
+          measurementId: "G-X027DDY1PN"
+        };
+
+        // Initialize Firebase app
+        let db; // Declare db globally within this script's scope
+        try {
+            // Use initializeApp with compat version
+            const app = firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore(); // Get Firestore instance using compat version
+            console.log("Firebase initialized successfully.");
+        } catch (error) {
+            console.error("Error initializing Firebase: ", error);
+            alert("Firebase initialization failed. Please check your console.");
+        }
+
+        // --- DOM Elements ---
+        const blogForm = document.getElementById("blog-form");
+        const blogsListDiv = document.getElementById("blogs-list");
+        const blogTitleInput = document.getElementById("blog-title");
+        const blogCategoryInput = document.getElementById("blog-category");
+        const blogTagsInput = document.getElementById("blog-tags");
+        const blogImageUrlInput = document.getElementById("blog-image-url");
+        const blogContentInput = document.getElementById("blog-content");
+        const isFeaturedCheckbox = document.getElementById("is-featured");
+        const isTrendingCheckbox = document.getElementById("is-trending");
+
+        // --- Firebase Collection References ---
+        let blogsCollectionRef;
+        if (db) { // Check if db was initialized successfully
+            blogsCollectionRef = db.collection("blogs"); // Use compat version
+        } else {
+            console.error("Firestore database instance is not available.");
+            alert("Admin panel cannot function without a valid Firestore connection.");
+        }
+
+        // --- Functions ---
+
+        // Function to fetch and display existing blog posts
+        async function loadBlogPosts() {
+            if (!blogsCollectionRef) return; // Exit if Firestore is not available
+
+            blogsListDiv.innerHTML = '<p>Loading posts...</p>'; // Indicate loading
+            try {
+                // Order by timestamp for consistency
+                const q = blogsCollectionRef.orderBy("timestamp", "desc"); // Use compat version
+                const querySnapshot = await q.get(); // Use compat version
+                blogsListDiv.innerHTML = ''; // Clear loading message
+
+                if (querySnapshot.empty) {
+                    blogsListDiv.innerHTML = '<p>No blog posts found. Add one using the form above.</p>';
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const post = { id: doc.id, ...doc.data() };
+                    displayBlogPost(post);
+                });
+            } catch (error) {
+                console.error("Error loading blog posts: ", error);
+                blogsListDiv.innerHTML = '<p>Error loading posts. Please check console.</p>';
+            }
+        }
+
+        // Function to display a single blog post in the admin list
+        function displayBlogPost(post) {
+            const postElement = document.createElement("div");
+            postElement.classList.add("data-item");
+            postElement.innerHTML = `
+                <div class="data-item-details">
+                    <strong>${post.title || 'Untitled'}</strong><br>
+                    <small>Category: ${post.category || 'N/A'}</small><br>
+                    <small>Tags: ${post.tags ? post.tags.join(', ') : 'N/A'}</small>
+                    ${post.isFeatured ? '<span style="color: #007aff; margin-left: 5px;">(Featured)</span>' : ''}
+                    ${post.isTrending ? '<span style="color: #ff8c00; margin-left: 5px;">(Trending)</span>' : ''}
+                </div>
+                <div class="data-item-actions">
+                    <button class="edit" onclick="editBlogPost('${post.id}')">Edit</button>
+                    <button class="delete" onclick="deleteBlogPost('${post.id}')">Delete</button>
+                </div>
+            `;
+            blogsListDiv.appendChild(postElement);
+        }
+
+        // Function to handle deleting a blog post
+        window.deleteBlogPost = async function(postId) {
+            if (!confirm("Are you sure you want to delete this blog post? This action cannot be undone.")) {
+                return;
+            }
+            if (!blogsCollectionRef) { alert("Firestore not available."); return; }
+
+            try {
+                await blogsCollectionRef.doc(postId).delete(); // Use compat version
+                alert("Blog post deleted successfully!");
+                loadBlogPosts(); // Refresh the list
+            } catch (error) {
+                console.error("Error deleting blog post: ", error);
+                alert("Failed to delete blog post. Please check console.");
+            }
+        }
+
+        // Function to handle editing a blog post (populate form)
+        window.editBlogPost = async function(postId) {
+            if (!blogsCollectionRef) { alert("Firestore not available."); return; }
+
+            // Fetch the specific post data
+            const postRef = blogsCollectionRef.doc(postId); // Use compat version
+            try {
+                const docSnap = await postRef.get(); // Use compat version
+                if (docSnap.exists()) {
+                    const postData = { id: docSnap.id, ...docSnap.data() };
+
+                    // Populate form fields
+                    blogTitleInput.value = postData.title || '';
+                    blogCategoryInput.value = postData.category || '';
+                    blogTagsInput.value = postData.tags ? postData.tags.join(', ') : '';
+                    blogImageUrlInput.value = postData.imageUrl || '';
+                    blogContentInput.value = postData.content || '';
+                    isFeaturedCheckbox.checked = postData.isFeatured || false;
+                    isTrendingCheckbox.checked = postData.isTrending || false;
+
+                    // Change submit button to update mode
+                    const submitButton = blogForm.querySelector('button[type="submit"]');
+                    submitButton.textContent = "Update Blog Post";
+                    // Store current postId to use in the update function
+                    blogForm.dataset.editingPostId = postId;
+
+                    // Re-attach the submit handler to call updateBlogPost
+                    // Remove old listener to prevent multiple calls
+                    blogForm.removeEventListener('submit', handleFormSubmit);
+                    blogForm.addEventListener('submit', handleUpdateSubmit);
+
+                    // Scroll to form to make editing easier
+                    blogForm.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    alert("Blog post not found.");
+                }
+            } catch (error) {
+                console.error("Error fetching blog post for edit: ", error);
+                alert("Failed to retrieve blog post data for editing.");
+            }
+        }
+
+        // Function to handle the actual update submission
+        async function handleUpdateSubmit(e) {
+            e.preventDefault();
+            const postId = blogForm.dataset.editingPostId;
+            if (!postId) {
+                console.error("Editing post ID not found.");
+                return;
+            }
+
+            const title = blogTitleInput.value.trim();
+            const category = blogCategoryInput.value.trim();
+            const tags = blogTagsInput.value.split(',').map(tag => tag.trim()).filter(tag => tag);
+            const imageUrl = blogImageUrlInput.value.trim();
+            const content = blogContentInput.value.trim();
+            const isFeatured = isFeaturedCheckbox.checked;
+            const isTrending = isTrendingCheckbox.checked;
+
+            if (!title || !content) {
+                alert("Title and Content are required.");
+                return;
+            }
+
+            const postRef = blogsCollectionRef.doc(postId); // Use compat version
+            try {
+                await postRef.update({ // Use compat version
+                    title: title,
+                    category: category,
+                    tags: tags,
+                    imageUrl: imageUrl,
+                    content: content,
+                    isFeatured: isFeatured,
+                    isTrending: isTrending,
+                    // timestamp not updated on edit by default
+                });
+                alert("Blog post updated successfully!");
+
+                // Reset form and button
+                blogForm.reset();
+                delete blogForm.dataset.editingPostId; // Clear editing state
+                isFeaturedCheckbox.checked = false;
+                isTrendingCheckbox.checked = false;
+                const submitButton = blogForm.querySelector('button[type="submit"]');
+                submitButton.textContent = "Add New Blog Post";
+                // Restore original submit handler for adding new posts
+                blogForm.removeEventListener('submit', handleUpdateSubmit);
+                blogForm.addEventListener('submit', handleFormSubmit);
+
+                loadBlogPosts(); // Refresh list
+            } catch (error) {
+                console.error("Error updating blog post: ", error);
+                alert("Failed to update blog post. Please check console.");
+            }
+        }
+
+        // Function to handle adding a new blog post
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            if (!blogsCollectionRef) { alert("Firestore not available."); return; }
+
+            const title = blogTitleInput.value.trim();
+            const category = blogCategoryInput.value.trim();
+            const tags = blogTagsInput.value.split(',').map(tag => tag.trim()).filter(tag => tag);
+            const imageUrl = blogImageUrlInput.value.trim();
+            const content = blogContentInput.value.trim();
+            const isFeatured = isFeaturedCheckbox.checked;
+            const isTrending = isTrendingCheckbox.checked;
+
+            if (!title || !content) {
+                alert("Title and Content are required.");
+                return;
+            }
+
+            try {
+                await blogsCollectionRef.add({ // Use compat version
+                    title: title,
+                    category: category,
+                    tags: tags,
+                    imageUrl: imageUrl,
+                    content: content,
+                    likes: 0, // Initialize likes to 0
+                    isFeatured: isFeatured,
+                    isTrending: isTrending,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(), // Use compat version
+                    comments: [] // Initialize comments as an empty array
+                });
+                alert("Blog post added successfully!");
+                blogForm.reset();
+                isFeaturedCheckbox.checked = false; // Reset checkboxes
+                isTrendingCheckbox.checked = false;
+                loadBlogPosts(); // Refresh the list
+            } catch (error) {
+                console.error("Error adding blog post: ", error);
+                alert("Failed to add blog post. Please check console for details.");
+            }
+        }
+
+        // --- Initial Load ---
+        document.addEventListener("DOMContentLoaded", () => {
+            // Set the initial submit handler for adding new posts
+            blogForm.addEventListener('submit', handleFormSubmit);
+            loadBlogPosts(); // Load existing posts when the page loads
+        });
+    </script>
+    <!-- admin test only -->
+     <script>
+        firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    console.log("🔥 Logged in as:", user.email, "UID:", user.uid);
+  } else {
+    console.log("❌ Not logged in");
+  }
+});
+     </script>
+</body>
+</html>

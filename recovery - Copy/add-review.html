@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Review - Admin</title>
+  <style>
+    body { font-family: Poppins, sans-serif; background:#f9fff9; padding:50px; text-align:center; }
+    input, textarea { width:300px; padding:10px; margin:10px; border-radius:8px; border:1px solid #ccc; }
+    button { background:#23c55e; border:none; color:white; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:600; }
+  </style>
+</head>
+<body>
+  <h2>Add a New Review 🌟</h2>
+  <input id="name" placeholder="Customer Name"><br>
+  <textarea id="message" placeholder="Write review..."></textarea><br>
+  <input id="rating" type="number" placeholder="Rating (1-5)" min="1" max="5"><br>
+  <input id="photo" placeholder="Photo URL (optional)"><br>
+  <button onclick="addReview()">Submit</button>
+  <p id="status"></p>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCu-j4jpX89hE3zihqb6Ibet22syYFDh1o",
+      authDomain: "scriptobot-1.firebaseapp.com",
+      projectId: "scriptobot-1",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    async function addReview() {
+      const name = document.getElementById("name").value.trim();
+      const message = document.getElementById("message").value.trim();
+      const rating = parseInt(document.getElementById("rating").value);
+      const photo = document.getElementById("photo").value.trim();
+
+      if (!name || !message || !rating) return alert("Fill all fields!");
+
+      try {
+        await db.collection("reviews").add({
+          name,
+          message,
+          rating,
+          photo,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        document.getElementById("status").innerText = "✅ Review added!";
+      } catch (e) {
+        document.getElementById("status").innerText = "❌ Error adding review";
+        console.error(e);
+      }
+    }
+  </script>
+</body>
+</html>

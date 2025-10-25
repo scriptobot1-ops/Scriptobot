@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio - Scriptobot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- For skill icons -->
+<style>
+  /* ===== Base ===== */
+  :root {
+    --primary-color: #ff3b3b;
+    --secondary-color: #e22a2a;
+    --dark-bg: #0e0e0e;
+    --light-text: #ffffff;
+    --muted-text: #dddddd;
+    --section-padding: 80px 20px;
+    --max-width: 1200px;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: var(--dark-bg);
+    color: var(--light-text);
+    line-height: 1.7;
+    scroll-behavior: smooth;
+    overflow-x: hidden; /* Crucial: Prevents horizontal scrollbars */
+  }
+  a { text-decoration: none; color: inherit; transition: color 0.3s ease; }
+  a:hover { color: var(--primary-color); }
+
+  /* ===== Header ===== */
+  .site-header {
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top:0;
+    z-index:1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  }
+  .navbar {
+    max-width: var(--max-width);
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    width: 100%; /* Ensures it takes full available width within max-width */
+    box-sizing: border-box; /* Includes padding in the element's total width and height */
+  }
+  .brand { font-size:1.8rem; font-weight:bold; color:var(--primary-color); font-family: 'Montserrat', sans-serif; }
+  .nav-links {
+    list-style:none;
+    display:flex;
+    gap:25px;
+    margin:0;
+    padding:0;
+  }
+  .nav-links li a { transition:0.3s; font-weight:500; }
+  .nav-links li a:hover { color:var(--primary-color); }
+  .controls { display:flex; gap:15px; align-items: center;}
+  #theme-toggle { background:transparent; border:none; font-size:1.4rem; cursor:pointer; color:var(--light-text); }
+  #theme-toggle:hover { color:var(--primary-color); }
+  .hamburger {
+    display:none; /* Hidden by default, shown in media query */
+    flex-direction:column;
+    gap:4px;
+    background:transparent;
+    border:none;
+    cursor:pointer;
+    padding: 5px;
+  }
+  .hamburger span {
+    width:24px;
+    height:3px;
+    background:var(--light-text);
+    border-radius: 2px;
+    transition:0.3s;
+  }
+
+  /* Responsive adjustments for Header */
+  @media(max-width:768px){
+    .nav-links {
+      position:absolute;
+      top: 70px; /* Position below the header */
+      right: 0;
+      background: rgba(0,0,0,0.95);
+      backdrop-filter: blur(5px);
+      flex-direction:column;
+      align-items:flex-start;
+      width:0px;
+      padding:0px;
+      height: calc(100vh - 70px); /* Full viewport height minus header */
+      transform: translateX(100%); /* Initially off-screen */
+      transition: transform 0.4s ease-in-out;
+      display:flex; /* Ensure it's display:flex for the transition */
+      overflow-y: auto; /* Allow scrolling if menu items exceed height */
+    }
+    .nav-links.active { transform: translateX(0); } /* Slide in */
+    .hamburger { display:flex; } /* Show hamburger on smaller screens */
+    .navbar { padding: 20px; } /* Adjust padding for smaller screens */
+    .brand { font-size: 1.6rem; } /* Slightly smaller brand name */
+  }
+
+  /* ===== Hero ===== */
+  .hero {
+    padding: 120px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh; /* Ensure it takes up significant vertical space */
+    position: relative;
+    overflow: hidden; /* Contain background effects */
+  }
+  .hero-bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, rgba(255, 59, 59, 0.1) 0%, rgba(255, 59, 59, 0) 50%, rgba(255, 59, 59, 0.1) 100%);
+    z-index: -1;
+    opacity: 0.5;
+  }
+  .hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.2;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    /* Added styles for better centering and stability */
+    width: 100%; /* Occupy full width */
+    max-width: 960px; /* Limit width for readability */
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero p {
+    font-size: 1.3rem;
+    margin-bottom: 40px;
+    max-width: 700px; /* Limit width for readability on larger screens */
+    color: var(--muted-text);
+    /* Added styles to keep paragraph centered */
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero .typed-text {
+    font-weight: bold;
+    color: var(--primary-color);
+  }
+  .btn {
+    padding: 14px 30px;
+    border-radius: 8px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    margin: 0 10px; /* Spacing between buttons */
+    display: inline-block; /* Ensures margin works correctly */
+  }
+  .btn.primary {
+    background: var(--primary-color);
+    color: var(--light-text);
+    box-shadow: 0 5px 15px rgba(255, 59, 59, 0.3);
+  }
+  .btn.primary:hover {
+    background: var(--secondary-color);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 59, 59, 0.4);
+  }
+  .btn.outline {
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    background: transparent;
+  }
+  .btn.outline:hover {
+    background: var(--primary-color);
+    color: var(--light-text);
+    transform: translateY(-3px);
+  }
+
+  /* Responsive adjustments for Hero */
+  @media(max-width:768px){
+    .hero h1 { font-size: 2.8rem; }
+    .hero p { font-size: 1.1rem; }
+    .btn { padding: 12px 25px; font-size: 0.95rem; margin: 10px 5px;} /* Adjusted margin for buttons in stacked view */
+  }
+
+  /* ===== Section Title ===== */
+  .section-title {
+    text-align: center;
+    margin-bottom: 60px;
+    font-size: 2.8rem;
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
+    padding-bottom: 10px;
+  }
+  .section-title::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: var(--primary-color);
+    border-radius: 2px;
+  }
+
+  /* ===== Portfolio Section ===== */
+  #portfolio { padding: var(--section-padding); }
+  .portfolio-grid {
+    display: grid;
+    /* auto-fit: Creates as many columns as fit within the container */
+    /* minmax(320px, 1fr): Each column will be at least 320px wide, and will grow to fill available space */
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    width: 100%; /* Ensure grid takes full width */
+    max-width: var(--max-width); /* Apply max-width constraint */
+    margin: 0 auto; /* Center the grid if its content is narrower than max-width */
+    padding: 0 20px; /* Add padding on sides for smaller screens */
+    box-sizing: border-box;
+  }
+  .portfolio-item {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #1a1a1a;
+    cursor: pointer;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .portfolio-item img {
+    width: 100%;
+    height: 250px; /* Fixed height for consistency */
+    object-fit: cover; /* Ensures image covers the area without distortion */
+    display: block;
+    transition: transform 0.5s ease;
+  }
+  .portfolio-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+  }
+  .portfolio-item:hover img { transform: scale(1.05); }
+  .portfolio-item .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 30%, rgba(0,0,0,0) 70%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    text-align: center;
+    padding: 25px;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    transform: translateY(20px);
+  }
+  .portfolio-item:hover .overlay {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .portfolio-item h3 {
+    margin: 0 0 12px;
+    color: var(--light-text);
+    font-size: 1.6rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+  }
+  .portfolio-item p {
+    color: var(--muted-text);
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    max-width: 350px; /* Limit description width */
+  }
+  .btn.small {
+    padding: 10px 20px;
+    border-radius: 6px;
+    background: var(--primary-color);
+    color: var(--light-text);
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: none;
+    margin-top: auto; /* Pushes button to the bottom if content above is short */
+  }
+  .btn.small:hover {
+    background: var(--secondary-color);
+  }
+
+  /* ===== Skills Section ===== */
+  #skills {
+    padding: var(--section-padding);
+    background-color: #151515;
+  }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 30px;
+    text-align: center;
+    width: 100%;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+  .skill-item {
+    background: rgba(255,255,255,0.05);
+    padding: 30px 20px;
+    border-radius: 10px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+  .skill-item:hover {
+    transform: translateY(-5px);
+    background-color: rgba(255, 59, 59, 0.1);
+  }
+  .skill-item i {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+  }
+  .skill-item h4 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  /* Animated Skill Bars */
+  .skill-bar-container {
+    width: 100%;
+    background-color: rgba(255,255,255,0.05);
+    border-radius: 5px;
+    margin-top: 10px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .skill-bar {
+    height: 100%;
+    background-color: var(--primary-color);
+    width: 0; /* Animated via JS/CSS transition */
+    transition: width 1.5s ease-out;
+    border-radius: 5px;
+  }
+
+  /* ===== Animated Counters ===== */
+  .counter-section {
+    padding: var(--section-padding);
+    text-align: center;
+    background: #1a1a1a;
+    position: relative;
+    overflow: hidden;
+  }
+  .counter-section::before { /* Parallax effect - Note: background-attachment: fixed can sometimes have issues on mobile */
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 150%;
+    background: url('https://via.placeholder.com/1500x1000/333333/FFFFFF?text=Abstract+Pattern') center center/cover no-repeat; /* Changed to scroll for better mobile compatibility */
+    z-index: -1;
+    opacity: 0.1;
+    transform: translateZ(-1px) scale(1.5);
+  }
+
+  .counter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+    justify-items: center;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+  .counter-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .counter-item .number {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 10px;
+    line-height: 1.1;
+    overflow: hidden;
+    position: relative;
+    height: 1.2em;
+    display: inline-block;
+    width: auto;
+  }
+  .counter-item .number span {
+    display: block;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  }
+  .counter-item .label {
+    font-size: 1.1rem;
+    color: var(--muted-text);
+    font-weight: 500;
+  }
+
+  /* ===== Website Shop Section ===== */
+  #website-shop {
+    padding: var(--section-padding);
+    background-color: #151515;
+  }
+  .website-shop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    width: 100%;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+  .website-shop-item {
+    background: rgba(255,255,255,0.05);
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .website-shop-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+  }
+  .website-shop-item img {
+    max-width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+  }
+  .website-shop-item:hover img {
+    transform: scale(1.05);
+  }
+  .website-shop-item h3 {
+    font-size: 1.8rem;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+  }
+  .website-shop-item p {
+    font-size: 1rem;
+    color: var(--muted-text);
+    margin-bottom: 25px;
+  }
+  .website-shop-item .price {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--light-text);
+    margin-bottom: 20px;
+  }
+  .website-shop-item .btn.primary {
+    padding: 12px 25px;
+    font-size: 1rem;
+  }
+  .website-shop-item .btn.disabled {
+      background-color: #555;
+      color: #aaa;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+  }
+  .website-shop-item .btn.disabled:hover {
+      transform: none;
+      box-shadow: none;
+  }
+
+  /* ===== Animated Text Section ===== */
+  .animated-text-section {
+    padding: var(--section-padding);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+    position: relative;
+    overflow: hidden;
+  }
+  .animated-text-bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, rgba(59, 177, 255, 0.1) 0%, rgba(59, 177, 255, 0) 50%, rgba(59, 177, 255, 0.1) 100%);
+    z-index: -1;
+    opacity: 0.5;
+  }
+  .animated-text-section h2 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.2;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  }
+  .animated-text-section p {
+    font-size: 1.2rem;
+    max-width: 700px;
+    color: var(--muted-text);
+  }
+  .animated-text-section .typed-text-contact {
+    font-weight: bold;
+    color: #3bb2ff;
+  }
+
+  /* ===== Footer ===== */
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    background: rgba(255,255,255,0.05);
+    margin-top: 100px;
+    font-size: 0.9rem;
+    color: var(--muted-text);
+  }
+  footer a { color: var(--primary-color); text-decoration: underline; }
+  footer a:hover { color: var(--secondary-color); }
+
+  /* ===== Animations ===== */
+  .reveal { opacity:0; transform:translateY(30px); transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1); }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+  .reveal-left { transform:translateX(-50px); }
+  .reveal-right { transform:translateX(50px); }
+  .reveal-bottom { transform:translateY(50px); }
+  .delay-1 { transition-delay:0.3s; }
+  .delay-2 { transition-delay:0.6s; }
+  .delay-3 { transition-delay:0.9s; }
+
+  /* Custom animation for hamburger menu */
+  .hamburger.is-active .line-1 { transform: rotate(45deg) translate(5px, 5px); }
+  .hamburger.is-active .line-2 { opacity: 0; }
+  .hamburger.is-active .line-3 { transform: rotate(-45deg) translate(7px, -6px); }
+/* hire btn */
+/* === Profile Card Styling (Modified) === */
+#profile-card-section {
+  padding: 60px 20px;
+  background-color: #151515;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-card-container {
+  display: inline-block;
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.profile-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  padding: 30px 25px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 35px rgba(255, 59, 59, 0.3);
+}
+
+.profile-image-wrapper {
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.profile-picture {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--primary-color);
+  transition: border-color 0.4s ease;
+}
+
+.profile-card:hover .profile-picture {
+  border-color: var(--secondary-color);
+}
+
+.profile-content {
+  width: 100%;
+  display: flex; /* Use flexbox for content alignment */
+  flex-direction: column;
+  align-items: center; /* Center items horizontally */
+}
+
+.profile-name {
+  font-size: 1.8rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  color: var(--light-text);
+  margin-bottom: 5px;
+}
+
+.profile-title {
+  font-size: 1.1rem;
+  color: var(--muted-text);
+  margin-bottom: 25px;
+  font-weight: 500;
+}
+
+/* Wrapper for the CTA button to control its spacing */
+.cta-button-wrapper {
+  margin-bottom: 25px; /* Space below the button */
+  width: 100%; /* Ensure it takes full width to center the button */
+  display: flex;
+  justify-content: center; /* Center the button inside the wrapper */
+}
+
+/* === Your Custom CTA Button Styles (Adjusted for context) === */
+.cta {
+  position: relative;
+  padding: 12px 25px; /* Adjusted padding to match other buttons */
+  transition: all 0.4s ease; /* Smoother transition */
+  border: 3px solid var(--primary-color); /* Use accent color */
+  border-radius: 8px; /* Match other button radii */
+  background: var(--primary-color); /* Use accent color */
+  cursor: pointer;
+  display: inline-flex; /* Use inline-flex to align text and SVG */
+  align-items: center; /* Vertically center content */
+  justify-content: center; /* Horizontally center content */
+  font-size: 1rem; /* Match other button font size */
+  font-weight: 700; /* Bold text */
+  letter-spacing: 0.5px;
+  color: var(--light-text); /* White text */
+  text-decoration: none; /* Remove underline if it's an anchor tag */
+  box-shadow: 0 5px 15px rgba(255, 59, 59, 0.3);
+}
+
+.cta:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+  border-radius: 8px; /* Match button radius */
+  background: var(--dark-bg); /* Use dark background for the reveal */
+  width: 45px; /* Keep original width */
+  height: 100%; /* Make it cover full height */
+  transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smoother easing */
+  z-index: 0; /* Behind the text */
+}
+
+.cta span {
+  position: relative; /* Ensure text is above the ::before element */
+  z-index: 1;
+  font-family: 'Poppins', sans-serif; /* Use your site's font */
+  font-size: 1rem; /* Match other buttons */
+  letter-spacing: 0.5px;
+  color: var(--light-text); /* White text */
+  transition: color 0.4s ease; /* Transition color */
+}
+
+.cta svg {
+  position: relative;
+  z-index: 1; /* Above ::before element */
+  margin-left: 10px;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke: var(--light-text); /* White SVG color */
+  stroke-width: 2;
+  transform: translateX(-5px);
+  transition: all 0.5s ease;
+}
+
+/* Hover effects for the CTA button */
+.cta:hover {
+  background: var(--secondary-color); /* Darker accent on hover */
+  border-color: var(--secondary-color);
+  box-shadow: 0 8px 20px rgba(255, 59, 59, 0.4);
+  transform: translateY(-3px);
+}
+
+.cta:hover:before {
+  width: 100%; /* Expand to full width */
+  background: var(--dark-bg); /* Dark background reveal */
+}
+
+.cta:hover svg {
+  transform: translateX(0); /* Move SVG into view */
+  stroke: var(--light-text); /* Ensure stroke color is correct */
+}
+
+.cta:active {
+  transform: scale(0.98) translateY(-1px); /* Slight press effect */
+}
+
+/* Responsive adjustments for the card */
+@media (max-width: 480px) {
+  .profile-card {
+    padding: 20px 15px;
+  }
+  .profile-picture {
+    width: 100px;
+    height: 100px;
+    border-width: 3px;
+  }
+  .profile-name { font-size: 1.5rem; }
+  .profile-title { font-size: 1rem; }
+  .cta {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+  .cta span { font-size: 0.9rem; }
+  .cta svg { width: 12px; height: 8px; } /* Slightly smaller SVG on mobile */
+}
+
+  /* ===== Base ===== */
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  /* ===== Theme Variables (Simplified as theme toggle is removed) ===== */
+  :root {
+    --primary-color: #ff3b3b;
+    --secondary-color: #e22a2a;
+    
+    --bg: #121212; /* Dark background */
+    --text: #ffffff; /* Dark text */
+    --muted-text: #dddddd; /* Dark muted text */
+    --glass: rgba(0,0,0,0.6); /* Dark glass effect for header */
+    --accent: var(--primary-color); /* Accent is primary color for underlines, glows, etc. */
+
+    --section-padding: 80px 20px;
+    --max-width: 1200px;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  a { text-decoration: none; color: inherit; transition: color 0.3s ease; }
+  a:hover { color: var(--primary-color); }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 5px;
+    border: 2px solid var(--bg);
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+  /* Text Selection Style */
+  ::selection { background-color: var(--accent); color: var(--bg); }
+
+  /* Focus States */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  .btn:focus-visible, .hero-left:focus-visible, .card:focus-visible,
+  .review-card:focus-visible, input:focus-visible, textarea:focus-visible,
+  .profile-card:focus-visible, .website-shop-item:focus-visible {
+    border-radius: 8px;
+  }
+
+  /* ===== Header ===== */
+  .site-header {
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top:0;
+    z-index:1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  }
+  .navbar {
+    max-width: var(--max-width);
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .brand {
+    font-size:1.8rem;
+    font-weight:bold;
+    color:var(--primary-color);
+    font-family: 'Montserrat', sans-serif;
+    text-shadow: 0 0 5px rgba(230, 57, 70, 0.4);
+    transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+  }
+  .brand:hover {
+    color: var(--primary-color);
+    text-shadow: 0 0 10px rgba(230, 57, 70, 0.7), 0 0 20px rgba(230, 57, 70, 0.3);
+  }
+  .nav-links { /* Large screen links */
+    list-style:none;
+    display:flex;
+    gap:0.7rem;
+    margin:0;
+    padding:0;
+  }
+  .nav-links li a {
+    font-weight:700;
+    font-size:1em;
+    color:var(--text);
+    position: relative;
+    transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+    padding: 0.5rem 0.7rem;
+    border-radius: 4px;
+  }
+  .nav-links li a::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -5px;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: width 0.3s ease-out;
+  }
+  .nav-links li a:hover {
+    color:var(--accent);
+    text-shadow: 0 0 8px rgba(230, 57, 70, 0.4);
+  }
+  .nav-links li a:hover::after {
+    width: 100%;
+  }
+
+  /* --- Uiverse Hamburger Styles (CSS-driven) --- */
+  .hamburger-checkbox-hidden {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .hamburger {
+    cursor: pointer;
+    display: none; /* Default hidden for larger screens */
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    z-index: 1001;
+  }
+
+  .hamburger:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .hamburger-checkbox-hidden:checked + .hamburger svg {
+    transform: rotate(-45deg);
+  }
+
+  .hamburger-checkbox-hidden:checked + .hamburger .line-top-bottom {
+    stroke-dasharray: 20 300;
+    stroke-dashoffset: -32.42;
+  }
+
+  .hamburger svg {
+    height: 2.2em;
+    width: 2.2em;
+    transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .line {
+    fill: none;
+    stroke: var(--text);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 3;
+    transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
+                stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .line-top-bottom {
+    stroke-dasharray: 12 63;
+  }
+
+  /* ===== Responsive adjustments for Header (Dropdown Fix) ===== */
+  @media(max-width:768px){
+    .navbar { padding: 0.8rem 1.5rem; }
+    .brand { font-size: 1.6rem; }
+
+    /* Show hamburger on small screens */
+    .hamburger { display:flex; }
+
+    /* Nav-links (dropdown) */
+    .nav-links {
+      position:absolute;
+      top: 100%;
+      left: 0;
+      background: var(--bg); /* Dropdown background */
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      flex-direction:column;
+      align-items:center;
+      width: 100%;
+      padding: 0;
+      
+      /* Animation properties for showing/hiding */
+      max-height: 0; /* Initially hidden */
+      opacity: 0; /* Fade out effect */
+      pointer-events: none; /* Disable clicks when hidden */
+      visibility: hidden; /* Hide from screen readers when hidden */
+      transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+      z-index:999;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+      
+      /* FIX: display: flex; hamesha mobile par on rakha hai takay flex-direction kaam kare */
+      display: flex; 
+    }
+    
+    /* Jab hamburger checkbox checked ho tab nav links ko dikhao */
+    #menu-toggle-checkbox:checked ~ .nav-links {
+      max-height: 500px; /* Adjust this value if your menu content is taller */
+      padding: 1rem 0;
+      opacity: 1;
+      pointer-events: auto; /* Enable clicks when visible */
+      visibility: visible;
+    }
+    
+    /* Individual dropdown links */
+    .nav-links li {
+        margin: 0.5rem 0;
+        width: 100%;
+    }
+    .nav-links li a {
+        display: block;
+        width: 100%;
+        font-weight:700;
+        font-size: 1.1em;
+        text-align: center;
+        background-color: transparent;
+        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    }
+    .nav-links li a:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: var(--accent);
+        text-shadow: none;
+    }
+    .nav-links li a::after {
+        display: none;
+    }
+  }
+
+  /* Further small screen adjustments */
+  @media(max-width:480px){
+    .navbar { padding: 0.8rem 1rem; }
+    .brand { font-size: 1.4rem; }
+    #menu-toggle-checkbox:checked ~ .nav-links { padding: 0.8rem 0; }
+    .nav-links li a { font-size: 1em; padding: 0.6rem 0.8rem; }
+  }
+  /* Aapka existing CSS yahan tak */
+
+  /* Gemini se provide ki gayi extra CSS takay hamburger menu ka dropdown theek se kaam kare */
+  @media(max-width:768px){
+    /* Zaroori: Navbar ko relative position den takay iske andar absolute position wale nav-links theek se adjust hon. */
+    .navbar {
+      position: relative !important; /* Agar pehle se define nahi hai ya override ho raha hai */
+    }
+
+    /* Conflicting styles ko override karen aur z-index theek karen */
+    .nav-links {
+      width: 100% !important; /* Purane 'width: 0px' ko override karega */
+      height: auto !important; /* Purane fixed height ko override karega */
+      transform: none !important; /* Purane 'transform: translateX(100%)' ko override karega */
+      top: 100% !important; /* Header ke theek neeche position karega */
+      left: 0 !important; /* Left se align karega */
+      z-index: 1002 !important; /* Header (1000) aur hamburger icon (1001) ke upar dikhayega */
+      overflow-y: auto !important; /* Agar menu items zyada hon to scroll allow karega */
+      box-sizing: border-box !important; /* Padding aur border ko width/height mein include karega */
+    }
+
+    /* Jab checkbox check ho tab menu ka active state */
+    #menu-toggle-checkbox:checked ~ .nav-links {
+      max-height: 600px !important; /* Menu ke liye kaafi height dein (zaroorat par adjust karen) */
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      visibility: visible !important;
+      padding: 1rem 0 !important; /* Jab menu khula ho tab padding lagayen */
+      background: var(--bg) !important; /* Background set karen */
+    }
+
+    /* Yeh rule purane JavaScript-driven menu ke 'active' class ke transform ko bhi disable karega, */
+    /* agar galti se woh apply ho raha ho. */
+    .nav-links.active {
+      transform: none !important;
+    }
+
+    /* Mobile menu links ki spacing */
+    .nav-links li {
+        margin: 0.5rem 0 !important; /* Vertical spacing dein */
+        width: 100% !important;
+    }
+    .nav-links li a {
+        padding: 0.8rem 1rem !important; /* Links ko touch-friendly banayen */
+        font-size: 1.1em !important;
+        /* Transition for hover effect */
+        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out !important;
+    }
+
+    /* --- Naya Hover Effect for Mobile Dropdown Links --- */
+    .nav-links li a:hover {
+        background-color: rgba(255, 59, 59, 0.1) !important; /* Primary color ka translucent background */
+        color: var(--primary-color) !important; /* Primary color ka text */
+        text-shadow: none !important; /* Text shadow hata den */
+    }
+    /* --- End of New Hover Effect --- */
+
+  }
+  
+  @media(max-width:768px){
+    /* ... aapke existing mobile styles ... */
+    
+    .nav-links li a {
+        display: block;
+        width: 100%;
+        text-align: center;
+        font-weight: 700;
+        font-size: 1.1em;
+        padding: 0.8rem 1rem;
+        background-color: transparent; /* Default transparent background */
+        color: var(--text); /* Default text color */
+        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out !important; /* Smooth transition */
+    }
+
+    /* --- Mobile Dropdown Links ke liye Text-only Red Hover Effect --- */
+    .nav-links li a:hover,
+    .nav-links li a:active,
+    .nav-links li a:focus {
+        background-color: rgba(255, 59, 59, 0.1) !important; /* Halki translucent red background */
+        color: var(--primary-color) !important; /* Text ko red karega */
+        text-shadow: none !important;
+        outline: none !important;
+    }
+    /* --- End of Text-only Red Hover Effect --- */
+
+    /* ... aapke baqi mobile styles ... */
+  }
+  /* Scroll to Top Button Styling */
+#scrollToTopBtn {
+  display: none; /* JavaScript iski visibility control karega */
+  position: fixed; /* Screen par fixed rahega */
+  bottom: 30px; /* Neeche se 30px upar */
+  right: 30px; /* Daen (right) se 30px andar */
+  background-color: #ff3b3b; /* بٹن کا پس منظر کا رنگ (primary-color value) */
+  color: #fff; /* ٹیکسٹ کا رنگ */
+  border: none; /* کوئی بارڈر نہیں */
+  border-radius: 50%; /* گول شکل کے لیے */
+  width: 50px; /* چوڑائی */
+  height: 50px; /* اونچائی */
+  font-size: 1.8rem; /* تیر (arrow) کا سائز */
+  line-height: 50px; /* تیر کو عمودی طور پر مرکز میں لانے کے لیے */
+  text-align: center; /* تیر کو افقی طور پر مرکز میں لانے کے لیے */
+  cursor: pointer; /* ماؤس پوائنٹر کو ہاتھ میں بدلتا ہے */
+  z-index: 900; /* یقینی بناتا ہے کہ یہ دوسرے مواد کے اوپر رہے */
+  box-shadow: 0 5px 15px rgba(255, 59, 59, 0.4); /* ایک خوبصورت شیڈو */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease; /* ہموار (smooth) ہوور اینیمیشنز */
+}
+
+#scrollToTopBtn:hover {
+  background-color: #e22a2a; /* ہوور کرنے پر پس منظر کا رنگ (secondary-color value) */
+  box-shadow: 0 8px 20px rgba(255, 59, 59, 0.5); /* ہوور کرنے پر بڑھا ہوا شیڈو */
+  transform: translateY(-2px); /* ہوور کرنے پر تھوڑا سا اوپر اٹھتا ہے */
+}
+
+/* Responsive Adjustments for Scroll to Top Button */
+@media (max-width: 768px) {
+  #scrollToTopBtn {
+    bottom: 20px; /* چھوٹے اسکرینوں پر نیچے سے تھوڑا کم اوپر */
+    right: 20px; /* چھوٹے اسکرینوں پر دائیں سے تھوڑا کم اندر */
+    width: 45px; /* چھوٹے اسکرینوں پر چوڑائی کم */
+    height: 45px; /* چھوٹے اسکرینوں پر اونچائی کم */
+    font-size: 1.5rem; /* چھوٹے اسکرینوں پر تیر کا سائز کم */
+  }
+}
+/* --- LOADING SCREEN (FIXED) --- */
+#loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; /* Poori screen ki chaudai */
+  height: 100vh; /* Poori screen ki unchai */
+  background-color: #0e0e0e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999; /* Hamesha sabse upar rahe */
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
+}
+
+#loading-video {
+  /* Yeh styles video ko poori screen par phaila denge */
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Video ko stretch kiye baghair poori screen cover karega */
+}
+</style>
+</head>
+<body>
+  <!-- LOADING SCREEN HTML: Body tag ke theek baad yahi aayega -->
+  <div id="loading-screen">
+    <video id="loading-video" autoplay loop muted playsinline>
+      <source src="myloading.mp4" type="video/mp4">
+      <!-- Agar myloading.webm bhi hai to add kar sakte hain: -->
+      <!-- <source src="myloading.webm" type="video/webm"> -->
+      Your browser does not support the video tag.
+    </video>
+  </div>
+  <!-- LOADING SCREEN HTML END -->
+
+<header class="site-header">
+  <nav class="navbar">
+    <a class="brand" href="index.html">Scriptobot</a>
+    
+    <!-- Uiverse Hamburger Checkbox (CSS-driven menu ke liye) -->
+    <input type="checkbox" id="menu-toggle-checkbox" class="hamburger-checkbox-hidden">
+    
+    <!-- Uiverse Hamburger Icon (label for the checkbox) -->
+    <label for="menu-toggle-checkbox" class="hamburger" aria-label="Toggle navigation">
+      <svg viewBox="0 0 32 32">
+        <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+        <path class="line" d="M7 16 27 16"></path>
+      </svg>
+    </label>
+    
+    <!-- Navigation Links -->
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="login.html">Login</a></li>
+    </ul>
+  </nav>
+</header>
+
+
+<section class="hero reveal reveal-bottom">
+  <div class="hero-bg"></div>
+  <h1><span id="typed-text-heading"></span></h1>
+  <p>At Scriptobot, we believe that great design speaks for itself. Our portfolio features a diverse range of projects that demonstrate our commitment to excellence and our ability to adapt to every client’s vision. Browse through our work to discover how we bring ideas to life, combining aesthetics, functionality, and seamless user experience.</p>
+  <div>
+    <a href="#portfolio" class="btn primary">View Projects</a>
+    <a href="#counters" class="btn outline">Our Achievements</a>
+  </div>
+</section>
+
+<section id="portfolio">
+  <h2 class="section-title reveal reveal-bottom">Featured Projects</h2>
+  <div class="portfolio-grid">
+    <div class="portfolio-item reveal reveal-bottom">
+      <img src="https://via.placeholder.com/400x300/FF5733/FFFFFF?text=Modern+Landing+Page" alt="Project 1: Modern Landing Page">
+      <div class="overlay">
+        <h3>Modern Landing Page</h3>
+        <p>A sleek, responsive landing page designed to capture leads with dynamic animations and clear calls to action.</p>
+        <a href="project-details/landing-page.html" class="btn small">View Case Study</a>
+      </div>
+    </div>
+
+    <div class="portfolio-item reveal reveal-bottom delay-1">
+      <img src="https://via.placeholder.com/400x300/33FF57/FFFFFF?text=E-commerce+UI" alt="Project 2: E-commerce UI">
+      <div class="overlay">
+        <h3>E-commerce UI</h3>
+        <p>An intuitive and engaging user interface for an online retail platform, focused on a seamless shopping journey.</p>
+        <a href="project-details/ecommerce-ui.html" class="btn small">View Case Study</a>
+      </div>
+    </div>
+
+    <div class="portfolio-item reveal reveal-bottom delay-2">
+      <img src="https://via.placeholder.com/400x300/3357FF/FFFFFF?text=Portfolio+Website" alt="Project 3: Portfolio Website">
+      <div class="overlay">
+        <h3>Portfolio Website</h3>
+        <p>A sophisticated personal portfolio with a modern dark theme and interactive elements, showcasing unique design aesthetics.</p>
+        <a href="project-details/portfolio-site.html" class="btn small">View Case Study</a>
+      </div>
+    </div>
+
+    <div class="portfolio-item reveal reveal-bottom">
+      <img src="https://via.placeholder.com/400x300/FF33A1/FFFFFF?text=Web+App+Dashboard" alt="Project 4: Web App Dashboard">
+      <div class="overlay">
+        <h3>Web App Dashboard</h3>
+        <p>A functional and user-friendly dashboard design for a web application, prioritizing data visualization and actionable insights.</p>
+        <a href="project-details/webapp-dashboard.html" class="btn small">View Case Study</a>
+      </div>
+    </div>
+
+    <div class="portfolio-item reveal reveal-bottom delay-2">
+      <img src="https://via.placeholder.com/400x300/8A2BE2/FFFFFF?text=Data+Visualization" alt="Project 6: Data Visualization">
+      <div class="overlay">
+        <h3>Data Visualization</h3>
+        <p>Interactive charts and graphs developed to present complex datasets in a clear, understandable, and visually appealing format.</p>
+        <a href="project-details/data-visualization.html" class="btn small">View Case Study</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <h2 class="section-title reveal reveal-bottom">My Skills</h2>
+  <div class="skills-grid">
+    <div class="skill-item reveal reveal-bottom delay-1">
+      <i class="fab fa-html5"></i>
+      <h4>HTML5</h4>
+      <div class="skill-bar-container">
+        <div class="skill-bar" style="width: 95%;"></div>
+      </div>
+    </div>
+    <div class="skill-item reveal reveal-bottom delay-2">
+      <i class="fab fa-css3-alt"></i>
+      <h4>CSS3</h4>
+      <div class="skill-bar-container">
+        <div class="skill-bar" style="width: 80%;"></div>
+      </div>
+    </div>
+    <div class="skill-item reveal reveal-bottom delay-3">
+      <i class="fab fa-js"></i>
+      <h4>JavaScript</h4>
+      <div class="skill-bar-container">
+        <div class="skill-bar" style="width: 60%;"></div>
+      </div>
+    </div>
+    <div class="skill-item reveal reveal-bottom delay-1">
+      <i class="fas fa-paint-brush"></i>
+      <h4>UI/UX Design</h4>
+      <div class="skill-bar-container">
+        <div class="skill-bar" style="width: 28%;"></div>
+      </div>
+    </div>
+    <div class="skill-item reveal reveal-bottom delay-2">
+      <i class="fas fa-chart-line"></i>
+      <h4>Data Analysis</h4>
+      <div class="skill-bar-container">
+        <div class="skill-bar" style="width: 36%;"></div>
+      </div>
+    </div>
+    <div class="skill-item reveal reveal-bottom delay-3">
+      <i class="fas fa-rocket"></i>
+      <h4>API Integration</h4>
+      <div class="skill-bar-container">
+        <div class="skill-bar" style="width: 18%;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Animated Counters Section -->
+<section id="counters" class="counter-section">
+  <div class="counter-section-bg"></div> <!-- For background parallax -->
+  <h2 class="section-title reveal reveal-bottom">Our Achievements</h2>
+  <div class="counter-grid">
+    <div class="counter-item reveal reveal-bottom delay-1">
+      <div class="number" data-target="85"><span>0</span></div>
+      <div class="label">Completed Projects</div>
+    </div>
+    <div class="counter-item reveal reveal-bottom delay-2">
+      <div class="number" data-target="150"><span>0</span></div>
+      <div class="label">Happy Customers</div>
+    </div>
+    <div class="counter-item reveal reveal-bottom delay-3">
+      <div class="number" data-target="12"><span>0</span></div>
+      <div class="label">Awards Won</div>
+    </div>
+    <div class="counter-item reveal reveal-bottom delay-1">
+      <div class="number" data-target="1000"><span>0</span></div>
+      <div class="label">Lines of Code</div>
+    </div>
+  </div>
+</section>
+
+<!-- Website Shop Section -->
+<section id="website-shop">
+  <h2 class="section-title reveal reveal-bottom">Marketplace</h2>
+  <div class="website-shop-grid">
+    <!-- Example Item 1 -->
+    <div class="website-shop-item reveal reveal-bottom delay-1">
+      <img src="https://via.placeholder.com/400x250/FF5733/FFFFFF?text=Website+Template+1" alt="Website Template 1">
+      <h3>Aesthetic Portfolio Site</h3>
+      <p>A clean, modern, and fully responsive portfolio template designed for creatives.</p>
+      <div class="price">$149.00</div>
+      <a href="https://magicalfloor-01.firebaseapp.com/" class="btn primary" target="_blank">View & Purchase</a>
+    </div>
+
+    <!-- Example Item 2 -->
+    <div class="website-shop-item reveal reveal-bottom delay-2">
+      <img src="https://via.placeholder.com/400x250/33FF57/FFFFFF?text=Website+Template+2" alt="Website Template 2">
+      <h3>E-commerce Starter Kit</h3>
+      <p>A robust and user-friendly template for small businesses looking to start selling online.</p>
+      <div class="price">$299.00</div>
+      <a href="#" class="btn primary disabled">Coming Soon</a> <!-- Placeholder for future item -->
+    </div>
+
+    <!-- Add more items as needed -->
+  </div>
+</section>
+
+<!-- card -->
+
+<!-- === PROFILE CARD SECTION (Add this where you want the card to appear) === -->
+<section id="profile-card-section" class="reveal reveal-bottom">
+  <div class="profile-card-container">
+    <div class="profile-card">
+      <div class="profile-image-wrapper">
+        <!-- Replace 'your-image.jpg' with the path to your image -->
+        <!-- Example: src="/images/my-photo.jpg" or src="https://your-website.com/path/to/your/image.jpg" -->
+        <img src="data:image/jpeg;base64,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" alt="Scriptobot - Web Developer & Designer" class="profile-picture">
+      </div>
+      <div class="profile-content">
+        <h2 class="profile-name">Scriptobot</h2>
+        <p class="profile-title">Web Developer & Designer</p>
+        
+        <!-- The Custom "Contact Me" Button -->
+        <div class="cta-button-wrapper">
+          <!-- Changed from <button> to <a> to make it a clickable link -->
+          <a href="contact.html" class="cta" aria-label="Contact Me">
+            <span>Contact Me &nbsp;</span>
+            <svg viewBox="0 0 13 10" height="10px" width="15px">
+              <path d="M1,5 L11,5"></path>
+              <polyline points="8 1 12 5 8 9"></polyline>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- === END PROFILE CARD SECTION === -->
+<!-- Animated Text Section -->
+<section class="animated-text-section">
+  <div class="animated-text-bg"></div>
+  <h2 id="animated-contact-title"></h2>
+  <p>Let's connect and create something amazing together. Your ideas are welcome!</p>
+</section>
+
+<footer>
+  <p>&copy; 2025 Scriptobot. All rights reserved<span style="color: var(--primary-color);"></span></p>
+</footer>
+<!-- Scroll to Top Button -->
+<button id="scrollToTopBtn" title="Go to top">↑</button>
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.16/dist/typed.umd.js"></script>
+<script>
+  // Reveal on Scroll
+  function revealOnScroll() {
+    document.querySelectorAll('.reveal').forEach(el => {
+      const windowHeight = window.innerHeight;
+      const elementTop = el.getBoundingClientRect().top;
+      const revealPoint = 80; // Trigger reveal when element is 80px from bottom of viewport
+      if(elementTop < windowHeight - revealPoint) {
+        el.classList.add('visible');
+      }
+    });
+  }
+  window.addEventListener('scroll', revealOnScroll);
+  window.addEventListener('load', revealOnScroll); // Trigger on load to show elements already in view
+
+  // Typed.js for Animated Heading (Hero Section)
+  var typedHeading = new Typed("#typed-text-heading", {
+    strings: [
+      "We Build Exceptional Digital Experiences.",
+      "Innovative Solutions for Your Business.",
+      "Crafting Your Vision into Reality."
+    ],
+    typeSpeed: 70,
+    backSpeed: 40,
+    loop: true,
+    cursorChar: '_',
+    backDelay: 1500,
+    showCursor: true
+  });
+
+  // Typed.js for Animated Text (Contact Section)
+  var typedContact = new Typed("#animated-contact-title", {
+    strings: [
+      "Let's Collaborate",
+      "Get In Touch",
+      "Future Projects Await"
+    ],
+    typeSpeed: 60,
+    backSpeed: 35,
+    loop: true,
+    cursorChar: '✨',
+    backDelay: 1200,
+    showCursor: true
+  });
+
+  // Animated Skill Bars Logic
+  function animateSkillBars() {
+    document.querySelectorAll('.skill-bar').forEach(bar => {
+      const windowHeight = window.innerHeight;
+      const elementTop = bar.getBoundingClientRect().top;
+      const revealPoint = 100; // Trigger animation when bar is 100px from bottom
+
+      // Check if element is in viewport and hasn't been animated yet
+      if (elementTop < windowHeight - revealPoint && !bar.classList.contains('animated')) {
+        bar.classList.add('animated');
+        // The width is already set via inline style (e.g., style="width: 95%;")
+        // The CSS transition property 'transition: width 1.5s ease-out;' handles the animation.
+      }
+    });
+  }
+  window.addEventListener('scroll', animateSkillBars);
+  window.addEventListener('load', animateSkillBars);
+
+
+  // Animated Counters Logic
+  const counters = document.querySelectorAll('.counter-item .number');
+  const revealPointCounters = 100; // Trigger counters when they are 100px from bottom
+
+  function animateCounters() {
+    counters.forEach(counter => {
+      const windowHeight = window.innerHeight;
+      const elementTop = counter.getBoundingClientRect().top;
+      const target = +counter.getAttribute('data-target'); // Get the target number
+
+      // Check if element is in viewport and hasn't been animated yet
+      if (elementTop < windowHeight - revealPointCounters && !counter.classList.contains('animated')) {
+        counter.classList.add('animated'); // Mark as animated to prevent re-animation
+
+        let currentCount = 0;
+        const countStep = target / 100; // Calculate step for smoother animation (100 steps)
+        const intervalTime = 20; // Milliseconds per step
+
+        const interval = setInterval(() => {
+          currentCount += countStep;
+          if (currentCount >= target) {
+            counter.innerText = target; // Ensure final count is exact
+            clearInterval(interval); // Stop the interval
+          } else {
+            counter.innerText = Math.floor(currentCount); // Update count, rounded down
+          }
+        }, intervalTime);
+      }
+    });
+  }
+
+  window.addEventListener('scroll', animateCounters);
+  window.addEventListener('load', animateCounters); // Trigger on load if elements are already visible
+
+  // Theme Toggle functionality
+  document.getElementById("theme-toggle").addEventListener("click", () => {
+    document.body.classList.toggle("light-mode"); // Add/remove 'light-mode' class
+    const toggleButton = document.getElementById("theme-toggle");
+    // Update icon based on current mode
+    if (document.body.classList.contains("light-mode")) {
+      toggleButton.textContent = "☀️";
+    } else {
+      toggleButton.textContent = "🌓";
+    }
+  });
+
+  // Mobile Menu Toggle functionality
+  document.getElementById("mobile-toggle").addEventListener("click", () => {
+    document.querySelector(".nav-links").classList.toggle("active"); // Toggle 'active' class for menu visibility
+    document.getElementById("mobile-toggle").classList.toggle("is-active"); // Toggle 'is-active' for hamburger animation
+  });
+
+</script>
+<script>
+  // ... (Your existing revealOnScroll, Typed.js, animateSkillBars, animateCounters code) ...
+
+  // Theme Toggle functionality (Updated and Re-integrated)
+  document.getElementById("theme-toggle").addEventListener("click", () => {
+    document.body.classList.toggle("light-mode"); // Add/remove 'light-mode' class
+    const toggleButton = document.getElementById("theme-toggle");
+    // Update icon based on current mode
+    if (document.body.classList.contains("light-mode")) {
+      toggleButton.textContent = "☀️";
+    } else {
+      toggleButton.textContent = "🌓";
+    }
+    // Store current theme preference in local storage (optional, but good for UX)
+    localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+  });
+
+  // Check for saved theme preference on load (optional)
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      document.body.classList.add('light-mode');
+      document.getElementById("theme-toggle").textContent = "☀️";
+    } else {
+      document.body.classList.remove('light-mode');
+      document.getElementById("theme-toggle").textContent = "🌓";
+    }
+  });
+
+  // Mobile Menu Toggle functionality (Removed, as hamburger is now CSS-driven)
+  // The Uiverse hamburger menu is controlled entirely by CSS using the :checked pseudo-class.
+  // No JavaScript is needed for its toggle functionality.
+</script>
+<script>
+  // --- SCROLL TO TOP BUTTON ---
+  const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+  // جب یوزر اسکرول کرے تو بٹن کی visibility کو کنٹرول کریں
+  window.onscroll = function() {scrollFunction()};
+
+  function scrollFunction() {
+    // اگر 50px سے زیادہ اسکرول ہو تو بٹن دکھائیں، ورنہ چھپا دیں
+    if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+      scrollToTopBtn.style.display = "block";
+    } else {
+      scrollToTopBtn.style.display = "none";
+    }
+  }
+
+  // بٹن پر کلک کرنے پر صفحے کو سب سے اوپر اسکرول کریں
+  scrollToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // ہموار (smooth) اسکرولنگ اینیمیشن کے لیے
+    });
+  });
+  
+  // LOADING SCREEN LOGIC
+  document.addEventListener('DOMContentLoaded', () => {
+    const loadingScreen = document.getElementById('loading-screen');
+    if (!loadingScreen) return; // Agar loading screen element na mile to exit
+
+    // 2 second ke baad loading screen ko hide karna shuru karein
+    setTimeout(() => {
+      loadingScreen.style.opacity = '0'; // Opacity ko 0 kar do (fade out shuru)
+
+      // Fade out transition complete hone tak wait karein (0.5s CSS transition time)
+      setTimeout(() => {
+        loadingScreen.style.display = 'none'; // Poori tarah layout se hata do
+        loadingScreen.remove(); // DOM se bhi remove kar do (optional, but good)
+      }, 500); // CSS transition duration ke barabar ya thoda zyada (0.5 seconds)
+
+    }, 1500); // Total 1.5 seconds (1500 milliseconds) tak loading screen dikhegi.
+  });
+</script>
+</body>
+</html>

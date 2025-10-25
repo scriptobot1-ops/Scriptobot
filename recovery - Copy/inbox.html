@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inbox - Scriptobot</title>
+  <style>
+    /* Base Reset */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: Arial, sans-serif; transition:0.3s; }
+
+    /* Theme Variables - Defaulting to Dark theme for Black Background */
+    :root {
+      --bg:#121212; /* Dark background */
+      --text:#f5f5f5; /* Light text */
+      --accent:#e63946; /* Accent red color */
+      --glass: rgba(0,0,0,0.3); /* Dark transparent glass effect */
+      --shadow-dark: rgba(0,0,0,0.2);
+    }
+
+    /* General Body Enhancements */
+    body {
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      background:var(--bg); /* Ensure body background applies theme var */
+      color:var(--text); /* Ensure body text color applies theme var */
+      display: flex; /* Flexbox for sticky footer */
+      flex-direction: column; /* Stack children vertically */
+      min-height: 100vh; /* Minimum height is full viewport height */
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 5px;
+      border: 2px solid var(--bg);
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    /* Text Selection Style */
+    ::selection { background-color: var(--accent); color: var(--bg); }
+
+    /* Focus States (Accessibility & UX) */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+    .btn:focus-visible,
+    input:focus-visible {
+      border-radius: 8px;
+    }
+
+    /* Buttons General */
+    .btn {
+      padding:0.75rem 1.5rem;
+      border-radius:2rem;
+      font-weight:bold;
+      text-decoration:none;
+      transition:0.3s;
+      letter-spacing: 0.05em;
+      border: none;
+      cursor: pointer;
+      display: inline-flex; /* Changed to inline-flex for better button content alignment */
+      align-items: center; /* Center content vertically */
+      justify-content: center; /* Center content horizontally */
+      gap: 8px; /* Space between icon and text */
+    }
+    .btn.primary {
+      background:var(--accent);
+      color:#fff;
+      box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+    }
+    .btn.primary:hover {
+      opacity: 0.9;
+      box-shadow: 0 6px 20px rgba(230, 57, 70, 0.6);
+      transform: translateY(-2px); /* Slightly less aggressive transform */
+    }
+
+    /* Main Content Area */
+    main {
+      flex-grow: 1; /* Allows main content to take up available space, pushing footer down */
+      display: flex; /* Use flex to center content */
+      align-items: center; /* Center vertically */
+      justify-content: center; /* Center horizontally */
+      padding: 2rem; /* Add some padding around the content */
+    }
+
+    /* Content Cards (Unverified) */
+    .content-card { /* General style, might be overridden by specific cards */
+      max-width: 500px;
+      width: 100%; /* Make it fill its container up to max-width */
+      padding: 2rem;
+      border-radius: 1rem;
+      background: var(--glass); /* Transparent dark glass */
+      backdrop-filter: blur(15px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      text-align: center;
+      position: relative;
+      /* overflow: hidden; */ /* Original CSS */
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+      color: var(--text);
+    }
+
+    .content-card h2, .content-card h3 {
+      font-size:2rem;
+      margin-bottom:0.5rem;
+      color:var(--accent);
+      text-shadow: 1px 1px 5px rgba(230, 57, 70, 0.4);
+    }
+    .content-card p {
+      margin-bottom:1.5rem;
+      opacity: 0.9;
+    }
+    .content-card button {
+      margin-top: 1rem;
+    }
+    .content-card .btn {
+        margin-bottom: 0.5rem; /* Space out buttons */
+    }
+
+    /* Specific Styles for Inbox Button Card (for unverified) */
+    .initial-verification-card {
+        padding: 3rem 2rem; /* More prominent padding */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .initial-verification-card .btn.inbox-btn {
+        background: #DB4437; /* Gmail Red */
+        color: white;
+        padding: 1rem 2.5rem;
+        border-radius: 3rem;
+        font-size: 1.2rem;
+        box-shadow: 0 5px 15px rgba(219, 68, 55, 0.5);
+    }
+    .initial-verification-card .btn.inbox-btn:hover {
+        background: #c33a2d;
+        box-shadow: 0 8px 20px rgba(219, 68, 55, 0.6);
+        transform: translateY(-3px);
+    }
+    .initial-verification-card .btn.inbox-btn svg {
+        fill: white;
+        width: 24px;
+        height: 24px;
+        margin-right: 10px;
+    }
+
+    /* --- NEW VERIFIED CARD STYLES --- */
+    /* This section contains the styles for the new animated card */
+    #verified-card-container { /* This is the outer container for the new card */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%; /* Take full height of main for centering */
+        width: 100%; /* Take full width of main */
+    }
+
+    #verified-card { /* This is the actual envelope card, previously 'relative bg-black...' */
+      position: relative;
+      background: var(--glass); /* Transparent background using theme variable */
+      backdrop-filter: blur(10px); /* Add blur for glass effect */
+      width: 300px;
+      /* aspect-video (16/9) means height is width * 9 / 16 */
+      height: calc(300px * 9 / 16);
+      transition: all 0.7s ease; /* transition-all duration-700 */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 1rem; /* rounded-xl */
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); /* shadow-2xl, adjusted for dark theme */
+      /* overflow: hidden; */ /* <--- Yahan se 'overflow: hidden;' remove kar diya gaya hai */
+      max-width: 90%; /* Responsive adjustment */
+      border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border for glass effect */
+    }
+
+    @media (min-width: 640px) { /* sm:w-[350px] */
+      #verified-card {
+        width: 350px;
+        height: calc(350px * 9 / 16);
+      }
+    }
+
+    #verified-card .card-inner-paper { /* The inner "paper" content */
+      transition: all 0.3s ease; /* duration-300 */
+      background-color: #f5f5f5; /* bg-white */
+      width: 100%;
+      height: 100%; /* Paper takes full height of the envelope initially */
+      position: absolute;
+      border-radius: 1rem; /* rounded-xl */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start; /* justify-start */
+      padding: 1.25rem; /* py-5 */
+      text-align: center;
+      transform: translateY(0); /* Initial position */
+      color: #333; /* Darker text for white background */
+      /* Ensure text styling for inner paper */
+      font-family: Arial, sans-serif;
+    }
+
+    #verified-card:hover .card-inner-paper {
+      /* Increased translate value for paper to come out more fully */
+      transform: translateY(-8rem); /* Adjusted for fuller slide out */
+      transition-duration: 1s; /* group-hover:duration-1000 */
+    }
+
+    #verified-card .card-inner-paper p {
+      margin-bottom: 0.5rem; /* Added margin for better spacing */
+      line-height: 1.4;
+    }
+
+    #verified-card .card-inner-paper p:first-of-type {
+      font-size: 1.25rem; /* text-xl */
+      font-weight: 600; /* font-semibold */
+      color: #6b7280; /* text-gray-500 */
+      font-family: serif; /* font-serif */
+      margin-top: 0.5rem;
+    }
+    @media (min-width: 640px) {
+        #verified-card .card-inner-paper p:first-of-type {
+            font-size: 1.5rem; /* sm:text-2xl */
+        }
+    }
+
+    #verified-card .card-inner-paper #userName {
+      color: var(--accent); /* text-rose-500, using accent color */
+    }
+
+    #verified-card .card-inner-paper .card-text {
+      padding-left: 1.5rem; /* px-10 */
+      padding-right: 1.5rem; /* px-10 */
+      font-size: 0.625rem; /* text-[10px] */
+      color: #4b5563; /* text-gray-700 */
+    }
+    @media (min-width: 640px) {
+        #verified-card .card-inner-paper .card-text {
+            font-size: 0.75rem; /* sm:text-[12px] */
+        }
+    }
+
+    #verified-card .card-inner-paper .card-signature {
+      font-family: sans-serif; /* font-sans */
+      padding-top: 1.25rem; /* pt-5 */
+      font-weight: 600; /* font-semibold */
+      letter-spacing: 0.05em; /* tracking-wide */
+    }
+
+    /* Button inside the paper - Initially hidden, visible on hover */
+    #verified-card .card-inner-paper .go-home-btn {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none; /* Make it unclickable when hidden */
+      transition: opacity 0.4s ease, visibility 0.4s ease; /* Smooth transition */
+      margin-top: 1.25rem; /* Thora space */
+    }
+
+    #verified-card:hover .card-inner-paper .go-home-btn {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto; /* Make it clickable when visible */
+      transition-delay: 0.5s; /* Paper ke slide out hone ke thodi der baad dikhe */
+    }
+
+    #verified-card .card-seal { /* The red seal button */
+      background-color: var(--accent); /* bg-rose-500 */
+      color: #221f1f; /* text-red-800, darker accent for text */
+      width: 40px; /* w-10 */
+      aspect-ratio: 1; /* aspect-square */
+      border-radius: 50%; /* rounded-full */
+      z-index: 40;
+      font-size: 0.625rem; /* text-[10px] */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600; /* font-semibold */
+      /* This clip-path attempts to mimic the given shape closely. */
+      clip-path:polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);
+      border: 4px solid #b72734; /* border-4 border-rose-900, using a darker accent */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* shadow-md */
+      transition: all 1s ease; /* transition-all duration-1000 */
+      cursor: pointer;
+    }
+
+    #verified-card:hover .card-seal {
+      opacity: 0; /* group-hover:opacity-0 */
+      transform: scale(0) rotate(180deg); /* group-hover:scale-0 group-hover:rotate-180 */
+    }
+
+    /* Envelope Folds */
+    #verified-card .card-fold {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transition: all 0.7s ease; /* For initial open/close effect, duration-700 */
+    }
+
+    #verified-card .card-fold.card-tp { /* Top fold */
+      background-color: #212121; /* Solid dark color for the fold */
+      clip-path: polygon(50% 50%, 100% 0, 0 0); /* Initial state */
+      z-index: 10;
+      transition: all 1s ease; /* duration-1000 */
+    }
+    #verified-card:hover .card-fold.card-tp {
+      clip-path: polygon(50% 0%, 100% 0, 0 0); /* group-hover:[clip-path:polygon(50%_0%,_100%_0,_0_0)] */
+      transition-duration: 0.1s; /* group-hover:duration-100 */
+    }
+
+    #verified-card .card-fold.card-lft { /* Left fold */
+      background-color: #121212; /* Solid dark color for the fold */
+      clip-path: polygon(50% 50%, 0 0, 0 100%);
+      z-index: 10;
+    }
+    #verified-card .card-fold.card-rgt { /* Right fold */
+      background-color: #212121; /* Solid dark color for the fold */
+      clip-path: polygon(50% 50%, 100% 0, 100% 100%);
+      z-index: 10;
+    }
+    #verified-card .card-fold.card-btm { /* Bottom fold */
+      background-color: #121212; /* Solid dark color for the fold */
+      clip-path: polygon(50% 50%, 100% 100%, 0 100%);
+      z-index: 10;
+    }
+    /* End NEW VERIFIED CARD STYLES */
+
+
+    /* Video Background */
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -2; /* Even lower z-index than loading screen */
+    }
+    .video-background video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.4) saturate(1.2);
+    }
+
+    /* Loading Video Screen */
+    #loading-video-screen { /* Standardized ID from login page */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #000000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.7s ease-out, visibility 0.7s ease-out;
+    }
+    #loading-video-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    #loading-video-screen video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Scroll to Top Button Styling */
+    #scrollToTopBtn {
+      display: none;
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background-color: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 1.8rem;
+      line-height: 50px;
+      text-align: center;
+      cursor: pointer;
+      z-index: 900;
+      box-shadow: 0 5px 15px rgba(255, 59, 59, 0.4);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+    }
+    #scrollToTopBtn:hover {
+      background-color: #e22a2a;
+      box-shadow: 0 8px 20px rgba(255, 59, 59, 0.5);
+      transform: translateY(-2px);
+    }
+
+    /* Simple Footer Styles */
+    footer {
+      padding: 1.5rem 2rem;
+      text-align: center;
+      background: var(--glass); /* Transparent dark glass */
+      backdrop-filter: blur(10px);
+      color: var(--text);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      flex-shrink: 0; /* Prevents footer from shrinking */
+    }
+    footer p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    /* --- TOAST NOTIFICATION STYLES --- */
+    .toast-notification {
+      visibility: hidden; /* Default hidden */
+      min-width: 280px; /* Minimum width */
+      background-color: var(--glass); /* Glass background */
+      backdrop-filter: blur(10px); /* Blur effect */
+      color: var(--text); /* Text color from theme */
+      text-align: center; /* Centered text */
+      border-radius: 10px; /* Rounded corners */
+      padding: 16px 20px; /* Padding */
+      position: fixed; /* Fixed position */
+      z-index: 10000; /* On top of everything, higher than loading screen */
+      left: 50%; /* Center horizontally */
+      transform: translateX(-50%); /* Adjust for true centering */
+      top: 30px; /* Position from top */
+      font-size: 1.1rem; /* Font size */
+      font-weight: 600;
+      box-shadow: 0 4px 15px var(--shadow-dark); /* Subtle shadow */
+      opacity: 0; /* Hidden by default */
+      transition: visibility 0.5s, opacity 0.5s ease-in-out, background-color 0.3s, color 0.3s, border-color 0.3s; /* Smooth transition */
+      border: 1px solid transparent; /* Default transparent border */
+    }
+
+    .toast-notification.show {
+      visibility: visible; /* Show when 'show' class is added */
+      opacity: 1; /* Fully visible */
+    }
+
+    .toast-notification.success {
+      background-color: rgba(76, 175, 80, 0.8); /* Green for success */
+      color: white;
+      border-color: rgba(76, 175, 80, 1);
+    }
+
+    .toast-notification.error {
+      background-color: rgba(244, 67, 54, 0.8); /* Red for error */
+      color: white;
+      border-color: rgba(244, 67, 54, 1);
+    }
+
+    .toast-notification.info {
+      background-color: rgba(33, 150, 243, 0.8); /* Blue for info */
+      color: white;
+      border-color: rgba(33, 150, 243, 1);
+    }
+
+    /* Helper class to hide elements */
+    .hidden {
+      display: none !important;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      #scrollToTopBtn {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+        font-size: 1.5rem;
+      }
+      main { padding: 1rem; } /* Adjust main padding for mobile */
+
+      .toast-notification {
+        width: 90%; /* Smaller width on mobile */
+        min-width: unset;
+        font-size: 1rem;
+        padding: 12px 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Video Screen -->
+  <div id="loading-video-screen">
+    <video autoplay muted loop playsinline>
+      <source src="myloading.mp4" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast-notification" class="toast-notification"></div>
+
+  <!-- Background Video -->
+  <div class="video-background">
+    <video autoplay muted loop playsinline>
+      <source src="inboxbg.mp4" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
+  </div>
+
+  <!-- Main content area -->
+  <main>
+    <!-- Initial Unverified Card -->
+    <section id="initial-verification-card" class="content-card initial-verification-card">
+      <h3>Please Verify Your Email</h3>
+      <p>A verification link has been sent to your email address. Please check your inbox and click the link to activate your account.</p>
+      <p>If you don't see the email, please check your spam folder. You might need to refresh this page after verification.</p>
+      <a href="https://mail.google.com/mail/u/0/#inbox" target="_blank" class="btn primary inbox-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        Go to Gmail Inbox
+      </a>
+    </section>
+
+    <!-- NEW Verified User Thanks Card -->
+    <div id="verified-card-container" class="hidden">
+      <div id="verified-card" class="group">
+        <div class="card-inner-paper">
+          <p>
+            Thank You <span id="userName"></span>
+          </p>
+          <p class="card-text">Your account has been successfully verified.</p>
+          <p class="card-text">You’re now part of our creative community!</p>
+          <p class="card-text card-signature">— Scriptobot</p>
+          <!-- The Go to Home button moved inside the paper content -->
+          <!-- 'hidden' class ko yahan se hata diya gaya hai -->
+          <button id="go-to-home-btn" class="btn primary go-home-btn">Go to Home</button>
+        </div>
+
+        <!-- 🔴 Seal Animation -->
+        <button class="card-seal">S-B</button>
+
+        <!-- ✉️ Letter Fold Animation Layers -->
+        <div class="card-fold card-tp"></div>
+        <div class="card-fold card-lft"></div>
+        <div class="card-fold card-rgt"></div>
+        <div class="card-fold card-btm"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Scroll to Top Button -->
+  <button id="scrollToTopBtn" title="Go to top">↑</button>
+
+  <!-- Simple Footer -->
+  <footer>
+    <p>&copy; 2025 Scriptobot. All rights reserved.</p>
+  </footer>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+  <script>
+    // ✅ Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCu-j4jpX89hE3zihqb6Ibet22syYFDh1o",
+      authDomain: "scriptobot-1.firebaseapp.com",
+      projectId: "scriptobot-1",
+      storageBucket: "scriptobot-1.firebasestorage.app",
+      messagingSenderId: "463059915239",
+      appId: "1:463059915239:web:9a5446d23c2c19286b6d42",
+      measurementId: "G-X027DDY1PN"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // DOM Elements
+    const initialVerificationCard = document.getElementById('initial-verification-card');
+    const verifiedCardContainer = document.getElementById('verified-card-container'); // Reference the new outer container
+    const userNameSpan = document.getElementById('userName'); // Targeting the span inside the new card
+    const goToHomeBtn = document.getElementById('go-to-home-btn');
+
+    // Function to show a toast notification
+    function showToast(message, type = 'info') { // type can be 'success', 'error', 'info'
+      const toast = document.getElementById('toast-notification');
+      toast.textContent = message;
+      toast.className = 'toast-notification show'; // Reset classes
+      toast.classList.add(type); // Add type class for styling
+
+      setTimeout(() => {
+        toast.classList.remove('show');
+        // Optional: remove type classes after transition for next use
+        setTimeout(() => {
+          toast.className = 'toast-notification';
+        }, 500); // Match CSS transition duration
+      }, 3000); // Toast visible for 3 seconds
+    }
+
+    // Function to handle user authentication state
+    function handleAuthStateChanged(user) {
+      if (user) {
+        // Reload user to get latest emailVerified status
+        user.reload().then(() => {
+          const reloadedUser = auth.currentUser; // Get the reloaded user object
+
+          if (reloadedUser.emailVerified) {
+            // User is verified
+            initialVerificationCard.classList.add('hidden');
+            verifiedCardContainer.classList.remove('hidden'); // Show the new card container
+            userNameSpan.textContent = `${reloadedUser.displayName || reloadedUser.email.split('@')[0]}!`; // Update the span with ID 'userName'
+            
+            // "Go to Home" button ki visibility ab CSS ke through control hogi
+            // Is JavaScript block ko remove kar diya gaya hai
+            // goToHomeBtn.classList.add('hidden'); // Ensure it's hidden first
+            // setTimeout(() => {
+            //     goToHomeBtn.classList.remove('hidden');
+            // }, 2000); // 2 second delay
+
+          } else {
+            // User is NOT verified
+            verifiedCardContainer.classList.add('hidden'); // Hide the new card container
+            initialVerificationCard.classList.remove('hidden');
+            showToast("Please verify your email to proceed.", 'info');
+
+            // Optionally, resend verification email if not sent recently
+            if (reloadedUser && !reloadedUser.emailVerified) {
+                reloadedUser.sendEmailVerification().then(() => {
+                    showToast("A new verification email has been sent. Please check your inbox.", 'info');
+                }).catch(error => {
+                    // console.error("Error sending verification email:", error);
+                });
+            }
+          }
+        }).catch(error => {
+          showToast(`❌ Error refreshing user data: ${error.message}. Please try again or re-login.`, 'error');
+          console.error("Error reloading user:", error);
+          // If reload fails, redirect to login page as user data might be invalid
+          setTimeout(() => window.location.href = "login.html", 2000);
+        });
+
+      } else {
+        // No user is logged in, redirect to login page
+        showToast("You are not logged in. Redirecting...", 'info');
+        setTimeout(() => window.location.href = "login.html", 1500);
+      }
+    }
+
+    // Firebase Auth Listener
+    auth.onAuthStateChanged(handleAuthStateChanged);
+
+    // Go to Home button click
+    goToHomeBtn.addEventListener('click', () => {
+      window.location.href = "index.html";
+    });
+
+    // --- Loading Screen Logic (2-second loop) ---
+    let loadingScreenHidden = false; // Flag to ensure it hides only once
+
+    function hideAndRemoveLoadingScreen() {
+      const loadingScreen = document.getElementById('loading-video-screen');
+      if (loadingScreen && !loadingScreenHidden) {
+        loadingScreen.classList.add('hidden'); // Use class for transition
+        loadingScreen.addEventListener('transitionend', () => {
+          loadingScreen.remove(); // Transition ke baad element ko DOM se hata dein
+          document.body.style.overflow = ''; // Scrolling ko wapas enable karein
+        }, { once: true });
+        loadingScreenHidden = true; // Mark as hidden
+      }
+    }
+
+    // Hide after 2 seconds irrespective of video loop ending (as video might be shorter/longer)
+    // This assumes the video starts playing instantly.
+    setTimeout(hideAndRemoveLoadingScreen, 2000); // 2000 milliseconds = 2 seconds
+
+    // Initial scroll ko disable karein jab DOM content load ho jaye
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.style.overflow = 'hidden';
+    });
+    // --- End Loading Screen Logic ---
+
+    // JavaScript for Scroll to Top Button
+    const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+    // Show or hide the button based on scroll position
+    window.onscroll = function() {
+      if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+        scrollToTopBtn.style.display = "block";
+      } else {
+        scrollToTopBtn.style.display = "none";
+      }
+    };
+
+    // When the user clicks on the button, scroll to the top of the document
+    scrollToTopBtn.addEventListener("click", () => {
+      document.body.scrollTop = 0; // For Safari
+      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    });
+
+    // Optional: Passive Event Listeners for performance
+    (function() {
+      if (typeof EventTarget !== 'undefined') {
+        const originalAddEventListener = EventTarget.prototype.addEventListener;
+        EventTarget.prototype.addEventListener = function(type, listener, options) {
+          let usesPassive = false;
+          if (type.includes('scroll') || type.includes('touch') || type.includes('wheel')) {
+            if (typeof options === 'object' && options !== null) {
+              usesPassive = options.passive;
+            } else if (typeof options === 'boolean') {
+              // Do nothing
+            } else {
+              usesPassive = true;
+            }
+          }
+
+          if (usesPassive && typeof options === 'object' && options !== null) {
+            options.passive = true;
+          } else if (usesPassive === true && typeof options === 'undefined') {
+            options = { passive: true };
+          }
+
+          return originalAddEventListener.call(this, type, listener, options);
+        };
+      }
+    })();
+  </script>
+</body>
+</html>
